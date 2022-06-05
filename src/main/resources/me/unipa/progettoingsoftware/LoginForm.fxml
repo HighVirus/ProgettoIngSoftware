@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXPasswordField?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<fx:root type="javafx.scene.layout.AnchorPane" prefHeight="650.0" prefWidth="960.0" style="-fx-background-color: DBDBDB;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MFXTextField fx:id="email" layoutX="348.0" layoutY="275.0" prefHeight="26.0" prefWidth="262.0" />
+      <MFXPasswordField fx:id="password" layoutX="349.0" layoutY="383.0" prefHeight="18.0" prefWidth="262.0" />
+      <Label layoutX="348.0" layoutY="247.0" text="E-Mail" textFill="#00b118">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="349.0" layoutY="353.0" text="Password" textFill="#00b118">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <MFXButton onAction="#onClickButton" layoutX="384.0" layoutY="482.0" prefHeight="38.0" prefWidth="192.0" style="-fx-background-color: #00b118;" text="LOG IN" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </MFXButton>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="393.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/farmacia-logo.png" />
+         </image>
+      </ImageView>
+   </children>
+</fx:root>
