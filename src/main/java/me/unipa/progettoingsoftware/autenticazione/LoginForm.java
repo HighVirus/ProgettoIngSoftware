@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware;
+package me.unipa.progettoingsoftware.autenticazione;
 
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware;
+package me.unipa.progettoingsoftware.autenticazione;
 
 import io.github.palexdev.materialfx.controls.MFXPasswordField;
 import io.github.palexdev.materialfx.controls.MFXTextField;
@@ -11,7 +11,7 @@ import javafx.event.ActionEvent;
 
 @RequiredArgsConstructor
 public class LoginFormController extends AnchorPane {
-    private final LoginC loginC;
+    private final AccessControl accessControl;
 
 
     @FXML
@@ -23,8 +23,8 @@ public class LoginFormController extends AnchorPane {
     private MFXPasswordField password;
 
     @FXML
-    public void onClickButton(ActionEvent event){
-        loginC.clickButton();
+    public void onClickLoginButton(ActionEvent event){
+        accessControl.clickLoginButton();
     }
 
 

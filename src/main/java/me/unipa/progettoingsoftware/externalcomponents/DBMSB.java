@@ -3,9 +3,13 @@ package me.unipa.progettoingsoftware.externalcomponents;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
+import me.unipa.progettoingsoftware.autenticazione.User;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -16,7 +20,7 @@ public class DBMSB {
     @Getter(lazy = true)
     private static final DBMSB farmacia = new DBMSB("farmacia", 30001, "farmacia", "farmacia");
 
-    private final String host = "172.17.255.255";
+    private final String host = "129.152.17.152";
     private final String database;
     private final String username;
     private final String password;
@@ -77,5 +81,21 @@ public class DBMSB {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public CompletableFuture<User> getUser(String email, String password) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM ACCOUNT WHERE EMAIL=? AND PASSWORD=?")) {
+                preparedStatement.setString(1, email);
+                preparedStatement.setString(2, password);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next())
+                    return User.createInstance(resultSet.getInt("TYPE"), resultSet.getString("EMAIL"), resultSet.getString("PASSWORD"));
+                else return null;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
     }
 }
