@@ -2,6 +2,7 @@ package me.unipa.progettoingsoftware.externalcomponents;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import javafx.stage.Stage;
 import lombok.Getter;
 import me.unipa.progettoingsoftware.autenticazione.User;
 
@@ -61,15 +62,18 @@ public class DBMSB {
             throw new SQLException("Hikari is null");
         }
         Connection connection = hikariDataSource.getConnection();
-        int attempts = 1;
-        while (connection == null && attempts < 13) {
-            System.out.println("Tentativo di riconnessione numero: " + attempts);
-            attempts++;
-            connection = hikariDataSource.getConnection();
+        if (connection == null) {
+            new RestoreConnectionC().restoreConnection();
         }
-        if (connection == null)
-            throw new SQLException("Connection is null");
         return connection;
+    }
+
+    public boolean checkConnection() throws SQLException {
+        if (this.hikariDataSource == null) {
+            throw new SQLException("Hikari is null");
+        }
+        Connection connection = this.hikariDataSource.getConnection();
+        return connection != null;
     }
 
     private void setup() {
