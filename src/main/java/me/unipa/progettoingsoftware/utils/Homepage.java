@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.Init;
@@ -13,8 +14,8 @@ import me.unipa.progettoingsoftware.autenticazione.User;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public abstract class Homepage extends Application {
-        private Stage stage;
+public abstract class Homepage extends AnchorPane {
+        private final Stage stage;
 
         @FXML
         public void onClickLogoutButton(ActionEvent event) {

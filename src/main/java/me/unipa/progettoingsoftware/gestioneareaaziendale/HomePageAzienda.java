@@ -1,5 +1,6 @@
 package me.unipa.progettoingsoftware.gestioneareaaziendale;
 
+import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,7 +11,7 @@ import me.unipa.progettoingsoftware.utils.Homepage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class HomePageAzienda extends Homepage {
+public class HomePageAzienda extends Application {
     private final Stage stage;
     private final FXMLLoader fxmlLoader;
 

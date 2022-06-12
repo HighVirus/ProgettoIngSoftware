@@ -11,10 +11,11 @@ import lombok.Getter;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.Init;
 import me.unipa.progettoingsoftware.autenticazione.User;
+import me.unipa.progettoingsoftware.utils.Homepage;
 
 import java.io.IOException;
 
-public class HomePageAziendaController extends AnchorPane {
+public class HomePageAziendaController extends Homepage {
     private final Stage stage;
 
     @FXML
@@ -23,10 +24,11 @@ public class HomePageAziendaController extends AnchorPane {
     private Label welcomeText;
 
     public HomePageAziendaController(Stage stage) {
+        super(stage);
         this.stage = stage;
     }
 
-    @FXML
+    /*@FXML
     public void onClickLogoutButton(ActionEvent event) {
         if (User.isAuthenticated())
             User.getUser().logout();
@@ -43,7 +45,7 @@ public class HomePageAziendaController extends AnchorPane {
             throw new RuntimeException(e);
         }
 
-    }
+    }*/
 
     public void onClickCatalogoButton(ActionEvent event) {
     }

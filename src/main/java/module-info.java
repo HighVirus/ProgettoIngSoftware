@@ -12,4 +12,6 @@ module me.unipa.progettoingsoftware {
     opens me.unipa.progettoingsoftware.autenticazione to javafx.fxml;
     opens me.unipa.progettoingsoftware.gestioneareaaziendale to javafx.fxml;
     exports me.unipa.progettoingsoftware.gestioneareaaziendale;
+    opens me.unipa.progettoingsoftware.utils to javafx.fxml;
+    exports me.unipa.progettoingsoftware.utils;
 }
