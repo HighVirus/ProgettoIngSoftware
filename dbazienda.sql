@@ -4,22 +4,25 @@
 CREATE DATABASE IF NOT EXISTS azienda;
 USE azienda;
 
-create table dipendenti(
-	nome varchar(255) not null,
-    cognome varchar(255) not null,
-	email varchar(255) primary key,
-	pass varchar(255)
+create TABLE if not exists ACCOUNT (
+    ID INTEGER PRIMARY KEY AUTO_INCREMENT,
+    TYPE INT,
+    NAME VARCHAR(100),
+    SURNAME VARCHAR(100),
+    EMAIL VARCHAR(200),
+    PASSWORD VARCHAR(200)
 );
 
+INSERT INTO ACCOUNT (TYPE, NAME, SURNAME, EMAIL, PASSWORD) VALUES (1,'Alessandro', 'Spank', 'ciao', 'ciao');
 
 create table farmacista(
-	partita_iva bigint primary key,
+    partita_iva bigint primary key,
+    IDACCOUNT INTEGER ,
     nome_farmacia varchar(255),
     cap int,
     indirizzo varchar(255),
     numero_civico int 
-)
-;
+);
 
 create table catalogo_farmaci(
         codice_aic bigint primary key,

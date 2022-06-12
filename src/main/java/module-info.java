@@ -10,4 +10,6 @@ module me.unipa.progettoingsoftware {
     exports me.unipa.progettoingsoftware;
     exports me.unipa.progettoingsoftware.autenticazione;
     opens me.unipa.progettoingsoftware.autenticazione to javafx.fxml;
+    opens me.unipa.progettoingsoftware.gestioneareaaziendale to javafx.fxml;
+    exports me.unipa.progettoingsoftware.gestioneareaaziendale;
 }

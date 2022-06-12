@@ -38,7 +38,7 @@ public class DBMSB {
         this.username = username;
         this.password = password;
         hikariConfig.setConnectionTimeout(5000);
-        this.executor = Executors.newFixedThreadPool(4);
+        this.executor = Executors.newFixedThreadPool(2);
         this.setup();
     }
 
@@ -49,23 +49,28 @@ public class DBMSB {
                 this.port +
                 "/" +
                 this.database +
-                "?autoReconnect=true&maxReconnects=12&useSSL=" +
+                "?allowPublicKeyRetrieval=true&useSSL=" +
                 this.ssl);
         hikariConfig.setUsername(this.username);
         hikariConfig.setPassword(this.password);
+
         hikariDataSource = new HikariDataSource(hikariConfig);
         return hikariDataSource.getConnection();
     }
 
-    public Connection getConnection() throws SQLException {
+    public synchronized Connection getConnection() throws SQLException {
         if (hikariDataSource == null) {
             throw new SQLException("Hikari is null");
         }
-        Connection connection = hikariDataSource.getConnection();
-        if (connection == null) {
+        Connection connection;
+        connection = this.hikariDataSource.getConnection();
+        if (connection == null || connection.isClosed()) {
+            System.out.println("culo");
             new RestoreConnectionC().restoreConnection();
+            System.out.println("ciao");
         }
         return connection;
+
     }
 
     public boolean checkConnection() throws SQLException {
@@ -83,6 +88,7 @@ public class DBMSB {
             }
             connection = this.getJdbcUrl();
         } catch (SQLException e) {
+            System.out.println("porco dio");
             e.printStackTrace();
         }
     }
@@ -95,7 +101,7 @@ public class DBMSB {
                 preparedStatement.setString(2, password);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next())
-                    return User.createInstance(resultSet.getInt("TYPE"), resultSet.getString("EMAIL"), resultSet.getString("PASSWORD"));
+                    return User.createInstance(resultSet.getInt("TYPE"), resultSet.getString("EMAIL"), resultSet.getString("NAME"), resultSet.getString("SURNAME"));
                 else return null;
             } catch (SQLException e) {
                 throw new RuntimeException(e);

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #DBDBDB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #DBDBDB;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane layoutY="-5.0" prefHeight="170.0" prefWidth="1920.0">
          <top>
-            <AnchorPane prefHeight="162.0" prefWidth="960.0" style="-fx-background-color: #1c7c54;" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="162.0" prefWidth="1198.0" style="-fx-background-color: #1c7c54;" BorderPane.alignment="CENTER">
                <children>
                   <Circle fill="#d4d4d4" layoutX="111.0" layoutY="81.0" radius="57.0" stroke="TRANSPARENT" strokeType="INSIDE" />
                   <Label fx:id="welcomeText" layoutX="189.0" layoutY="45.0" text="Benvenuto/a, %utente%" textFill="WHITE">
@@ -29,20 +31,13 @@
             </AnchorPane>
          </top>
       </BorderPane>
-      <MFXButton layoutX="1354.0" layoutY="350.0" onAction="#onClickOrdiniButton" prefHeight="517.0" prefWidth="477.0" text="Gestione Ordini" textFill="#1c7c54" wrapText="true">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </MFXButton>
-      <MFXButton layoutX="722.0" layoutY="350.0" onAction="#onClickOrdiniButton" prefHeight="517.0" prefWidth="477.0" text="Gestione Catalogo" textFill="#1c7c54" wrapText="true">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </MFXButton>
-      <MFXButton layoutX="103.0" layoutY="350.0" onAction="#onClickOrdiniButton" prefHeight="517.0" prefWidth="477.0" text="Gestione Magazzino" textFill="#1c7c54" wrapText="true">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </MFXButton>
+      <MFXLegacyTableView layoutX="103.0" layoutY="210.0" prefHeight="724.0" prefWidth="1715.0">
+         <columns>
+            <TableColumn prefWidth="205.0" text="Codice AIC" />
+            <TableColumn prefWidth="1029.0" text="Nome" />
+            <TableColumn prefWidth="211.0" text="Principio Attivo" />
+            <TableColumn prefWidth="269.0" text="Costo" />
+         </columns>
+      </MFXLegacyTableView>
    </children>
 </AnchorPane>

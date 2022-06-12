@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAziendaController;
 
 import java.io.IOException;
 
@@ -36,28 +37,27 @@ public class AccessControl {
         }).thenAccept(user -> {
             Platform.runLater(() -> {
                 if (user != null) {
-                    try {
-                        FXMLLoader fxmlLoader;
+                    FXMLLoader fxmlLoader;
 
-                        int userType = user.getType();
-                        switch (userType) {
-                            case 1: {
-                                fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
-                                break;
-                            }
-                            default: {
-                                fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
-                                System.out.println("aaaaaaaaaaaaaaaaaaaa");
-                            }
+                    int userType = user.getType();
+                    switch (userType) {
+                        case 1: {
+                            fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
+                            break;
                         }
-                        Scene scene = new Scene(fxmlLoader.load());
-                        stage.setResizable(false);
-                        stage.setScene(scene);
-                        stage.centerOnScreen();
-                        stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        case 2: {
+                            fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
+                            break;
+                        }
+                        case 3: {
+                            fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
+                            break;
+                        }
+                        default: {
+                            fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
+                        }
                     }
+                    new HomePageAzienda(this.stage, fxmlLoader);
                 } else
                     System.out.println("Non trovato bro, mi disp xdxd");
             });

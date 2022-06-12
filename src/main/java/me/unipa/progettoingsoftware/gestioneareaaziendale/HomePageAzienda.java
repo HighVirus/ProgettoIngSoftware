@@ -38,10 +38,14 @@ public class HomePageAzienda extends Homepage {
 
     @Override
     public void start(Stage stage) throws Exception {
+        fxmlLoader.setController(new HomePageAziendaController(stage));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
+        HomePageAziendaController homePageAziendaController = fxmlLoader.getController();
+        homePageAziendaController.getWelcomeText().setText(homePageAziendaController.getWelcomeText().getText()
+                .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }
 }
