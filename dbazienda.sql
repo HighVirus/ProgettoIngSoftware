@@ -43,12 +43,6 @@ create table ordini(
     foreign key(email_o) references dipendenti(email)
 );
 
-INSERT INTO dipendenti VALUES
-('alessandro', 'bianchi', 'alessandrobianchi@gmail.com', 'agr784'),
-('marco', 'rossi', 'marcorossi@gmail.com','ciaociao96'),
-('giuseppe', 'antonini','giuseppeantonini@gmail.com')
-;
-
 INSERT INTO farmacista VALUES
 (94165746623, 'la mia farmacia', 90010, 'via Ernesto Basile', 154),
 (98774123459, 'farmacia pennino', 02077, 'viale Europa', 50),       

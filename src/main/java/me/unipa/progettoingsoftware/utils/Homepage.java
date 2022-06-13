@@ -1,21 +1,28 @@
 package me.unipa.progettoingsoftware.utils;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import me.unipa.progettoingsoftware.Init;
-import me.unipa.progettoingsoftware.autenticazione.User;
+import me.unipa.progettoingsoftware.utils.entity.User;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
 public abstract class Homepage extends AnchorPane {
         private final Stage stage;
+
+        @FXML
+        @Setter
+        @Getter
+        private Label welcomeText;
 
         @FXML
         public void onClickLogoutButton(ActionEvent event) {

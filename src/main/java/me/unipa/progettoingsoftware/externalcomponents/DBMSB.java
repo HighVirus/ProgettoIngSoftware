@@ -2,9 +2,8 @@ package me.unipa.progettoingsoftware.externalcomponents;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import javafx.stage.Stage;
 import lombok.Getter;
-import me.unipa.progettoingsoftware.autenticazione.User;
+import me.unipa.progettoingsoftware.utils.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -88,7 +87,6 @@ public class DBMSB {
             }
             connection = this.getJdbcUrl();
         } catch (SQLException e) {
-            System.out.println("porco dio");
             e.printStackTrace();
         }
     }

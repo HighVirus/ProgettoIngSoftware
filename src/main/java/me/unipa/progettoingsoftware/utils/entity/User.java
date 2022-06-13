@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.autenticazione;
+package me.unipa.progettoingsoftware.utils.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
