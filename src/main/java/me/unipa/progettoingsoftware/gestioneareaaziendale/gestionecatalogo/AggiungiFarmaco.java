@@ -1,20 +1,19 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale;
+package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import me.unipa.progettoingsoftware.utils.entity.User;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class HomePageAzienda extends Application {
+public class AggiungiFarmaco extends Application {
     private final Stage stage;
     private final FXMLLoader fxmlLoader;
 
-    public HomePageAzienda(Stage stage, FXMLLoader fxmlLoader) {
+    public AggiungiFarmaco(Stage stage, FXMLLoader fxmlLoader) {
         this.stage = stage;
         this.fxmlLoader = fxmlLoader;
 
@@ -38,14 +37,11 @@ public class HomePageAzienda extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        fxmlLoader.setController(new HomePageAziendaController(stage));
         Scene scene = new Scene(fxmlLoader.load());
+        stage.setTitle("Aggiungi Nuovo Farmaco");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        HomePageAziendaController homePageAziendaController = fxmlLoader.getController();
-        homePageAziendaController.getWelcomeText().setText(homePageAziendaController.getWelcomeText().getText()
-                .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }
 }

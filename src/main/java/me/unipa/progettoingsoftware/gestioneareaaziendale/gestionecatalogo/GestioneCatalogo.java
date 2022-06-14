@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale;
+package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -10,12 +10,11 @@ import me.unipa.progettoingsoftware.utils.entity.User;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class HomePageAzienda extends Application {
-    private final Stage stage;
+public class GestioneCatalogo extends Application {
+
     private final FXMLLoader fxmlLoader;
 
-    public HomePageAzienda(Stage stage, FXMLLoader fxmlLoader) {
-        this.stage = stage;
+    public GestioneCatalogo(Stage stage, FXMLLoader fxmlLoader) {
         this.fxmlLoader = fxmlLoader;
 
         try {
@@ -38,13 +37,13 @@ public class HomePageAzienda extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        fxmlLoader.setController(new HomePageAziendaController(stage));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        HomePageAziendaController homePageAziendaController = fxmlLoader.getController();
-        homePageAziendaController.getWelcomeText().setText(homePageAziendaController.getWelcomeText().getText()
+        GestioneCatalogoController gestioneCatalogoController = fxmlLoader.getController();
+        gestioneCatalogoController.setupTable();
+        gestioneCatalogoController.getWelcomeText().setText(gestioneCatalogoController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }

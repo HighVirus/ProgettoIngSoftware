@@ -2,13 +2,9 @@ package me.unipa.progettoingsoftware.autenticazione;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAziendaController;
-
-import java.io.IOException;
 
 public class AccessControl {
     private final Stage stage;
