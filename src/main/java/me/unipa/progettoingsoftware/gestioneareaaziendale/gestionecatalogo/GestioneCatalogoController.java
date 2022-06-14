@@ -20,10 +20,12 @@ public class GestioneCatalogoController extends Homepage {
     @FXML
     public MFXTableView<Farmaco> catalogo;
     private final Stage stage;
+    private final CatalogoAzControl catalogoAzControl;
 
     public GestioneCatalogoController(Stage stage, CatalogoAzControl catalogoAzControl) {
         super(stage);
         this.stage = stage;
+        this.catalogoAzControl = catalogoAzControl;
     }
 
     public void setupTable() {
@@ -48,6 +50,7 @@ public class GestioneCatalogoController extends Homepage {
 
     @FXML
     public void onClickAggiungiButton(ActionEvent event) {
+        catalogoAzControl.addProductRequest();
     }
 
     @FXML

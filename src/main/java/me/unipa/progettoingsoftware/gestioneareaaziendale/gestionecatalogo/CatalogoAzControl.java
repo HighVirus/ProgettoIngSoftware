@@ -1,8 +1,12 @@
 package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
+import me.unipa.progettoingsoftware.Init;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 public class CatalogoAzControl {
@@ -21,6 +25,11 @@ public class CatalogoAzControl {
     }
 
     public void addProductRequest() {
+        FXMLLoader fxmlLoader = new FXMLLoader(AggiungiFarmaco.class.getResource("AggiungiFarmaco.fxml"));
+        AggiungiFarmacoController aggiungiFarmacoController = new AggiungiFarmacoController(this);
+        fxmlLoader.setRoot(aggiungiFarmacoController);
+        fxmlLoader.setController(aggiungiFarmacoController);
+        new AggiungiFarmaco(new Stage(), fxmlLoader);
 
     }
 }
