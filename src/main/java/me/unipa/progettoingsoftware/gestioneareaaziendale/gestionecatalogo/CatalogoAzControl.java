@@ -19,4 +19,8 @@ public class CatalogoAzControl {
 
         new GestioneCatalogo(this.stage, fxmlLoader);
     }
+
+    public void addProductRequest() {
+
+    }
 }

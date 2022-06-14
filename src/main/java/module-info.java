@@ -5,6 +5,7 @@ module me.unipa.progettoingsoftware {
     requires com.zaxxer.hikari;
     requires lombok;
     requires java.sql;
+    requires org.slf4j;
 
     opens me.unipa.progettoingsoftware to javafx.fxml;
     exports me.unipa.progettoingsoftware;

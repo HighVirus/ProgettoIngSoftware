@@ -7,7 +7,9 @@ import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.utils.Farmaco;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
@@ -17,9 +19,11 @@ public class GestioneCatalogoController extends Homepage {
 
     @FXML
     public MFXTableView<Farmaco> catalogo;
+    private final Stage stage;
 
     public GestioneCatalogoController(Stage stage, CatalogoAzControl catalogoAzControl) {
         super(stage);
+        this.stage = stage;
     }
 
     public void setupTable() {
@@ -48,5 +52,6 @@ public class GestioneCatalogoController extends Homepage {
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {
+        new HomePageAzienda(this.stage, new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml")));
     }
 }
