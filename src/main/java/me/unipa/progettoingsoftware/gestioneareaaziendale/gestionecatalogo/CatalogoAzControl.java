@@ -3,7 +3,9 @@ package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.utils.entity.Farmaco;
@@ -14,6 +16,9 @@ public class CatalogoAzControl {
     private final Stage stage;
     private GestioneCatalogoController gestioneCatalogoController;
     private AggiungiFarmacoController aggiungiFarmacoController;
+    @Getter
+    @Setter
+    private Farmaco farmacoToRemove;
 
     public void showCatalogoAziendale() {
         this.gestioneCatalogoController = new GestioneCatalogoController(stage, this);
@@ -56,10 +61,10 @@ public class CatalogoAzControl {
                     if (farm != null)
                         new ErrorsNotice("Il prodotto è gia presente all'interno del catalogo.");
                     else {
-                        gestioneCatalogoController.catalogo.getItems().add(farmaco);
+                        gestioneCatalogoController.getCatalogo().getItems().add(farmaco);
                         DBMSB.getAzienda().addFarmacoToCatalog(farmaco.getCodAic(), farmaco.getFarmacoName(),
                                 farmaco.getPrincipioAttivo(), farmaco.isPrescrivibile(), farmaco.getCosto());
-                        gestioneCatalogoController.catalogo.update();
+                        gestioneCatalogoController.getCatalogo().update();
                         aggiungiFarmacoController.getStage().close();
                     }
                 });
@@ -67,6 +72,19 @@ public class CatalogoAzControl {
         } catch (NumberFormatException ex) {
             new ErrorsNotice("Hai inserito un valore non valido, ricontrolla.");
         }
+    }
+
+    public void showConfirmRemNotice(){
+        ConfirmRemNoticeController confirmRemNoticeController = new ConfirmRemNoticeController(this);
+        FXMLLoader fxmlLoader = new FXMLLoader(ConfirmRemNotice.class.getResource("ConfirmRemNotice.fxml"));
+        fxmlLoader.setRoot(confirmRemNoticeController);
+        fxmlLoader.setController(confirmRemNoticeController);
+        new ConfirmRemNotice(new Stage(), fxmlLoader);
+    }
+
+    public void confirmRemProduct(){
+        gestioneCatalogoController.getCatalogo().getItems().remove(this.farmacoToRemove);
+        DBMSB.getAzienda().removeFarmacoToCatalog(this.farmacoToRemove.getCodAic());
     }
 
     private boolean allFieldAreFilled() {

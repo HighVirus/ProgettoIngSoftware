@@ -7,24 +7,25 @@ import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TableCell;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import lombok.Getter;
 import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
 import me.unipa.progettoingsoftware.utils.Homepage;
+import me.unipa.progettoingsoftware.utils.entity.Farmaco;
 
 import java.util.Comparator;
 
 public class GestioneCatalogoController extends Homepage {
 
     @FXML
-    public MFXTableView<Farmaco> catalogo;
+    @Getter
+    private MFXTableView<Farmaco> catalogo;
     private final Stage stage;
     private final CatalogoAzControl catalogoAzControl;
 
@@ -49,17 +50,19 @@ public class GestioneCatalogoController extends Homepage {
 
             @Override
             public void update(Farmaco farmaco) {
-                super.update(farmaco);
-
                 if (farmaco == null) {
                     setGraphic(null);
                     return;
                 }
 
+                deleteButton.setStyle("-fx-background-color: #FF595E;" + "-fx-font-weight: bold;");
+                deleteButton.setTextFill(Paint.valueOf("WHITE"));
+
                 setGraphic(deleteButton);
-                deleteButton.setOnAction(
-                        event -> catalogo.getItems().remove(farmaco)
-                );
+                deleteButton.setOnAction(event -> {
+                    catalogoAzControl.setFarmacoToRemove(farmaco);
+                    catalogoAzControl.showConfirmRemNotice();
+                });
             }
         });
 

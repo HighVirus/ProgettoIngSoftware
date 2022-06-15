@@ -37,12 +37,12 @@ public class AggiungiFarmacoController extends AnchorPane {
     }
 
     @FXML
-    public void onClickConfirmButton(ActionEvent actionEvent) {
+    public void onClickConfirmButton(ActionEvent event) {
         catalogoAzControl.confirmAddProduct();
     }
 
     @FXML
-    public void onClickAnnullaButton(ActionEvent actionEvent) {
+    public void onClickAnnullaButton(ActionEvent event) {
         stage.close();
     }
 }

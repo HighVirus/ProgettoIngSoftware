@@ -172,7 +172,18 @@ public class DBMSB {
                 preparedStatement.setInt(6, 10);
                 preparedStatement.setString(7, "231232");
                 preparedStatement.setDate(8, new Date(System.currentTimeMillis()));
-                System.out.println("culoculo");
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public void removeFarmacoToCatalog(String codiceAic) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM catalogo_farmaci WHERE codice_aic = ?")) {
+                preparedStatement.setString(1, codiceAic);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
