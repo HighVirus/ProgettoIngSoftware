@@ -3,6 +3,7 @@ package me.unipa.progettoingsoftware.externalcomponents;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import javafx.application.Platform;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import me.unipa.progettoingsoftware.utils.entity.Farmaco;
@@ -12,6 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DBMSB {
     @Getter(lazy = true)
@@ -57,7 +59,6 @@ public class DBMSB {
         return hikariDataSource.getConnection();
     }
 
-    @SneakyThrows
     public synchronized Connection getConnection() throws SQLException {
         if (hikariDataSource == null) {
             throw new SQLException("Hikari is null");
@@ -66,24 +67,25 @@ public class DBMSB {
         try {
             connection = this.hikariDataSource.getConnection();
             return connection;
-        } catch (Exception e) {
-            FutureTask<Boolean> query = new FutureTask<>(() -> new RestoreConnectionC().restoreConnection());
-            Platform.runLater(query);
-            if (query.get())
-                System.out.println("connessione ristabilita");
-            connection = this.hikariDataSource.getConnection();
-            return connection;
+        } catch (SQLTransientConnectionException e) {
+            AtomicReference<Stage> stage = new AtomicReference<>();
+            Platform.runLater(() -> {
+                stage.set(new Stage());
+                new RestoreConnectionC(stage.get());
+            });
+            while (true) {
+                try {
+                    Connection connection1 = this.hikariDataSource.getConnection();
+                    if (connection1 != null)
+                        Platform.runLater(() -> stage.get().close());
+                    return connection1;
+                } catch (Exception ignored) {
+
+                }
+            }
 
         }
 
-    }
-
-    public boolean checkConnection() throws SQLException {
-        if (this.hikariDataSource == null) {
-            throw new SQLException("Hikari is null");
-        }
-        Connection connection = this.hikariDataSource.getConnection();
-        return connection != null;
     }
 
     private void setup() {
@@ -160,15 +162,17 @@ public class DBMSB {
     public void addFarmacoToCatalog(String codiceAic, String nomeFarmaco, String principioAttivo, boolean prescrivibile, double costo) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO catalogo_farmaci (codice_aic, nome_farmaco, principio_attivo, prescrivibile, costo, unita, lotto) " +
-                         "VALUES (?,?,?,?,?,?,?)")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO catalogo_farmaci (codice_aic, nome_farmaco, principio_attivo, prescrivibile, costo, unita, lotto, data_scadenza) " +
+                         "VALUES (?,?,?,?,?,?,?,?)")) {
                 preparedStatement.setInt(1, Integer.parseInt(codiceAic));
                 preparedStatement.setString(2, nomeFarmaco);
                 preparedStatement.setString(3, principioAttivo);
                 preparedStatement.setBoolean(4, prescrivibile);
                 preparedStatement.setDouble(5, costo);
                 preparedStatement.setInt(6, 10);
-                preparedStatement.setInt(7, 231232);
+                preparedStatement.setString(7, "231232");
+                preparedStatement.setDate(8, new Date(System.currentTimeMillis()));
+                System.out.println("culoculo");
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);

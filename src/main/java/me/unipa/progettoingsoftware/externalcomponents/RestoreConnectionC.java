@@ -1,12 +1,15 @@
 package me.unipa.progettoingsoftware.externalcomponents;
 
 import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
 
 import java.sql.SQLException;
 
 public class RestoreConnectionC {
+    private final Stage stage;
 
-    public RestoreConnectionC() {
+    public RestoreConnectionC(Stage stage) {
+        this.stage = stage;
         this.showConnectionWindow();
     }
 
@@ -15,22 +18,6 @@ public class RestoreConnectionC {
         FXMLLoader fxmlLoader = new FXMLLoader(ConnectionAttempt.class.getResource("ConnectionAttempt.fxml"));
         fxmlLoader.setRoot(connectionAttemptController);
         fxmlLoader.setController(connectionAttemptController);
-        new ConnectionAttempt(fxmlLoader);
-    }
-
-    public boolean restoreConnection() {
-
-        try {
-            boolean connectionAzienda = DBMSB.getAzienda().checkConnection();
-            boolean connectionFarmacia = DBMSB.getFarmacia().checkConnection();
-
-            while (!connectionAzienda || !connectionFarmacia) {
-                connectionAzienda = DBMSB.getAzienda().checkConnection();
-                connectionFarmacia = DBMSB.getFarmacia().checkConnection();
-            }
-            return true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        new ConnectionAttempt(this.stage, fxmlLoader);
     }
 }
