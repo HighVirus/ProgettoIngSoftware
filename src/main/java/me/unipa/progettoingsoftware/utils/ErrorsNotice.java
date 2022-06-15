@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,6 +50,7 @@ public class ErrorsNotice extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
+        stage.initStyle(StageStyle.UNDECORATED);
         errorsNoticeController.getTextToShow().setText(errorsNoticeController.getTextToShow().getText()
                 .replaceAll("%text%", this.text));
         stage.show();
