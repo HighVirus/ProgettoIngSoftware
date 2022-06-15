@@ -10,16 +10,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: #DBDBDB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #DBDBDB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane prefHeight="162.0" prefWidth="1920.0" style="-fx-background-color: #1c7c54;">
+      <Pane prefHeight="162.0" prefWidth="1000.0" style="-fx-background-color: #1c7c54;">
          <children>
-            <MFXButton layoutX="1669.0" layoutY="58.0" prefHeight="45.0" prefWidth="178.0" style="-fx-background-color: #ca3c25; -fx-background-radius: 20;" text="LOGOUT" textFill="WHITE">
+            <MFXButton layoutX="774.0" layoutY="58.0" onAction="#onClickLogoutButton" prefHeight="45.0" prefWidth="178.0" style="-fx-background-color: #ca3c25; -fx-background-radius: 20;" text="LOGOUT" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </MFXButton>
-            <MFXButton layoutX="1573.0" layoutY="59.0" prefHeight="42.0" prefWidth="42.0" text=" " />
+            <MFXButton layoutX="686.0" layoutY="59.0" prefHeight="42.0" prefWidth="42.0" text=" " />
          </children>
       </Pane>
       <Circle fill="#d4d4d4" layoutX="111.0" layoutY="81.0" radius="57.0" stroke="TRANSPARENT" strokeType="INSIDE" />
@@ -28,25 +28,25 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <MFXLegacyTableView layoutX="103.0" layoutY="259.0" prefHeight="724.0" prefWidth="1715.0">
+      <MFXLegacyTableView layoutX="51.0" layoutY="261.0" prefHeight="310.0" prefWidth="898.0">
          <columns>
-            <TableColumn prefWidth="205.0" text="Codice AIC" />
-            <TableColumn prefWidth="1029.0" text="Nome" />
-            <TableColumn prefWidth="211.0" text="Principio Attivo" />
-            <TableColumn prefWidth="269.0" text="Costo" />
+            <TableColumn prefWidth="164.0" text="Codice AIC" />
+            <TableColumn prefWidth="357.0" text="Nome" />
+            <TableColumn prefWidth="266.0" text="Principio Attivo" />
+            <TableColumn prefWidth="110.0" text="Costo" />
          </columns>
       </MFXLegacyTableView>
-      <MFXButton layoutX="103.0" layoutY="994.0" onAction="#onClickLogoutButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
+      <MFXButton layoutX="51.0" layoutY="582.0" onAction="#onClickTornaButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </MFXButton>
-      <Text fill="#1c7c54" layoutX="103.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualizza Catalogo">
+      <Text fill="#1c7c54" layoutX="51.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VISUALIZZA CATALOGO">
          <font>
             <Font name="System Bold" size="48.0" />
          </font>
       </Text>
-      <MFXButton layoutX="1596.0" layoutY="994.0" onAction="#onClickLogoutButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Aggiungi Farmaco" textFill="WHITE">
+      <MFXButton layoutX="726.0" layoutY="582.0" onAction="#onClickAggiungiButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Aggiungi Farmaco" textFill="WHITE">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
