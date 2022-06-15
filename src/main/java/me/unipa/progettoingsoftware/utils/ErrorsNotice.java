@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
+package me.unipa.progettoingsoftware.utils;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -9,13 +9,20 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AggiungiFarmaco extends Application {
+public class ErrorsNotice extends Application {
     private final Stage stage;
     private final FXMLLoader fxmlLoader;
+    private final String text;
+    private final ErrorsNoticeController errorsNoticeController;
 
-    public AggiungiFarmaco(Stage stage, FXMLLoader fxmlLoader) {
-        this.stage = stage;
+    public ErrorsNotice(String text) {
+        this.stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(ErrorsNotice.class.getResource("ErrorsNotice.fxml"));
+        errorsNoticeController = new ErrorsNoticeController(stage);
+        fxmlLoader.setRoot(errorsNoticeController);
+        fxmlLoader.setController(errorsNoticeController);
         this.fxmlLoader = fxmlLoader;
+        this.text = text;
 
         try {
             start(stage);
@@ -37,13 +44,13 @@ public class AggiungiFarmaco extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        fxmlLoader.setController(errorsNoticeController);
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Aggiungi Nuovo Farmaco");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        AggiungiFarmacoController aggiungiFarmacoController = fxmlLoader.getController();
-        aggiungiFarmacoController.setupPrescrivibilitaComboBox();
+        errorsNoticeController.getTextToShow().setText(errorsNoticeController.getTextToShow().getText()
+                .replaceAll("%text%", this.text));
         stage.show();
     }
 }

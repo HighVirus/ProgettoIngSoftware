@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.utils;
+package me.unipa.progettoingsoftware.utils.entity;
 
 
 import lombok.AllArgsConstructor;
@@ -17,4 +17,8 @@ public class Farmaco {
     private final Date scadenza;
     private final Double costo;
     private int unita;
+
+    public Farmaco(String codAic, String farmacoName, String principioAttivo, boolean prescrivibile, Double costo){
+        this(codAic, null, farmacoName, principioAttivo, prescrivibile, null, costo, 0);
+    }
 }

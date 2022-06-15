@@ -2,16 +2,16 @@ package me.unipa.progettoingsoftware.externalcomponents;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import javafx.application.Platform;
 import lombok.Getter;
+import lombok.SneakyThrows;
+import me.unipa.progettoingsoftware.utils.entity.Farmaco;
 import me.unipa.progettoingsoftware.utils.entity.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class DBMSB {
     @Getter(lazy = true)
@@ -57,18 +57,24 @@ public class DBMSB {
         return hikariDataSource.getConnection();
     }
 
+    @SneakyThrows
     public synchronized Connection getConnection() throws SQLException {
         if (hikariDataSource == null) {
             throw new SQLException("Hikari is null");
         }
         Connection connection;
-        connection = this.hikariDataSource.getConnection();
-        if (connection == null || connection.isClosed()) {
-            System.out.println("culo");
-            new RestoreConnectionC().restoreConnection();
-            System.out.println("ciao");
+        try {
+            connection = this.hikariDataSource.getConnection();
+            return connection;
+        } catch (Exception e) {
+            FutureTask<Boolean> query = new FutureTask<>(() -> new RestoreConnectionC().restoreConnection());
+            Platform.runLater(query);
+            if (query.get())
+                System.out.println("connessione ristabilita");
+            connection = this.hikariDataSource.getConnection();
+            return connection;
+
         }
-        return connection;
 
     }
 
@@ -101,6 +107,69 @@ public class DBMSB {
                 if (resultSet.next())
                     return User.createInstance(resultSet.getInt("TYPE"), resultSet.getString("EMAIL"), resultSet.getString("NAME"), resultSet.getString("SURNAME"));
                 else return null;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public CompletableFuture<List<Farmaco>> getFarmaciCatalogList() {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM catalogo_farmaci")) {
+                List<Farmaco> farmacoList = new ArrayList<>();
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    String codAic = resultSet.getString("codice_aic");
+                    String farmacoName = resultSet.getString("nome_farmaco");
+                    String principioAttivo = resultSet.getString("principio_attivo");
+                    boolean prescrivibile = resultSet.getBoolean("prescrivibile");
+                    double costo = resultSet.getDouble("costo");
+                    farmacoList.add(new Farmaco(codAic, farmacoName, principioAttivo, prescrivibile, costo));
+                }
+                return farmacoList;
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public CompletableFuture<Farmaco> getFarmacoFromCatalog(String codice_aic) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM catalogo_farmaci WHERE codice_aic = ?")) {
+                preparedStatement.setString(1, codice_aic);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    String codAic = resultSet.getString("codice_aic");
+                    String farmacoName = resultSet.getString("nome_farmaco");
+                    String principioAttivo = resultSet.getString("principio_attivo");
+                    boolean prescrivibile = resultSet.getBoolean("prescrivibile");
+                    double costo = resultSet.getDouble("costo");
+                    return new Farmaco(codAic, farmacoName, principioAttivo, prescrivibile, costo);
+                }
+                return null;
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public void addFarmacoToCatalog(String codiceAic, String nomeFarmaco, String principioAttivo, boolean prescrivibile, double costo) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO catalogo_farmaci (codice_aic, nome_farmaco, principio_attivo, prescrivibile, costo, unita, lotto) " +
+                         "VALUES (?,?,?,?,?,?,?)")) {
+                preparedStatement.setInt(1, Integer.parseInt(codiceAic));
+                preparedStatement.setString(2, nomeFarmaco);
+                preparedStatement.setString(3, principioAttivo);
+                preparedStatement.setBoolean(4, prescrivibile);
+                preparedStatement.setDouble(5, costo);
+                preparedStatement.setInt(6, 10);
+                preparedStatement.setInt(7, 231232);
+                preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

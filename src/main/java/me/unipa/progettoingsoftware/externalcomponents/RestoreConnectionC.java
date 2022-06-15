@@ -18,16 +18,17 @@ public class RestoreConnectionC {
         new ConnectionAttempt(fxmlLoader);
     }
 
-    public void restoreConnection() {
+    public boolean restoreConnection() {
 
         try {
             boolean connectionAzienda = DBMSB.getAzienda().checkConnection();
             boolean connectionFarmacia = DBMSB.getFarmacia().checkConnection();
 
-            while (!connectionAzienda && !connectionFarmacia) {
+            while (!connectionAzienda || !connectionFarmacia) {
                 connectionAzienda = DBMSB.getAzienda().checkConnection();
                 connectionFarmacia = DBMSB.getFarmacia().checkConnection();
             }
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
