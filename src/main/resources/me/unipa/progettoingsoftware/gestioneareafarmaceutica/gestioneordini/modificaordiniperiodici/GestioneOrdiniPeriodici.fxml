@@ -11,7 +11,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #DBDBDB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <BorderPane layoutY="-5.0" prefHeight="118.0" prefWidth="1000.0">
+      <BorderPane prefHeight="118.0" prefWidth="1000.0">
          <top>
             <AnchorPane prefHeight="118.0" prefWidth="1000.0" style="-fx-background-color: #1c7c54;" BorderPane.alignment="CENTER">
                <children>
