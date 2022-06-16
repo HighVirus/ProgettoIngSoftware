@@ -5,14 +5,16 @@ import com.zaxxer.hikari.HikariDataSource;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import me.unipa.progettoingsoftware.utils.entity.Farmaco;
+import me.unipa.progettoingsoftware.utils.entity.Order;
 import me.unipa.progettoingsoftware.utils.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class DBMSB {
@@ -187,10 +189,11 @@ public class DBMSB {
         }, executor);
     }
 
-    public CompletableFuture<List<Farmaco>> getFarmaciListFromAziendaStorage() {
+    public CompletableFuture<List<Farmaco>> getFarmaciListFromStorage() {
+        String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "magazzino_farmacia";
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM magazzino_aziendale")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + STORAGE_TABLE)) {
                 List<Farmaco> farmacoList = new ArrayList<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
@@ -212,10 +215,11 @@ public class DBMSB {
         }, executor);
     }
 
-    public CompletableFuture<Farmaco> getFarmacoFromAziendaStorage(String codice_aic, String lotto) {
+    public CompletableFuture<Farmaco> getFarmacoFromStorage(String codice_aic, String lotto) {
+        String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "magazzino_farmacia";
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM magazzino_aziendale WHERE codice_aic = ? AND lotto = ?")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + STORAGE_TABLE + " WHERE codice_aic = ? AND lotto = ?")) {
                 preparedStatement.setString(1, codice_aic);
                 preparedStatement.setString(2, lotto);
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -237,12 +241,34 @@ public class DBMSB {
         }, executor);
     }
 
-    public void removeFarmacoFromCatalog(String codiceAic) {
+    public void removeFarmacoFromStorage(String codiceAic, String lotto) {
+        String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "magazzino_farmacia";
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM catalogo_aziendale WHERE codice_aic = ?")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + STORAGE_TABLE + " WHERE codice_aic = ? AND lotto=?")) {
                 preparedStatement.setString(1, codiceAic);
+                preparedStatement.setString(2, lotto);
                 preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public CompletableFuture<List<Order>> getOrderList() {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT  FROM ordini ord, ")) {
+                List<Order> orderList = new ArrayList<>();
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    String orderCode = resultSet.getString("codice_ordine");
+                    Date deliveryDate = resultSet.getDate("data_consegna");
+                    String pivaFarmacia = resultSet.getString("partita_iva_f");
+                    orderList.add(new Order(orderCode, deliveryDate, pivaFarmacia));
+                }
+                return orderList;
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

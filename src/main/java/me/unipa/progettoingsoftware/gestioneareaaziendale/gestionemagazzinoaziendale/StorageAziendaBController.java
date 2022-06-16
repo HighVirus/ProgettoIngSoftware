@@ -96,8 +96,8 @@ public class StorageAziendaBController extends Homepage {
 
                 setGraphic(deleteButton);
                 deleteButton.setOnAction(event -> {
-                   // storageAziendaC.setFarmacoToRemove(farmaco);
-                    //storageAziendaC.showConfirmRemNotice();
+                    storageAziendaC.setFarmacoToRemove(farmaco);
+                    storageAziendaC.showConfirmRemNotice();
                 });
             }
         });

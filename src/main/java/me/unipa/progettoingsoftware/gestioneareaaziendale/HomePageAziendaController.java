@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionemagazzinoaziendale.StorageAziendaC;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.OrdersC;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
 public class HomePageAziendaController extends Homepage {
@@ -28,5 +29,6 @@ public class HomePageAziendaController extends Homepage {
     }
 
     public void onClickOrdiniButton(ActionEvent event) {
+        new OrdersC(stage).showOrderList();
     }
 }

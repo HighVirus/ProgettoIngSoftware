@@ -1,14 +1,16 @@
 package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNotice;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNoticeController;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
+import me.unipa.progettoingsoftware.utils.GenericNotice;
 import me.unipa.progettoingsoftware.utils.entity.Farmaco;
 
 @RequiredArgsConstructor
@@ -94,6 +96,7 @@ public class CatalogoAzControl {
     public void confirmRemProduct(){
         gestioneCatalogoController.getCatalogo().getItems().remove(this.farmacoToRemove);
         DBMSB.getAzienda().removeFarmacoToCatalog(this.farmacoToRemove.getCodAic());
+        new GenericNotice("Prodotto rimosso con successo dal catalogo.");
     }
 
     private boolean allFieldAreFilled() {
