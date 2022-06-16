@@ -11,22 +11,26 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #DBDBDB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane prefHeight="118.0" prefWidth="1000.0" style="-fx-background-color: #1c7c54;">
-         <children>
-            <MFXButton layoutX="771.0" layoutY="39.0" onAction="#onClickLogoutButton" prefHeight="39.0" prefWidth="178.0" style="-fx-background-color: #ca3c25; -fx-background-radius: 20;" text="LOGOUT" textFill="WHITE">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </MFXButton>
-            <MFXButton layoutX="684.0" layoutY="41.0" prefHeight="39.0" prefWidth="42.0" text=" " />
-         </children>
-      </Pane>
-      <Circle fill="#d4d4d4" layoutX="105.0" layoutY="61.0" radius="49.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-      <Label fx:id="welcomeText" layoutX="184.0" layoutY="31.0" text="Benvenuto/a, %utente%" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
+      <BorderPane layoutY="-5.0" prefHeight="118.0" prefWidth="1000.0">
+         <top>
+            <AnchorPane prefHeight="118.0" prefWidth="1000.0" style="-fx-background-color: #1c7c54;" BorderPane.alignment="CENTER">
+               <children>
+                  <Circle fill="#d4d4d4" layoutX="105.0" layoutY="61.0" radius="49.0" stroke="TRANSPARENT" strokeType="INSIDE" />
+                  <Label fx:id="welcomeText" layoutX="184.0" layoutY="31.0" text="Benvenuto/a, %utente%" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <MFXButton layoutX="771.0" layoutY="39.0" onAction="#onClickLogoutButton" prefHeight="39.0" prefWidth="178.0" style="-fx-background-color: #ca3c25; -fx-background-radius: 20;" text="LOGOUT" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </MFXButton>
+                  <MFXButton layoutX="684.0" layoutY="41.0" prefHeight="39.0" prefWidth="42.0" text=" " />
+               </children>
+            </AnchorPane>
+         </top>
+      </BorderPane>
       <MFXTableView fx:id="orderTable" layoutX="51.0" layoutY="184.0" prefHeight="387.0" prefWidth="898.0" />
       <MFXButton layoutX="51.0" layoutY="582.0" onAction="#onClickTornaButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
          <font>
