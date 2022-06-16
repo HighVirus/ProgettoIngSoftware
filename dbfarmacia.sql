@@ -83,7 +83,7 @@ WHERE codice_aic = '12745182' or codice_aic = '19655051'
 Ho inserito un dato a caso */
 
 INSERT INTO farmaco VALUES
-('026803080', 'omeprazen 10 MG 14 capsule rigide gastroresistenti', 'omeprazolo', 'no', '2023-01-01', 7.85, 45)
+('026803080', 'omeprazen 10 MG 14 capsule rigide gastroresistenti', 'omeprazolo', false, '2023-01-01', 7.85, 45)
 ;
 
 /* vendere un farmaco */
@@ -102,6 +102,6 @@ SET unita - (SELECT unita
 
 SELECT codice_aic, nome_farmaco
 FROM farmaco
-WHERE unita < 20
+WHERE unita < 50
 ;
 
