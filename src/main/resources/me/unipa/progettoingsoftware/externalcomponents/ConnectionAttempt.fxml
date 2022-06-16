@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<fx:root type="javafx.scene.layout.AnchorPane" prefHeight="216.0" prefWidth="483.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="216.0" prefWidth="483.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <DialogPane layoutY="-1.0" prefHeight="104.0" prefWidth="360.0" />
-      <Label layoutX="61.0" layoutY="60.0" prefHeight="97.0" prefWidth="361.0" text="Attenzione il sistema non è connesso al database, riconnessione in corso..." wrapText="true">
+      <Label layoutX="61.0" layoutY="34.0" prefHeight="97.0" prefWidth="361.0" text="Attenzione il sistema non è connesso al database, riconnessione in corso..." wrapText="true">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
+      <MFXProgressSpinner layoutX="216.0" layoutY="132.0" />
    </children>
 </fx:root>
