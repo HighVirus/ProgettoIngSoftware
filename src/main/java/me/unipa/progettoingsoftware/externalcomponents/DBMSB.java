@@ -11,7 +11,9 @@ import me.unipa.progettoingsoftware.utils.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -258,17 +260,29 @@ public class DBMSB {
     public CompletableFuture<List<Order>> getOrderList() {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT  FROM ordini ord, ")) {
-                List<Order> orderList = new ArrayList<>();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.data_consegna, far.partita_iva, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
+                         " WHERE farord.codice_ordine_fo=ord.codice_ordine AND farord.partita_iva_fo=far.partita_iva AND ord.codice_ordine=farmlistord.codice_ordine_o AND cat.codice_aic=farmlistord.codice_aic_o AND far.partita_iva=faracc.partita_iva AND faracc.IDACCOUNT_F=acc.ID")) {
+                Map<String, Order> orderMap = new HashMap<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     String orderCode = resultSet.getString("codice_ordine");
-                    Date deliveryDate = resultSet.getDate("data_consegna");
-                    String pivaFarmacia = resultSet.getString("partita_iva_f");
-                    orderList.add(new Order(orderCode, deliveryDate, pivaFarmacia));
+                    String codAic = resultSet.getString("codice_aic_o");
+                    String farmacoName = resultSet.getString("nome_farmaco");
+                    int unita = resultSet.getInt("unita");
+                    if (!orderMap.containsKey(orderCode)){
+                        Date deliveryDate = resultSet.getDate("data_consegna");
+                        String pivaFarmacia = resultSet.getString("partita_iva");
+                        String indirizzo = resultSet.getString("indirizzo");
+                        String cap = resultSet.getString("cap");
+                        String email = resultSet.getString("email");
+                        Order order = new Order(orderCode, deliveryDate, pivaFarmacia, indirizzo, cap, email);
+                        order.getFarmacoList().add(new Farmaco(codAic, farmacoName, unita));
+                        orderMap.put(orderCode, order);
+                    } else {
+                        orderMap.get(orderCode).getFarmacoList().add(new Farmaco(codAic, farmacoName, unita));
+                    }
                 }
-                return orderList;
-
+                return new ArrayList<>(orderMap.values());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

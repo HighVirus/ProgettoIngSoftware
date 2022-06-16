@@ -31,7 +31,7 @@ CREATE TABLE `account` (
   `password` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,12 +40,12 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES 
-(1,1,'Alessandro','Spank','alessandrospank@gmail.com','culocane'),
-(2,2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),
-(3,2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),
-(4,3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),
-(5,1,'Maria','Magro','mariamagro@gmail.com','treppitre');
+INSERT INTO `account` (type, nome, cognome, email, password) VALUES
+(1,'Alessandro','Spank','ciao','ciao'),
+(2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),
+(2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),
+(3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),
+(1,'Maria','Magro','mariamagro@gmail.com','treppitre');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +157,6 @@ CREATE TABLE `farmacia` (
   `nome_farmacia` varchar(255) DEFAULT NULL,
   `cap` varchar(255) DEFAULT NULL,
   `indirizzo` varchar(255) DEFAULT NULL,
-  `numero_civico` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`partita_iva`),
   UNIQUE KEY `partita_iva` (`partita_iva`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -170,8 +169,8 @@ CREATE TABLE `farmacia` (
 LOCK TABLES `farmacia` WRITE;
 /*!40000 ALTER TABLE `farmacia` DISABLE KEYS */;
 INSERT INTO `farmacia` VALUES 
-('15486232231','la mia farmacia','90115','via Ernesto Basile','64'),
-('45781004476','farmacia pennino','02475','viale Europa','41');
+('15486232231','la mia farmacia','90115','via Ernesto Basile 64'),
+('45781004476','farmacia pennino','02475','viale Europa 41');
 /*!40000 ALTER TABLE `farmacia` ENABLE KEYS */;
 UNLOCK TABLES;
 

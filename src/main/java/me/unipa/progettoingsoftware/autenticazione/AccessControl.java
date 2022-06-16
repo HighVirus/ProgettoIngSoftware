@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
+import me.unipa.progettoingsoftware.utils.ErrorsNotice;
+import me.unipa.progettoingsoftware.utils.GenericNotice;
 
 public class AccessControl {
     private final Stage stage;
@@ -54,8 +56,9 @@ public class AccessControl {
                         }
                     }
                     new HomePageAzienda(this.stage, fxmlLoader);
+                    new GenericNotice("Login effettuato con successo.");
                 } else
-                    System.out.println("Non trovato bro, mi disp xdxd");
+                    new ErrorsNotice("Login fallito, controlla i dati e riprova.");
             });
         });
     }
