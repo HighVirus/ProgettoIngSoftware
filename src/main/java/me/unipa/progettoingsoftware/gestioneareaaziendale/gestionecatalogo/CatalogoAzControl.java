@@ -1,6 +1,7 @@
 package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -21,12 +22,20 @@ public class CatalogoAzControl {
     private Farmaco farmacoToRemove;
 
     public void showCatalogoAziendale() {
-        this.gestioneCatalogoController = new GestioneCatalogoController(stage, this);
-        FXMLLoader fxmlLoader = new FXMLLoader(GestioneCatalogo.class.getResource("GestioneCatalogo.fxml"));
-        fxmlLoader.setRoot(this.gestioneCatalogoController);
-        fxmlLoader.setController(this.gestioneCatalogoController);
+        DBMSB.getAzienda().getFarmaciCatalogList().whenComplete((farmacoList, throwable) -> {
+            if (throwable != null)
+                throwable.printStackTrace();
+        }).thenAccept(farmacoList -> {
+            Platform.runLater(() -> {
+                this.gestioneCatalogoController = new GestioneCatalogoController(stage, this, farmacoList);
+                FXMLLoader fxmlLoader = new FXMLLoader(GestioneCatalogo.class.getResource("GestioneCatalogo.fxml"));
+                fxmlLoader.setRoot(this.gestioneCatalogoController);
+                fxmlLoader.setController(this.gestioneCatalogoController);
 
-        new GestioneCatalogo(this.stage, fxmlLoader);
+                new GestioneCatalogo(this.stage, fxmlLoader);
+            });
+        });
+
     }
 
     public void addProductRequest() {
@@ -62,9 +71,9 @@ public class CatalogoAzControl {
                         new ErrorsNotice("Il prodotto è gia presente all'interno del catalogo.");
                     else {
                         gestioneCatalogoController.getCatalogo().getItems().add(farmaco);
+                        gestioneCatalogoController.getCatalogo().update();
                         DBMSB.getAzienda().addFarmacoToCatalog(farmaco.getCodAic(), farmaco.getFarmacoName(),
                                 farmaco.getPrincipioAttivo(), farmaco.isPrescrivibile(), farmaco.getCosto());
-                        gestioneCatalogoController.getCatalogo().update();
                         aggiungiFarmacoController.getStage().close();
                     }
                 });

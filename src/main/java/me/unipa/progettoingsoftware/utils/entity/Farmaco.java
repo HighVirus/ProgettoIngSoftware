@@ -18,7 +18,11 @@ public class Farmaco {
     private final Double costo;
     private int unita;
 
-    public Farmaco(String codAic, String farmacoName, String principioAttivo, boolean prescrivibile, Double costo){
-        this(codAic, null, farmacoName, principioAttivo, prescrivibile, null, costo, 0);
+    public Farmaco(String codAic, String farmacoName, String principioAttivo, Double costo){
+        this(codAic, null, farmacoName, principioAttivo, false, null, costo, 0);
+    }
+
+    public Farmaco(String codAic, String farmacoName, String principioAttivo, boolean isPrescribile, Double costo){
+        this(codAic, null, farmacoName, principioAttivo, isPrescribile, null, costo, 0);
     }
 }

@@ -1,0 +1,135 @@
+package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionemagazzinoaziendale;
+
+import io.github.palexdev.materialfx.controls.MFXButton;
+import io.github.palexdev.materialfx.controls.MFXTableColumn;
+import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import io.github.palexdev.materialfx.filter.BooleanFilter;
+import io.github.palexdev.materialfx.filter.DoubleFilter;
+import io.github.palexdev.materialfx.filter.IntegerFilter;
+import io.github.palexdev.materialfx.filter.StringFilter;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
+import lombok.Getter;
+import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
+import me.unipa.progettoingsoftware.utils.Homepage;
+import me.unipa.progettoingsoftware.utils.entity.Farmaco;
+
+import java.util.Comparator;
+import java.util.List;
+
+public class StorageAziendaBController extends Homepage {
+
+    @FXML
+    @Getter
+    private MFXTableView<Farmaco> storage;
+    private final Stage stage;
+    private final StorageAziendaC storageAziendaC;
+    private final List<Farmaco> storageList;
+
+    public StorageAziendaBController(Stage stage, StorageAziendaC storageAziendaC, List<Farmaco> storageList) {
+        super(stage);
+        this.stage = stage;
+        this.storageAziendaC = storageAziendaC;
+        this.storageList = storageList;
+    }
+
+    public void setupTable() {
+        MFXTableColumn<Farmaco> codAicColumn = new MFXTableColumn<>("Codice AIC", true, Comparator.comparing(Farmaco::getCodAic));
+        codAicColumn.setMinWidth(80);
+        codAicColumn.resize(80, codAicColumn.getHeight());
+        codAicColumn.setColumnResizable(false);
+        MFXTableColumn<Farmaco> lottoColumn = new MFXTableColumn<>("Lotto", true, Comparator.comparing(Farmaco::getLotto));
+        lottoColumn.setMinWidth(80);
+        lottoColumn.resize(80, lottoColumn.getHeight());
+        lottoColumn.setColumnResizable(false);
+        MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome", true, Comparator.comparing(Farmaco::getFarmacoName));
+        farmacoNameColumn.setPrefWidth(250);
+        farmacoNameColumn.setColumnResizable(false);
+        MFXTableColumn<Farmaco> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
+        principioAttivoColumn.setPrefWidth(100);
+        principioAttivoColumn.setColumnResizable(false);
+        MFXTableColumn<Farmaco> prescrivibileColumn = new MFXTableColumn<>("Prescrivibile", true, Comparator.comparing(Farmaco::isPrescrivibile));
+        prescrivibileColumn.setMinWidth(80);
+        prescrivibileColumn.resize(80, prescrivibileColumn.getHeight());
+        prescrivibileColumn.setColumnResizable(false);
+
+        MFXTableColumn<Farmaco> expireDateColumn = new MFXTableColumn<>("Data di scadenza", true, Comparator.comparing(Farmaco::getScadenza));
+        expireDateColumn.setMinWidth(90);
+        expireDateColumn.resize(90, expireDateColumn.getHeight());
+        expireDateColumn.setColumnResizable(false);
+
+        MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
+        costoColumn.setMinWidth(65);
+        costoColumn.resize(65, costoColumn.getHeight());
+        costoColumn.setColumnResizable(false);
+
+        MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getUnita));
+        unitaColumn.setMinWidth(70);
+        unitaColumn.resize(70, unitaColumn.getHeight());
+        unitaColumn.setColumnResizable(false);
+
+
+        MFXTableColumn<Farmaco> removeColumn = new MFXTableColumn<>("", false);
+        removeColumn.setMinWidth(50);
+        removeColumn.resize(50, lottoColumn.getHeight());
+        removeColumn.setColumnResizable(false);
+        removeColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
+            private final MFXButton deleteButton = new MFXButton("X");
+
+            @Override
+            public void update(Farmaco farmaco) {
+                if (farmaco == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                deleteButton.setStyle("-fx-background-color: #FF595E;" + "-fx-font-weight: bold;");
+                deleteButton.setTextFill(Paint.valueOf("WHITE"));
+
+                setGraphic(deleteButton);
+                deleteButton.setOnAction(event -> {
+                   // storageAziendaC.setFarmacoToRemove(farmaco);
+                    //storageAziendaC.showConfirmRemNotice();
+                });
+            }
+        });
+
+
+        codAicColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCodAic));
+        lottoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getLotto));
+        farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
+        principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
+        prescrivibileColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::isPrescrivibile));
+        expireDateColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getScadenza));
+        costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
+        unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
+
+        storage.getTableColumns().addAll(codAicColumn, lottoColumn, farmacoNameColumn, principioAttivoColumn, prescrivibileColumn, expireDateColumn, costoColumn, unitaColumn, removeColumn);
+        storage.getFilters().addAll(
+                new StringFilter<>("Codice AIC", Farmaco::getCodAic),
+                new StringFilter<>("Lotto", Farmaco::getLotto),
+                new StringFilter<>("Nome", Farmaco::getFarmacoName),
+                new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
+                new BooleanFilter<>("Prescrivibilità", Farmaco::isPrescrivibile),
+                new DoubleFilter<>("Costo", Farmaco::getCosto),
+                new IntegerFilter<>("Unita", Farmaco::getUnita)
+        );
+
+        storage.setItems(FXCollections.observableArrayList(storageList));
+
+
+    }
+
+    @FXML
+    public void onClickTornaButton(ActionEvent event) {
+        new HomePageAzienda(this.stage, new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml")));
+    }
+}

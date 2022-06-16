@@ -39,7 +39,7 @@
             <Font size="24.0" />
          </font>
       </MFXButton>
-      <MFXButton layoutX="21.0" layoutY="267.0" onAction="#onClickOrdiniButton" prefHeight="280.0" prefWidth="280.0" text="Gestione Magazzino" textFill="#1c7c54" wrapText="true">
+      <MFXButton layoutX="21.0" layoutY="267.0" onAction="#onClickStorAzButton" prefHeight="280.0" prefWidth="280.0" text="Gestione Magazzino" textFill="#1c7c54" wrapText="true">
          <font>
             <Font size="24.0" />
          </font>

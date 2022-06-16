@@ -20,6 +20,7 @@ import me.unipa.progettoingsoftware.utils.Homepage;
 import me.unipa.progettoingsoftware.utils.entity.Farmaco;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class GestioneCatalogoController extends Homepage {
 
@@ -28,11 +29,13 @@ public class GestioneCatalogoController extends Homepage {
     private MFXTableView<Farmaco> catalogo;
     private final Stage stage;
     private final CatalogoAzControl catalogoAzControl;
+    private final List<Farmaco> catalogList;
 
-    public GestioneCatalogoController(Stage stage, CatalogoAzControl catalogoAzControl) {
+    public GestioneCatalogoController(Stage stage, CatalogoAzControl catalogoAzControl, List<Farmaco> catalogList) {
         super(stage);
         this.stage = stage;
         this.catalogoAzControl = catalogoAzControl;
+        this.catalogList = catalogList;
     }
 
     public void setupTable() {
@@ -79,14 +82,9 @@ public class GestioneCatalogoController extends Homepage {
                 new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
                 new DoubleFilter<>("Costo", Farmaco::getCosto)
         );
-        DBMSB.getAzienda().getFarmaciCatalogList().whenComplete((farmacoList, throwable) -> {
-            if (throwable != null)
-                throwable.printStackTrace();
-        }).thenAccept(farmacoList -> {
-            Platform.runLater(() -> {
-                catalogo.setItems(FXCollections.observableArrayList(farmacoList));
-            });
-        });
+
+        catalogo.setItems(FXCollections.observableArrayList(catalogList));
+
 
     }
 

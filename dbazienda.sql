@@ -40,7 +40,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,1,'Alessandro','Spank','alessandrospank@gmail.com','culocane'),(2,2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),(3,2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),(4,3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),(5,1,'Maria','Magro','mariamagro@gmail.com','treppitre');
+INSERT INTO `account` VALUES (1,'Alessandro','Spank','ciao','ciao'),(2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),(2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),(3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),(1,'Maria','Magro','mariamagro@gmail.com','treppitre');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -55,6 +55,7 @@ CREATE TABLE `catalogo_aziendale` (
   `codice_aic` varchar(8) NOT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) NOT NULL,
+  `prescrivibilita` boolean NOT NULL,
   `costo` double DEFAULT '0',
   PRIMARY KEY (`codice_aic`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -135,7 +136,7 @@ CREATE TABLE `magazzino_aziendale` (
   `lotto` varchar(9) DEFAULT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) NOT NULL,
-  `prescrivibilita` varchar(2) NOT NULL,
+  `prescrivibilita` boolean NOT NULL,
   `data_scadenza` date DEFAULT NULL,
   `costo` double DEFAULT '0',
   `unita` int NOT NULL DEFAULT '0',

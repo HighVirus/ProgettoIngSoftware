@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionemagazzinoaziendale.StorageAziendaC;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
 public class HomePageAziendaController extends Homepage {
@@ -22,7 +23,8 @@ public class HomePageAziendaController extends Homepage {
         new CatalogoAzControl(stage).showCatalogoAziendale();
     }
 
-    public void onClickMagazzinoButton(ActionEvent event) {
+    public void onClickStorAzButton(ActionEvent event) {
+        new StorageAziendaC(stage).showAziendaStorage();
     }
 
     public void onClickOrdiniButton(ActionEvent event) {
