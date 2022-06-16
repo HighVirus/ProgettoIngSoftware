@@ -40,7 +40,12 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,'Alessandro','Spank','ciao','ciao'),(2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),(2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),(3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),(1,'Maria','Magro','mariamagro@gmail.com','treppitre');
+INSERT INTO `account` VALUES 
+(1,1,'Alessandro','Spank','alessandrospank@gmail.com','culocane'),
+(2,2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),
+(3,2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),
+(4,3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),
+(5,1,'Maria','Magro','mariamagro@gmail.com','treppitre');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -52,10 +57,9 @@ DROP TABLE IF EXISTS `catalogo_aziendale`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `catalogo_aziendale` (
-  `codice_aic` varchar(8) NOT NULL,
+  `codice_aic` varchar(9) NOT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) NOT NULL,
-  `prescrivibilita` boolean NOT NULL,
   `costo` double DEFAULT '0',
   PRIMARY KEY (`codice_aic`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -78,12 +82,12 @@ DROP TABLE IF EXISTS `corriere_as`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `corriere_as` (
-  `IDCORRIERE_C` int NOT NULL AUTO_INCREMENT,
   `codice_ordine_c` varchar(5) NOT NULL,
-  PRIMARY KEY (`IDCORRIERE_C`,`codice_ordine_c`),
-  KEY `codice_ordine_c` (`codice_ordine_c`),
-  CONSTRAINT `corriere_as_ibfk_1` FOREIGN KEY (`IDCORRIERE_C`) REFERENCES `account` (`ID`),
-  CONSTRAINT `corriere_as_ibfk_2` FOREIGN KEY (`codice_ordine_c`) REFERENCES `ordini` (`codice_ordine`)
+  `idaccount_c` int NOT NULL,
+  PRIMARY KEY (`codice_ordine_c`,`idaccount_c`),
+  KEY `idaccount_c` (`idaccount_c`),
+  CONSTRAINT `corriere_as_ibfk_1` FOREIGN KEY (`codice_ordine_c`) REFERENCES `ordini` (`codice_ordine`),
+  CONSTRAINT `corriere_as_ibfk_2` FOREIGN KEY (`idaccount_c`) REFERENCES `account` (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -93,6 +97,8 @@ CREATE TABLE `corriere_as` (
 
 LOCK TABLES `corriere_as` WRITE;
 /*!40000 ALTER TABLE `corriere_as` DISABLE KEYS */;
+INSERT INTO `corriere_as` VALUES 
+('47811',4);
 /*!40000 ALTER TABLE `corriere_as` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,7 +125,9 @@ CREATE TABLE `farmaccount` (
 
 LOCK TABLES `farmaccount` WRITE;
 /*!40000 ALTER TABLE `farmaccount` DISABLE KEYS */;
-INSERT INTO `farmaccount` VALUES (2,'15486232231'),(3,'45781004476');
+INSERT INTO `farmaccount` VALUES 
+(2,'15486232231'),
+(3,'45781004476');
 /*!40000 ALTER TABLE `farmaccount` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -131,11 +139,12 @@ DROP TABLE IF EXISTS `farmacia`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `farmacia` (
-  `partita_iva` varchar(11) DEFAULT NULL,
+  `partita_iva` varchar(11) NOT NULL,
   `nome_farmacia` varchar(255) DEFAULT NULL,
   `cap` varchar(255) DEFAULT NULL,
   `indirizzo` varchar(255) DEFAULT NULL,
   `numero_civico` varchar(5) DEFAULT NULL,
+  PRIMARY KEY (`partita_iva`),
   UNIQUE KEY `partita_iva` (`partita_iva`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -146,8 +155,36 @@ CREATE TABLE `farmacia` (
 
 LOCK TABLES `farmacia` WRITE;
 /*!40000 ALTER TABLE `farmacia` DISABLE KEYS */;
-INSERT INTO `farmacia` VALUES ('15486232231','la mia farmacia','90115','via Ernesto Basile','64'),('45781004476','farmacia pennino','02475','viale Europa','41');
+INSERT INTO `farmacia` VALUES 
+('15486232231','la mia farmacia','90115','via Ernesto Basile','64'),
+('45781004476','farmacia pennino','02475','viale Europa','41');
 /*!40000 ALTER TABLE `farmacia` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `farmacia_ord`
+--
+
+DROP TABLE IF EXISTS `farmacia_ord`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `farmacia_ord` (
+  `codice_ordine_fo` varchar(5) NOT NULL,
+  `partita_iva_fo` varchar(11) NOT NULL,
+  PRIMARY KEY (`codice_ordine_fo`,`partita_iva_fo`),
+  KEY `partita_iva_fo` (`partita_iva_fo`),
+  CONSTRAINT `farmacia_ord_ibfk_1` FOREIGN KEY (`codice_ordine_fo`) REFERENCES `ordini` (`codice_ordine`),
+  CONSTRAINT `farmacia_ord_ibfk_2` FOREIGN KEY (`partita_iva_fo`) REFERENCES `farmacia` (`partita_iva`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `farmacia_ord`
+--
+
+LOCK TABLES `farmacia_ord` WRITE;
+/*!40000 ALTER TABLE `farmacia_ord` DISABLE KEYS */;
+/*!40000 ALTER TABLE `farmacia_ord` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -184,11 +221,11 @@ DROP TABLE IF EXISTS `magazzino_aziendale`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `magazzino_aziendale` (
-  `codice_aic` varchar(8) NOT NULL,
+  `codice_aic` varchar(9) NOT NULL,
   `lotto` varchar(9) DEFAULT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) NOT NULL,
-  `prescrivibilita` boolean NOT NULL,
+  `prescrivibilita` varchar(2) NOT NULL,
   `data_scadenza` date DEFAULT NULL,
   `costo` double DEFAULT '0',
   `unita` int NOT NULL DEFAULT '0',
@@ -234,6 +271,34 @@ LOCK TABLES `magcat` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ord_far`
+--
+
+DROP TABLE IF EXISTS `ord_far`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ord_far` (
+  `codice_ordine_o` varchar(5) NOT NULL,
+  `codice_aic_o` varchar(9) NOT NULL,
+  `unita` int NOT NULL,
+  PRIMARY KEY (`codice_ordine_o`,`codice_aic_o`),
+  KEY `codice_aic_o` (`codice_aic_o`),
+  CONSTRAINT `ord_far_ibfk_1` FOREIGN KEY (`codice_ordine_o`) REFERENCES `ordini` (`codice_ordine`),
+  CONSTRAINT `ord_far_ibfk_2` FOREIGN KEY (`codice_aic_o`) REFERENCES `magazzino_aziendale` (`codice_aic`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ord_far`
+--
+
+LOCK TABLES `ord_far` WRITE;
+/*!40000 ALTER TABLE `ord_far` DISABLE KEYS */;
+INSERT INTO `ord_far` VALUES ('47811','24840074',550),('47811','27860016',350);
+/*!40000 ALTER TABLE `ord_far` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ordini`
 --
 
@@ -243,12 +308,8 @@ DROP TABLE IF EXISTS `ordini`;
 CREATE TABLE `ordini` (
   `codice_ordine` varchar(5) NOT NULL,
   `data_consegna` date NOT NULL,
-  `id_corriere` int NOT NULL AUTO_INCREMENT,
-  `codice_aic_farmaco` varchar(9) DEFAULT NULL,
-  `partita_iva_f` varchar(11) DEFAULT NULL,
-  PRIMARY KEY (`codice_ordine`),
-  UNIQUE KEY `id_corriere` (`id_corriere`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`codice_ordine`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -257,7 +318,7 @@ CREATE TABLE `ordini` (
 
 LOCK TABLES `ordini` WRITE;
 /*!40000 ALTER TABLE `ordini` DISABLE KEYS */;
-INSERT INTO `ordini` VALUES ('47811','2022-07-05',4,'12745182','94165746623');
+INSERT INTO `ordini` VALUES ('47811','2022-07-05');
 /*!40000 ALTER TABLE `ordini` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -270,4 +331,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-15 22:12:22
+-- Dump completed on 2022-06-16 14:44:21
