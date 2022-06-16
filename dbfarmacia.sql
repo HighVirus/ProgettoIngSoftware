@@ -27,7 +27,7 @@ CREATE TABLE `farmaco` (
   `lotto` varchar(9) DEFAULT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) DEFAULT NULL,
-  `prescrivibilita` varchar(2) NOT NULL,
+  `prescrivibilita` boolean NOT NULL,
   `data_scadenza` date DEFAULT NULL,
   `costo` float DEFAULT '0',
   `unita` int NOT NULL DEFAULT '0',
@@ -42,13 +42,13 @@ CREATE TABLE `farmaco` (
 LOCK TABLES `farmaco` WRITE;
 /*!40000 ALTER TABLE `farmaco` DISABLE KEYS */;
 INSERT INTO `farmaco` VALUES 
-('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo','no','2027-07-01',4.54,250),
-('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo','no','2025-06-01',12.5,15),
-('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone','no','2022-07-01',1.35,19),
-('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico','si','2022-09-01',2.35,40),
-('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina','si','2023-05-01',8.5,21),
-('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene','si','2024-12-01',6.67,150),
-('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene','si','2022-07-01',4.75,25)
+('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',true,'2027-07-01',4.54,250),
+('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',false,'2025-06-01',12.5,15),
+('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',true,'2022-07-01',1.35,19),
+('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',true,'2022-09-01',2.35,40),
+('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',true,'2023-05-01',8.5,21),
+('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene', false,'2024-12-01',6.67,150),
+('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',true ,'2022-07-01',4.75,25)
 ;
 
 
