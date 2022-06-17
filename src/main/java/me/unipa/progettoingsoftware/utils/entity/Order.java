@@ -13,6 +13,7 @@ public class Order {
     private final String orderCode;
     private final Date deliveryDate;
     private final String pivaFarmacia;
+    private final String farmaciaName;
     private final String indirizzo;
     private final String cap;
     private final String email;

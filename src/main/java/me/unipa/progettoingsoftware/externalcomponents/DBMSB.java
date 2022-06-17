@@ -260,7 +260,7 @@ public class DBMSB {
     public CompletableFuture<List<Order>> getOrderList() {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.data_consegna, far.partita_iva, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.data_consegna, far.partita_iva, far.nome_farmacia, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
                          " WHERE farord.codice_ordine_fo=ord.codice_ordine AND farord.partita_iva_fo=far.partita_iva AND ord.codice_ordine=farmlistord.codice_ordine_o AND cat.codice_aic=farmlistord.codice_aic_o AND far.partita_iva=faracc.partita_iva AND faracc.IDACCOUNT_F=acc.ID")) {
                 Map<String, Order> orderMap = new HashMap<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -272,10 +272,11 @@ public class DBMSB {
                     if (!orderMap.containsKey(orderCode)){
                         Date deliveryDate = resultSet.getDate("data_consegna");
                         String pivaFarmacia = resultSet.getString("partita_iva");
+                        String farmaciaName = resultSet.getString("nome_farmacia");
                         String indirizzo = resultSet.getString("indirizzo");
                         String cap = resultSet.getString("cap");
                         String email = resultSet.getString("email");
-                        Order order = new Order(orderCode, deliveryDate, pivaFarmacia, indirizzo, cap, email);
+                        Order order = new Order(orderCode, deliveryDate, pivaFarmacia, farmaciaName, indirizzo, cap, email);
                         order.getFarmacoList().add(new Farmaco(codAic, farmacoName, unita));
                         orderMap.put(orderCode, order);
                     } else {

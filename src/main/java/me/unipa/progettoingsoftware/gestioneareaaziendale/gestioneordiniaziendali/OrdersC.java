@@ -9,16 +9,12 @@ import lombok.Setter;
 import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNotice;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNoticeController;
-import me.unipa.progettoingsoftware.utils.GenericNotice;
 import me.unipa.progettoingsoftware.utils.entity.Order;
 
 @RequiredArgsConstructor
 public class OrdersC {
     private final Stage stage;
     private OrderListBController orderListBController;
-    @Getter
-    @Setter
-    private Order order;
 
     public void showOrderList() {
         DBMSB.getAzienda().getOrderList().whenComplete((orders, throwable) -> {
@@ -36,12 +32,12 @@ public class OrdersC {
         });
     }
 
-    /*public void showOrderDetail() {
-        ConfirmRemNoticeController confirmRemNoticeController = new ConfirmRemNoticeController(this);
-        FXMLLoader fxmlLoader = new FXMLLoader(ConfirmRemNotice.class.getResource("ConfirmRemNotice.fxml"));
-        fxmlLoader.setRoot(confirmRemNoticeController);
-        fxmlLoader.setController(confirmRemNoticeController);
-        new ConfirmRemNotice(new Stage(), fxmlLoader);
-    }*/
+    public void showInfoOrder(Order order) {
+        InfoOrderBController infoOrderBController = new InfoOrderBController(order);
+        FXMLLoader fxmlLoader = new FXMLLoader(InfoOrderB.class.getResource("InfoOrderB.fxml"));
+        fxmlLoader.setRoot(infoOrderBController);
+        fxmlLoader.setController(infoOrderBController);
+        new InfoOrderB(new Stage(), fxmlLoader);
+    }
 
 }
