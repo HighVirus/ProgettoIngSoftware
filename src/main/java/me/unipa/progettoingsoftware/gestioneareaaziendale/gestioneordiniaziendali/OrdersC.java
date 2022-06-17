@@ -40,4 +40,20 @@ public class OrdersC {
         new InfoOrderB(new Stage(), fxmlLoader);
     }
 
+    public void showCreateOrder() {
+        DBMSB.getAzienda().getFarmaciCatalogList().whenComplete((farmacos, throwable) -> {
+            if (throwable != null)
+                throwable.printStackTrace();
+        }).thenAccept(farmacos -> {
+            Platform.runLater(() -> {
+                OrderWindowBController orderWindowBController = new OrderWindowBController(farmacos, this);
+                FXMLLoader fxmlLoader = new FXMLLoader(OrderWindowB.class.getResource("OrderWindowB.fxml"));
+                fxmlLoader.setRoot(orderWindowBController);
+                fxmlLoader.setController(orderWindowBController);
+                new OrderWindowB(new Stage(), fxmlLoader);
+            });
+        });
+
+    }
+
 }

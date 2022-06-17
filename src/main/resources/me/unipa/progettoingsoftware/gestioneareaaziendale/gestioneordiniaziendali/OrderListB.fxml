@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650" prefWidth="1000" style="-fx-background-color: #DBDBDB;" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650" prefWidth="1000" style="-fx-background-color: #DBDBDB;" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane prefHeight="120.0" prefWidth="1000.0">
          <top>
@@ -32,6 +32,11 @@
          </top>
       </BorderPane>
       <MFXButton layoutX="51.0" layoutY="582.0" onAction="#onClickTornaButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </MFXButton>
+      <MFXButton layoutX="726.0" layoutY="582.0" onAction="#onClickCreateOrderButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Crea nuovo ordine" textFill="WHITE">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

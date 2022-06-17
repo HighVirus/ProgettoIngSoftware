@@ -21,7 +21,6 @@ import java.util.Comparator;
 public class InfoOrderBController extends AnchorPane {
 
     @FXML
-    @Getter
     private MFXTableView<Farmaco> farmacoTable;
     private final Order order;
 

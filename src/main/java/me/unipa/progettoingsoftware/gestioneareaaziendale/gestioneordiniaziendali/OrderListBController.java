@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import lombok.Getter;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.utils.Homepage;
 import me.unipa.progettoingsoftware.utils.entity.Order;
@@ -24,7 +23,6 @@ import java.util.List;
 public class OrderListBController extends Homepage {
 
     @FXML
-    @Getter
     private MFXTableView<Order> orderTable;
     private final Stage stage;
     private final OrdersC ordersC;
@@ -90,5 +88,10 @@ public class OrderListBController extends Homepage {
     @FXML
     public void onClickTornaButton(ActionEvent event) {
         new HomePageAzienda(this.stage, new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml")));
+    }
+
+    @FXML
+    public void onClickCreateOrderButton(ActionEvent event){
+        ordersC.showCreateOrder();
     }
 }
