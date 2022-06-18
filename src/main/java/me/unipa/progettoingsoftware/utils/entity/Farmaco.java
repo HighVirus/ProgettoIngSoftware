@@ -3,6 +3,7 @@ package me.unipa.progettoingsoftware.utils.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Date;
 
@@ -16,6 +17,7 @@ public class Farmaco {
     private final boolean prescrivibile;
     private final Date scadenza;
     private final Double costo;
+    @Setter
     private int unita;
 
     public Farmaco(String codAic, String farmacoName, String principioAttivo, Double costo){
@@ -26,7 +28,10 @@ public class Farmaco {
         this(codAic, null, farmacoName, null, false, null, 0D, unita);
     }
 
-    public Farmaco(String codAic, String farmacoName, String principioAttivo, boolean isPrescribile, Double costo){
-        this(codAic, null, farmacoName, principioAttivo, isPrescribile, null, costo, 0);
+    public Farmaco(String codAic, String farmacoName, String principioAttivo, boolean isPrescrivibile, Double costo){
+        this(codAic, null, farmacoName, principioAttivo, isPrescrivibile, null, costo, 0);
+    }
+    public Farmaco(String codAic, String lotto, String farmacoName, String principioAttivo, boolean isPrescrivibile, Date expireDate, int unita){
+        this(codAic, lotto, farmacoName, principioAttivo, isPrescrivibile, expireDate, null, unita);
     }
 }

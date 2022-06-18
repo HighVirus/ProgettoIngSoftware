@@ -223,7 +223,6 @@ CREATE TABLE `magazzino_aziendale` (
   `data_scadenza` date DEFAULT NULL,
   `costo` double DEFAULT '0',
   `unita` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`codice_aic`),
   UNIQUE KEY `lotto` (`lotto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -236,6 +235,7 @@ LOCK TABLES `magazzino_aziendale` WRITE;
 /*!40000 ALTER TABLE `magazzino_aziendale` DISABLE KEYS */;
 INSERT INTO `magazzino_aziendale` VALUES 
 ('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo', false ,'2027-07-01',4.54,4503),
+('12745182','abe790','tachipirina 1000 mg 16 compresse','paracetamolo', false ,'2028-07-01',4.54,4503),
 ('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo', true,'2025-06-01',12.5,157),
 ('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',false ,'2022-07-01',1.35,19),
 ('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',false ,'2022-09-01',2.35,871),
@@ -255,10 +255,7 @@ DROP TABLE IF EXISTS `magcat`;
 CREATE TABLE `magcat` (
   `codice_aic` varchar(8) NOT NULL,
   `lotto` varchar(9) NOT NULL,
-  `nome_farmaco` varchar(255) NOT NULL,
-  PRIMARY KEY (`codice_aic`),
-  CONSTRAINT `magcat_ibfk_1` FOREIGN KEY (`codice_aic`) REFERENCES `catalogo_aziendale` (`codice_aic`),
-  CONSTRAINT `magcat_ibfk_2` FOREIGN KEY (`codice_aic`) REFERENCES `magazzino_aziendale` (`codice_aic`)
+  `nome_farmaco` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -284,8 +281,7 @@ CREATE TABLE `ord_far` (
   `unita` int NOT NULL,
   PRIMARY KEY (`codice_ordine_o`,`codice_aic_o`),
   KEY `codice_aic_o` (`codice_aic_o`),
-  CONSTRAINT `ord_far_ibfk_1` FOREIGN KEY (`codice_ordine_o`) REFERENCES `ordini` (`codice_ordine`),
-  CONSTRAINT `ord_far_ibfk_2` FOREIGN KEY (`codice_aic_o`) REFERENCES `magazzino_aziendale` (`codice_aic`)
+  CONSTRAINT `ord_far_ibfk_1` FOREIGN KEY (`codice_ordine_o`) REFERENCES `ordini` (`codice_ordine`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

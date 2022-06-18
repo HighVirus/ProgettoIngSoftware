@@ -45,42 +45,33 @@ public class StorageAziendaBController extends Homepage {
         MFXTableColumn<Farmaco> codAicColumn = new MFXTableColumn<>("Codice AIC", true, Comparator.comparing(Farmaco::getCodAic));
         codAicColumn.setMinWidth(80);
         codAicColumn.resize(80, codAicColumn.getHeight());
-        codAicColumn.setColumnResizable(false);
-        MFXTableColumn<Farmaco> lottoColumn = new MFXTableColumn<>("Lotto", true, Comparator.comparing(Farmaco::getLotto));
+        MFXTableColumn<Farmaco> lottoColumn = new MFXTableColumn<>("Lotto", false, Comparator.comparing(Farmaco::getLotto));
         lottoColumn.setMinWidth(80);
         lottoColumn.resize(80, lottoColumn.getHeight());
-        lottoColumn.setColumnResizable(false);
-        MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome", true, Comparator.comparing(Farmaco::getFarmacoName));
+        MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome", false, Comparator.comparing(Farmaco::getFarmacoName));
         farmacoNameColumn.setPrefWidth(250);
-        farmacoNameColumn.setColumnResizable(false);
-        MFXTableColumn<Farmaco> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
+        MFXTableColumn<Farmaco> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
         principioAttivoColumn.setPrefWidth(100);
-        principioAttivoColumn.setColumnResizable(false);
-        MFXTableColumn<Farmaco> prescrivibileColumn = new MFXTableColumn<>("Prescrivibile", true, Comparator.comparing(Farmaco::isPrescrivibile));
+        MFXTableColumn<Farmaco> prescrivibileColumn = new MFXTableColumn<>("Prescrivibile", false, Comparator.comparing(Farmaco::isPrescrivibile));
         prescrivibileColumn.setMinWidth(80);
         prescrivibileColumn.resize(80, prescrivibileColumn.getHeight());
-        prescrivibileColumn.setColumnResizable(false);
 
-        MFXTableColumn<Farmaco> expireDateColumn = new MFXTableColumn<>("Data di scadenza", true, Comparator.comparing(Farmaco::getScadenza));
+        MFXTableColumn<Farmaco> expireDateColumn = new MFXTableColumn<>("Data di scadenza", false, Comparator.comparing(Farmaco::getScadenza));
         expireDateColumn.setMinWidth(90);
         expireDateColumn.resize(90, expireDateColumn.getHeight());
-        expireDateColumn.setColumnResizable(false);
 
-        MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
+        MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
         costoColumn.setMinWidth(65);
         costoColumn.resize(65, costoColumn.getHeight());
-        costoColumn.setColumnResizable(false);
 
-        MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getUnita));
+        MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", false, Comparator.comparing(Farmaco::getUnita));
         unitaColumn.setMinWidth(70);
         unitaColumn.resize(70, unitaColumn.getHeight());
-        unitaColumn.setColumnResizable(false);
 
 
         MFXTableColumn<Farmaco> removeColumn = new MFXTableColumn<>("", false);
         removeColumn.setMinWidth(50);
         removeColumn.resize(50, lottoColumn.getHeight());
-        removeColumn.setColumnResizable(false);
         removeColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
             private final MFXButton deleteButton = new MFXButton("X");
 

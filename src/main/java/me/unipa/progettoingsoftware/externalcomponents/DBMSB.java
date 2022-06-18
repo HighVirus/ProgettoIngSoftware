@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -34,7 +34,7 @@ public class DBMSB {
     private final boolean ssl = false;
     private HikariDataSource hikariDataSource;
     private final HikariConfig hikariConfig = new HikariConfig();
-    private final Executor executor;
+    private final ExecutorService executor;
     private Connection connection;
 
     private DBMSB(String database, int port, String username, String password) {
@@ -61,6 +61,13 @@ public class DBMSB {
 
         hikariDataSource = new HikariDataSource(hikariConfig);
         return hikariDataSource.getConnection();
+    }
+
+    public void closePool() {
+        if (hikariDataSource != null && !hikariDataSource.isClosed()) {
+            hikariDataSource.close();
+        }
+        executor.shutdown();
     }
 
     public synchronized Connection getConnection() throws SQLException {
@@ -243,6 +250,46 @@ public class DBMSB {
         }, executor);
     }
 
+    public CompletableFuture<List<Farmaco>> getFarmacoListFromStorage(String codice_aic) {
+        String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "magazzino_farmacia";
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + STORAGE_TABLE + " WHERE codice_aic = ?")) {
+                preparedStatement.setString(1, codice_aic);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                List<Farmaco> farmacoList = new ArrayList<>();
+                while (resultSet.next()) {
+                    String codAic = resultSet.getString("codice_aic");
+                    String lotto = resultSet.getString("lotto");
+                    String farmacoName = resultSet.getString("nome_farmaco");
+                    String principioAttivo = resultSet.getString("principio_attivo");
+                    boolean prescrivibilita = resultSet.getBoolean("prescrivilita");
+                    Date expireDate = resultSet.getDate("data_scadenza");
+                    int unita = resultSet.getInt("unita");
+                    farmacoList.add(new Farmaco(codAic, lotto, farmacoName, principioAttivo, prescrivibilita, expireDate, unita));
+                }
+                return farmacoList;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public CompletableFuture<Boolean> checkFarmacoAvailability(String codice_aic, int quantity) {
+        String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "magazzino_farmacia";
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("select sum(unita) from " + STORAGE_TABLE + " where codice_aic=? group by codice_aic having sum(unita)>=?")) {
+                preparedStatement.setString(1, codice_aic);
+                preparedStatement.setInt(2, quantity);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                return resultSet.next();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
     public void removeFarmacoFromStorage(String codiceAic, String lotto) {
         String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "magazzino_farmacia";
         CompletableFuture.runAsync(() -> {
@@ -251,6 +298,19 @@ public class DBMSB {
                 preparedStatement.setString(1, codiceAic);
                 preparedStatement.setString(2, lotto);
                 preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public CompletableFuture<List<String>> getFarmaciaInfo(String piva) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT far.nome_farmacia, acc.email, far.indirizzo, far.cap FROM farmacia far, account acc, farmaccount faracc WHERE far.partita_iva=faracc.partita_iva AND faracc.IDACCOUNT_F=acc.ID AND far.partita_iva=?")) {
+                preparedStatement.setString(1, piva);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                return null;  //TO DO finire questo metodo
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -269,7 +329,7 @@ public class DBMSB {
                     String codAic = resultSet.getString("codice_aic_o");
                     String farmacoName = resultSet.getString("nome_farmaco");
                     int unita = resultSet.getInt("unita");
-                    if (!orderMap.containsKey(orderCode)){
+                    if (!orderMap.containsKey(orderCode)) {
                         Date deliveryDate = resultSet.getDate("data_consegna");
                         String pivaFarmacia = resultSet.getString("partita_iva");
                         String farmaciaName = resultSet.getString("nome_farmacia");
