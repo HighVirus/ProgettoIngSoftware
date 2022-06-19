@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.externalcomponents;
+package me.unipa.progettoingsoftware.gestionedati;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -310,7 +310,15 @@ public class DBMSB {
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT far.nome_farmacia, acc.email, far.indirizzo, far.cap FROM farmacia far, account acc, farmaccount faracc WHERE far.partita_iva=faracc.partita_iva AND faracc.IDACCOUNT_F=acc.ID AND far.partita_iva=?")) {
                 preparedStatement.setString(1, piva);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                return null;  //TO DO finire questo metodo
+                List<String> infoList = new ArrayList<>();
+                if (resultSet.next()) {
+                    infoList.add(resultSet.getString("nome_farmacia"));
+                    infoList.add(resultSet.getString("email"));
+                    infoList.add(resultSet.getString("indirizzo"));
+                    infoList.add(resultSet.getString("cap"));
+                }
+                return infoList;
+
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -344,6 +352,38 @@ public class DBMSB {
                     }
                 }
                 return new ArrayList<>(orderMap.values());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public void addFarmaciToStorage(Farmaco farmaco) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO magazzino_aziendale (?,?,?,?,?,?,?,?)")) {
+                preparedStatement.setString(1, farmaco.getCodAic());
+                preparedStatement.setString(2, farmaco.getLotto());
+                preparedStatement.setString(3, farmaco.getFarmacoName());
+                preparedStatement.setString(4, farmaco.getPrincipioAttivo());
+                preparedStatement.setBoolean(5, farmaco.isPrescrivibile());
+                preparedStatement.setDate(6, farmaco.getScadenza());
+                preparedStatement.setDouble(7, farmaco.getCosto());
+                preparedStatement.setInt(8, farmaco.getUnita());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public void removeFarmaciExpired() {
+        String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "magazzino_farmacia";
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + STORAGE_TABLE + " WHERE data_scadenza<?")) {
+                preparedStatement.setDate(1, new Date(System.currentTimeMillis()));
+                preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

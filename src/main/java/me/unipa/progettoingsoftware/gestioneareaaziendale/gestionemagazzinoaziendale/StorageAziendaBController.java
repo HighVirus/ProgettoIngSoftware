@@ -8,7 +8,6 @@ import io.github.palexdev.materialfx.filter.BooleanFilter;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,9 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
-import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
 import me.unipa.progettoingsoftware.utils.Homepage;
 import me.unipa.progettoingsoftware.utils.entity.Farmaco;
 

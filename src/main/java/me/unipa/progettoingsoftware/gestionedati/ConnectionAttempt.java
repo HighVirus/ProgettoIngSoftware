@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.externalcomponents;
+package me.unipa.progettoingsoftware.gestionedati;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

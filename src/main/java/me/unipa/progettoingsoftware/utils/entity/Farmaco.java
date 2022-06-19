@@ -11,7 +11,8 @@ import java.sql.Date;
 @Getter
 public class Farmaco {
     private final String codAic;
-    private final String lotto;
+    @Setter
+    private String lotto;
     private final String farmacoName;
     private final String principioAttivo;
     private final boolean prescrivibile;

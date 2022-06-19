@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
+import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNotice;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNoticeController;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;

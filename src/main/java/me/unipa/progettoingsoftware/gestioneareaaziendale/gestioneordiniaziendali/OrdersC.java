@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
+import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.utils.entity.Farmaco;
 import me.unipa.progettoingsoftware.utils.entity.Order;
@@ -45,11 +45,12 @@ public class OrdersC {
                 throwable.printStackTrace();
         }).thenAccept(farmacos -> {
             Platform.runLater(() -> {
-                this.orderWindowBController = new OrderWindowBController(farmacos, this);
+                Stage stage = new Stage();
+                this.orderWindowBController = new OrderWindowBController(farmacos, this, stage);
                 FXMLLoader fxmlLoader = new FXMLLoader(OrderWindowB.class.getResource("OrderWindowB.fxml"));
                 fxmlLoader.setRoot(orderWindowBController);
                 fxmlLoader.setController(orderWindowBController);
-                new OrderWindowB(new Stage(), fxmlLoader);
+                new OrderWindowB(stage, fxmlLoader);
             });
         });
     }
@@ -58,8 +59,8 @@ public class OrdersC {
         if (isValidUnitaField(textField)) {
             int unita = Integer.parseInt(textField);
             farmaco.setUnita(unita);
-            for (Farmaco f1 : orderWindowBController.getFarmaciTable().getItems()){
-                if (f1.getCodAic().equalsIgnoreCase(farmaco.getCodAic())){
+            for (Farmaco f1 : orderWindowBController.getFarmaciTable().getItems()) {
+                if (f1.getCodAic().equalsIgnoreCase(farmaco.getCodAic())) {
                     new ErrorsNotice("Prodotto gia aggiunto nella lista dei farmaci da ordinare");
                     return;
                 }
@@ -75,6 +76,29 @@ public class OrdersC {
         } else {
             new ErrorsNotice("Hai inserito un valore non valido, ricontrolla.");
         }
+    }
+
+    public void confirmOrder() {
+        if (orderWindowBController.getFarmaciTable().getItems().isEmpty()) {
+            new ErrorsNotice("Non ci sono farmaci nella lista dei farmaci da ordinare.");
+            return;
+        }
+        if (orderWindowBController.getPiva().getText().isEmpty()) {
+            new ErrorsNotice("Devi inserire la P.IVA della farmacia alla quale inviare l'ordine.");
+            return;
+        }
+        String piva = orderWindowBController.getPiva().getText();
+        DBMSB.getAzienda().getFarmaciaInfo(piva).thenAccept(strings -> {
+            Platform.runLater(() -> {
+                if (strings.isEmpty()){
+                    new ErrorsNotice("Farmacia non trovata, ricontrolla la P.IVA");
+                    return;
+                }
+                for (String s : strings)
+                    System.out.println(s);
+                orderWindowBController.getStage().close();
+            });
+        });
     }
 
     private boolean isValidUnitaField(String textField) {

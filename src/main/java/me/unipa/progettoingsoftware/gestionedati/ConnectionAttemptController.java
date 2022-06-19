@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.externalcomponents;
+package me.unipa.progettoingsoftware.gestionedati;
 
 import javafx.scene.layout.AnchorPane;
 

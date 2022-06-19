@@ -1,9 +1,7 @@
-package me.unipa.progettoingsoftware.externalcomponents;
+package me.unipa.progettoingsoftware.gestionedati;
 
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-
-import java.sql.SQLException;
 
 public class RestoreConnectionC {
     private final Stage stage;

@@ -4,7 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import me.unipa.progettoingsoftware.externalcomponents.DBMSB;
+import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 
 import java.io.IOException;
 
@@ -27,6 +27,6 @@ public class Init extends Application {
     @Override
     public void stop(){
         DBMSB.getAzienda().closePool();
-        //DBMSB.getFarmacia().closePool();
+        DBMSB.getFarmacia().closePool();
     }
 }

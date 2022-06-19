@@ -34,8 +34,11 @@ public class OrderWindowBController extends AnchorPane {
     private MFXTableView<Farmaco> farmaciTable;
     private final List<Farmaco> catalogList;
     private final OrdersC ordersC;
+    @Getter
+    private final Stage stage;
 
     @FXML
+    @Getter
     private TextField piva;
 
 
@@ -173,12 +176,11 @@ public class OrderWindowBController extends AnchorPane {
 
     @FXML
     public void onClickAnnullaButton(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
 
     @FXML
     public void onClickConfirmButton(ActionEvent event) {
-
+        ordersC.confirmOrder();
     }
 }
