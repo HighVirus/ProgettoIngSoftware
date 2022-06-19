@@ -307,6 +307,7 @@ DROP TABLE IF EXISTS `ordini`;
 CREATE TABLE `ordini` (
   `codice_ordine` varchar(5) NOT NULL,
   `data_consegna` date NOT NULL,
+  `stato` int NOT NULL,
   PRIMARY KEY (`codice_ordine`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -318,7 +319,7 @@ CREATE TABLE `ordini` (
 LOCK TABLES `ordini` WRITE;
 /*!40000 ALTER TABLE `ordini` DISABLE KEYS */;
 INSERT INTO `ordini` VALUES 
-('47811','2022-07-05');
+('47811','2022-07-05',3);
 /*!40000 ALTER TABLE `ordini` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
