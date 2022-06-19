@@ -389,4 +389,16 @@ public class DBMSB {
             }
         }, executor);
     }
+
+    public CompletableFuture<Boolean> thereIsAlertsNotRead() {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM alerts WHERE letto=false")) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                return resultSet.next();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
 }

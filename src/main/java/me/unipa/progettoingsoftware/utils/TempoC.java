@@ -1,8 +1,10 @@
 package me.unipa.progettoingsoftware.utils;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.utils.entity.Farmaco;
+import me.unipa.progettoingsoftware.utils.entity.User;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -14,6 +16,10 @@ public class TempoC {
 
     @Getter(lazy = true)
     private static final TempoC instance = new TempoC();
+
+    @Getter
+    @Setter
+    private boolean alertsToRead = false;
 
     private TempoC() {
         this.rifonisciMagazzinoAziendale();
@@ -63,6 +69,26 @@ public class TempoC {
                 DBMSB.getFarmacia().removeFarmaciExpired();
             }
         }, calendar.getTime(), TimeUnit.HOURS.toMillis(24));
+    }
+
+    private void checkAlerts() {  //da aggiungere quando maria fa il database
+        Timer time = new Timer();
+        time.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (User.isAuthenticated()) {
+                    if (User.getUser().getType() == 1) {
+                        DBMSB.getAzienda().thereIsAlertsNotRead().thenAccept(aBoolean -> {
+                            alertsToRead = aBoolean;
+                        });
+                    } else if (User.getUser().getType() == 2) {
+                        DBMSB.getFarmacia().thereIsAlertsNotRead().thenAccept(aBoolean -> {
+                            alertsToRead = aBoolean;
+                        });
+                    }
+                }
+            }
+        }, 0, TimeUnit.MINUTES.toMillis(10));
     }
 
     private String getRandomLottoCode() {

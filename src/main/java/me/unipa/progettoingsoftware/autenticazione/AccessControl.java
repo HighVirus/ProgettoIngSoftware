@@ -56,9 +56,9 @@ public class AccessControl {
                             fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
                         }
                     }
+                    new TempoB();  //avvia tutte le task
                     new HomePageAzienda(this.stage, fxmlLoader);
                     new GenericNotice("Login effettuato con successo.");
-                    new TempoB();  //avvia tutte le task
                 } else
                     new ErrorsNotice("Login fallito, controlla i dati e riprova.");
             });

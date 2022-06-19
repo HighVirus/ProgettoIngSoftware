@@ -1,5 +1,6 @@
 package me.unipa.progettoingsoftware.utils;
 
+import io.github.palexdev.materialfx.controls.MFXButton;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +28,10 @@ public abstract class Homepage extends AnchorPane {
     private Label welcomeText;
 
     @FXML
+    @Getter
+    private MFXButton alertButton;
+
+    @FXML
     public void onClickLogoutButton(ActionEvent event) {
         if (User.isAuthenticated())
             User.getUser().logout();
@@ -42,6 +47,11 @@ public abstract class Homepage extends AnchorPane {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    public void onClickAlertButton(ActionEvent event) {
 
     }
+
 }

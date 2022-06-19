@@ -4,7 +4,10 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import me.unipa.progettoingsoftware.utils.TempoC;
 import me.unipa.progettoingsoftware.utils.entity.User;
 
 import java.net.URL;
@@ -43,6 +46,11 @@ public class GestioneCatalogo extends Application {
         stage.centerOnScreen();
         GestioneCatalogoController gestioneCatalogoController = fxmlLoader.getController();
         gestioneCatalogoController.setupTable();
+        Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
+        ImageView imageView = new ImageView(buttonImage);
+        imageView.setFitWidth(20);
+        imageView.setFitHeight(20);
+        gestioneCatalogoController.getAlertButton().setGraphic(imageView);
         gestioneCatalogoController.getWelcomeText().setText(gestioneCatalogoController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
