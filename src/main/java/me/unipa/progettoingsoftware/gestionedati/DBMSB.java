@@ -5,9 +5,10 @@ import com.zaxxer.hikari.HikariDataSource;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import lombok.Getter;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
-import me.unipa.progettoingsoftware.utils.entity.Order;
-import me.unipa.progettoingsoftware.utils.entity.User;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Order;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
+import me.unipa.progettoingsoftware.utils.RestoreConnectionC;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
@@ -328,7 +330,7 @@ public class DBMSB {
     public CompletableFuture<List<Order>> getOrderList() {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.data_consegna, far.partita_iva, far.nome_farmacia, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.stato, ord.data_consegna, far.partita_iva, far.nome_farmacia, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
                          " WHERE farord.codice_ordine_fo=ord.codice_ordine AND farord.partita_iva_fo=far.partita_iva AND ord.codice_ordine=farmlistord.codice_ordine_o AND cat.codice_aic=farmlistord.codice_aic_o AND far.partita_iva=faracc.partita_iva AND faracc.IDACCOUNT_F=acc.ID")) {
                 Map<String, Order> orderMap = new HashMap<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -344,7 +346,8 @@ public class DBMSB {
                         String indirizzo = resultSet.getString("indirizzo");
                         String cap = resultSet.getString("cap");
                         String email = resultSet.getString("email");
-                        Order order = new Order(orderCode, deliveryDate, pivaFarmacia, farmaciaName, indirizzo, cap, email);
+                        int status = resultSet.getInt("stato");
+                        Order order = new Order(orderCode, deliveryDate, pivaFarmacia, farmaciaName, indirizzo, cap, email, status);
                         order.getFarmacoList().add(new Farmaco(codAic, farmacoName, unita));
                         orderMap.put(orderCode, order);
                     } else {
@@ -401,4 +404,41 @@ public class DBMSB {
             }
         }, executor);
     }
+
+    public void createNewOrder(Order order) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement ordineStatement = connection.prepareStatement("INSERT INTO ordini (codice_ordine, data_consegna, stato) VALUES (?,?,?)");
+                 PreparedStatement ordFarStatement = connection.prepareStatement("INSERT INTO ord_far (codice_ordine_o, codice_aic_o, unita)");
+                 PreparedStatement magazzinoStatement = connection.prepareStatement("UPDATE magazzino_aziendale SET unita=? WHERE codice_aic=? AND lotto=?")) {
+                ordineStatement.setString(1, order.getOrderCode());
+                ordineStatement.setDate(2, order.getDeliveryDate());
+                ordineStatement.setInt(3, 1);
+                ordineStatement.executeUpdate();
+
+                for (Farmaco farmaco : order.getFarmacoList()) {
+                    ordFarStatement.setString(1, order.getOrderCode());
+                    ordFarStatement.setString(2, farmaco.getCodAic());
+                    ordFarStatement.setInt(3, farmaco.getUnita());
+                    ordFarStatement.executeUpdate();
+
+                    this.getFarmacoFromStorage(farmaco.getCodAic(), farmaco.getLotto()).thenAccept(farmaco1 -> {
+                        int unitaBefore = farmaco1.getUnita();
+                        try {
+                            magazzinoStatement.setInt(1, unitaBefore - farmaco.getUnita());
+                            magazzinoStatement.setString(2, farmaco.getCodAic());
+                            magazzinoStatement.setString(3, farmaco.getLotto());
+                            magazzinoStatement.executeUpdate();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
 }

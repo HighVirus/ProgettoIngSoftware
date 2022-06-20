@@ -7,18 +7,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNotice;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNoticeController;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.utils.GenericNotice;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 @RequiredArgsConstructor
 public class CatalogoAzControl {
 
     private final Stage stage;
     private GestioneCatalogoController gestioneCatalogoController;
-    private AggiungiFarmacoController aggiungiFarmacoController;
+    private AddProdFormController addProdFormController;
     @Getter
     @Setter
     private Farmaco farmacoToRemove;
@@ -42,11 +40,11 @@ public class CatalogoAzControl {
 
     public void addProductRequest() {
         Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(AggiungiFarmaco.class.getResource("AggiungiFarmaco.fxml"));
-        aggiungiFarmacoController = new AggiungiFarmacoController(this, stage);
-        fxmlLoader.setRoot(aggiungiFarmacoController);
-        fxmlLoader.setController(aggiungiFarmacoController);
-        new AggiungiFarmaco(stage, fxmlLoader);
+        FXMLLoader fxmlLoader = new FXMLLoader(AddProdForm.class.getResource("AggiungiFarmaco.fxml"));
+        addProdFormController = new AddProdFormController(this, stage);
+        fxmlLoader.setRoot(addProdFormController);
+        fxmlLoader.setController(addProdFormController);
+        new AddProdForm(stage, fxmlLoader);
     }
 
     public void confirmAddProduct() {
@@ -58,12 +56,12 @@ public class CatalogoAzControl {
         boolean isPrescrivibile;
         int aic;
         double costo;
-        isPrescrivibile = aggiungiFarmacoController.getPrescrivibilita().getValue().equalsIgnoreCase("sì");
+        isPrescrivibile = addProdFormController.getPrescrivibilita().getValue().equalsIgnoreCase("sì");
 
         try {
-            aic = Integer.parseInt(aggiungiFarmacoController.getCodiceAic().getText());
-            costo = Double.parseDouble(aggiungiFarmacoController.getCosto().getText());
-            Farmaco farmaco = new Farmaco(String.valueOf(aic), aggiungiFarmacoController.getNomeProdotto().getText(), aggiungiFarmacoController.getPrincipioAttivo().getText(), isPrescrivibile, costo);
+            aic = Integer.parseInt(addProdFormController.getCodiceAic().getText());
+            costo = Double.parseDouble(addProdFormController.getCosto().getText());
+            Farmaco farmaco = new Farmaco(String.valueOf(aic), addProdFormController.getNomeProdotto().getText(), addProdFormController.getPrincipioAttivo().getText(), isPrescrivibile, costo);
             DBMSB.getAzienda().getFarmacoFromCatalog(farmaco.getCodAic()).whenComplete((farm, throwable) -> {
                 if (throwable != null)
                     throwable.printStackTrace();
@@ -76,7 +74,7 @@ public class CatalogoAzControl {
                         gestioneCatalogoController.getCatalogo().update();
                         DBMSB.getAzienda().addFarmacoToCatalog(farmaco.getCodAic(), farmaco.getFarmacoName(),
                                 farmaco.getPrincipioAttivo(), farmaco.isPrescrivibile(), farmaco.getCosto());
-                        aggiungiFarmacoController.getStage().close();
+                        addProdFormController.getStage().close();
                     }
                 });
             });
@@ -100,15 +98,15 @@ public class CatalogoAzControl {
     }
 
     private boolean allFieldAreFilled() {
-        if (aggiungiFarmacoController.getPrincipioAttivo().getText().length() == 0)
+        if (addProdFormController.getPrincipioAttivo().getText().length() == 0)
             return false;
-        if (aggiungiFarmacoController.getNomeProdotto().getText().length() == 0)
+        if (addProdFormController.getNomeProdotto().getText().length() == 0)
             return false;
-        if (aggiungiFarmacoController.getPrescrivibilita().getText().length() == 0)
+        if (addProdFormController.getPrescrivibilita().getText().length() == 0)
             return false;
-        if (aggiungiFarmacoController.getCosto().getText().length() == 0)
+        if (addProdFormController.getCosto().getText().length() == 0)
             return false;
-        if (aggiungiFarmacoController.getPrescrivibilita().getValue().length() == 0)
+        if (addProdFormController.getPrescrivibilita().getValue().length() == 0)
             return false;
         return true;
     }

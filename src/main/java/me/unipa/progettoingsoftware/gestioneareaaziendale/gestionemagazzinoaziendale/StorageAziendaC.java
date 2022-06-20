@@ -7,10 +7,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNotice;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.ConfirmRemNoticeController;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.ConfirmRemNotice;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.ConfirmRemNoticeController;
 import me.unipa.progettoingsoftware.utils.GenericNotice;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 @RequiredArgsConstructor
 public class StorageAziendaC {

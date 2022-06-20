@@ -10,10 +10,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
-import me.unipa.progettoingsoftware.utils.entity.Order;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 
 import java.util.Comparator;
 
@@ -36,6 +35,8 @@ public class InfoOrderBController extends AnchorPane {
     private Label indirizzo;
     @FXML
     private Label deliveryDate;
+    @FXML
+    private Label deliveryStatus;
 
 
     public void setupFields() {
@@ -45,6 +46,7 @@ public class InfoOrderBController extends AnchorPane {
         cap.setText(cap.getText().replaceAll("%CAP%", order.getCap()));
         indirizzo.setText(indirizzo.getText().replaceAll("%Indirizzo%", order.getIndirizzo()));
         deliveryDate.setText(deliveryDate.getText().replaceAll("%DataConsegna%", order.getDeliveryDate().toString()));
+        deliveryStatus.setText(deliveryStatus.getText().replaceAll("%StatoConsegna%", order.getStatus().getValue()));
 
 
         MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome Farmaco", true, Comparator.comparing(Farmaco::getFarmacoName));

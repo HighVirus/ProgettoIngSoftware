@@ -9,7 +9,6 @@ import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -17,7 +16,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 import java.util.Comparator;
 import java.util.HashMap;

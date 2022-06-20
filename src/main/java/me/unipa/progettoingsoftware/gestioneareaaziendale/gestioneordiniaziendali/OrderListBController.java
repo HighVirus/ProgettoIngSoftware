@@ -4,6 +4,7 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
+import io.github.palexdev.materialfx.filter.EnumFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -15,7 +16,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.utils.Homepage;
-import me.unipa.progettoingsoftware.utils.entity.Order;
+import me.unipa.progettoingsoftware.gestionedati.entity.Order;
+import me.unipa.progettoingsoftware.utils.OrderStatus;
 
 import java.util.Comparator;
 import java.util.List;
@@ -44,6 +46,8 @@ public class OrderListBController extends Homepage {
         farmaciaNameColumn.setPrefWidth(130);
         MFXTableColumn<Order> farmaciaEmailColumn = new MFXTableColumn<>("Indirizzo E-Mail", true, Comparator.comparing(Order::getEmail));
         farmaciaEmailColumn.setPrefWidth(230);
+        MFXTableColumn<Order> statoColumn = new MFXTableColumn<>("Stato Consegna", true, Comparator.comparing(Order::getStatus));
+        farmaciaEmailColumn.setPrefWidth(230);
         MFXTableColumn<Order> infoOrderColumn = new MFXTableColumn<>("", false);
         infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
             private final MFXButton infoOrderButton = new MFXButton("");
@@ -71,13 +75,15 @@ public class OrderListBController extends Homepage {
         pivaColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getPivaFarmacia));
         farmaciaNameColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getFarmaciaName));
         farmaciaEmailColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getEmail));
+        statoColumn.setRowCellFactory(order -> new MFXTableRowCell<>(order1 -> order1.getStatus().getValue()));
 
-        orderTable.getTableColumns().addAll(orderCodeColumn, pivaColumn, farmaciaNameColumn, farmaciaEmailColumn, infoOrderColumn);
+        orderTable.getTableColumns().addAll(orderCodeColumn, pivaColumn, farmaciaNameColumn, farmaciaEmailColumn, statoColumn, infoOrderColumn);
         orderTable.getFilters().addAll(
                 new StringFilter<>("Codice Ordine", Order::getOrderCode),
                 new StringFilter<>("P.IVA Farmacia", Order::getPivaFarmacia),
                 new StringFilter<>("Nome Farmacia", Order::getFarmaciaName),
-                new StringFilter<>("Indirizzo E-Mail", Order::getEmail)
+                new StringFilter<>("Indirizzo E-Mail", Order::getEmail),
+                new StringFilter<>("Stato Consegna", order -> order.getStatus().getValue())
         );
 
         orderTable.setItems(FXCollections.observableArrayList(orderList));
@@ -91,7 +97,7 @@ public class OrderListBController extends Homepage {
     }
 
     @FXML
-    public void onClickCreateOrderButton(ActionEvent event){
+    public void onClickCreateOrderButton(ActionEvent event) {
         ordersC.showCreateOrder();
     }
 }

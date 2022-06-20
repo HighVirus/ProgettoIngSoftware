@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.Init;
-import me.unipa.progettoingsoftware.utils.entity.User;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.io.IOException;
 

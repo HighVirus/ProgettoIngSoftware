@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali;
+package me.unipa.progettoingsoftware.gestioneareafarmaceutica;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -14,11 +14,12 @@ import me.unipa.progettoingsoftware.gestionedati.entity.User;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class OrderListB extends Application {
-
+public class HomePageFarmacia extends Application {
+    private final Stage stage;
     private final FXMLLoader fxmlLoader;
 
-    public OrderListB(Stage stage, FXMLLoader fxmlLoader) {
+    public HomePageFarmacia(Stage stage, FXMLLoader fxmlLoader) {
+        this.stage = stage;
         this.fxmlLoader = fxmlLoader;
 
         try {
@@ -41,19 +42,19 @@ public class OrderListB extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        fxmlLoader.setController(new HomePageFarmaciaController(stage));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        OrderListBController orderListBController = fxmlLoader.getController();
-        orderListBController.setupTable();
+        HomePageFarmaciaController homePageAziendaController = fxmlLoader.getController();
         Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
-        imageView.setFitWidth(20);
-        imageView.setFitHeight(20);
-        orderListBController.getAlertButton().setGraphic(imageView);
-        orderListBController.getAlertButton().setBackground(Background.EMPTY);
-        orderListBController.getWelcomeText().setText(orderListBController.getWelcomeText().getText()
+        imageView.setFitWidth(27);
+        imageView.setFitHeight(27);
+        homePageAziendaController.getAlertButton().setGraphic(imageView);
+        homePageAziendaController.getAlertButton().setBackground(Background.EMPTY);
+        homePageAziendaController.getWelcomeText().setText(homePageAziendaController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }

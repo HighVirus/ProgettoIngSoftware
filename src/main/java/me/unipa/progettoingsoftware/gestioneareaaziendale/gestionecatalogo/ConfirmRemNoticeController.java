@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale;
+package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

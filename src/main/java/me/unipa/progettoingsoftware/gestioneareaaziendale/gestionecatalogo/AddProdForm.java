@@ -9,11 +9,11 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AggiungiFarmaco extends Application {
+public class AddProdForm extends Application {
     private final Stage stage;
     private final FXMLLoader fxmlLoader;
 
-    public AggiungiFarmaco(Stage stage, FXMLLoader fxmlLoader) {
+    public AddProdForm(Stage stage, FXMLLoader fxmlLoader) {
         this.stage = stage;
         this.fxmlLoader = fxmlLoader;
 
@@ -42,8 +42,8 @@ public class AggiungiFarmaco extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        AggiungiFarmacoController aggiungiFarmacoController = fxmlLoader.getController();
-        aggiungiFarmacoController.setupPrescrivibilitaComboBox();
+        AddProdFormController addProdFormController = fxmlLoader.getController();
+        addProdFormController.setupPrescrivibilitaComboBox();
         stage.show();
     }
 }

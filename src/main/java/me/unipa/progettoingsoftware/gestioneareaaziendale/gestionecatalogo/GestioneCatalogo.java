@@ -6,9 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 import me.unipa.progettoingsoftware.utils.TempoC;
-import me.unipa.progettoingsoftware.utils.entity.User;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -51,6 +52,7 @@ public class GestioneCatalogo extends Application {
         imageView.setFitWidth(20);
         imageView.setFitHeight(20);
         gestioneCatalogoController.getAlertButton().setGraphic(imageView);
+        gestioneCatalogoController.getAlertButton().setBackground(Background.EMPTY);
         gestioneCatalogoController.getWelcomeText().setText(gestioneCatalogoController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();

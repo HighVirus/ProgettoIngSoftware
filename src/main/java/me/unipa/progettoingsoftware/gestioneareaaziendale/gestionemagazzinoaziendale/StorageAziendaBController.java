@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.utils.Homepage;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 import java.util.Comparator;
 import java.util.List;
@@ -65,32 +65,6 @@ public class StorageAziendaBController extends Homepage {
         unitaColumn.setMinWidth(70);
         unitaColumn.resize(70, unitaColumn.getHeight());
 
-
-        MFXTableColumn<Farmaco> removeColumn = new MFXTableColumn<>("", false);
-        removeColumn.setMinWidth(50);
-        removeColumn.resize(50, lottoColumn.getHeight());
-        removeColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
-            private final MFXButton deleteButton = new MFXButton("X");
-
-            @Override
-            public void update(Farmaco farmaco) {
-                if (farmaco == null) {
-                    setGraphic(null);
-                    return;
-                }
-
-                deleteButton.setStyle("-fx-background-color: #FF595E;" + "-fx-font-weight: bold;");
-                deleteButton.setTextFill(Paint.valueOf("WHITE"));
-
-                setGraphic(deleteButton);
-                deleteButton.setOnAction(event -> {
-                    storageAziendaC.setFarmacoToRemove(farmaco);
-                    storageAziendaC.showConfirmRemNotice();
-                });
-            }
-        });
-
-
         codAicColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCodAic));
         lottoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getLotto));
         farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
@@ -100,7 +74,7 @@ public class StorageAziendaBController extends Homepage {
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
         unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
 
-        storage.getTableColumns().addAll(codAicColumn, lottoColumn, farmacoNameColumn, principioAttivoColumn, prescrivibileColumn, expireDateColumn, costoColumn, unitaColumn, removeColumn);
+        storage.getTableColumns().addAll(codAicColumn, lottoColumn, farmacoNameColumn, principioAttivoColumn, prescrivibileColumn, expireDateColumn, costoColumn, unitaColumn);
         storage.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
                 new StringFilter<>("Lotto", Farmaco::getLotto),

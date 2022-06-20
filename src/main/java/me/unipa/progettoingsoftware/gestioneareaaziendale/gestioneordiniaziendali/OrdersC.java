@@ -6,8 +6,11 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
-import me.unipa.progettoingsoftware.utils.entity.Order;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Order;
+
+import java.sql.Date;
+import java.util.Random;
 
 @RequiredArgsConstructor
 public class OrdersC {
@@ -94,8 +97,11 @@ public class OrdersC {
                     new ErrorsNotice("Farmacia non trovata, ricontrolla la P.IVA");
                     return;
                 }
-                for (String s : strings)
-                    System.out.println(s);
+                String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
+                Order order = new Order(orderCode, new Date(System.currentTimeMillis() + 3000), piva, strings.get(0), strings.get(2), strings.get(3), strings.get(1), 1);
+                for (Farmaco farmaco : orderWindowBController.getFarmaciTable().getItems())
+                    order.getFarmacoList().add(farmaco);
+                DBMSB.getAzienda().createNewOrder(order);
                 orderWindowBController.getStage().close();
             });
         });
@@ -110,6 +116,25 @@ public class OrdersC {
         } catch (NumberFormatException ex) {
             return false;
         }
+    }
+
+    private String getRandomLottoCode() {
+        String alphaStr = "abcdefghijklmnopqurestuvwxyz";
+        String numStr = "0123456789";
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int j = 0; j < 3; j++) {
+            double randNo = new Random(System.currentTimeMillis()).nextDouble();
+            int idx = (int) (alphaStr.length() * randNo);
+            stringBuilder.append(alphaStr.charAt(idx));
+        }
+
+        for (int j = 0; j < 4; j++) {
+            double randNo = new Random(System.currentTimeMillis()).nextDouble();
+            int idx = (int) (numStr.length() * randNo);
+            stringBuilder.append(numStr.charAt(idx));
+        }
+        return stringBuilder.toString();
     }
 
 }

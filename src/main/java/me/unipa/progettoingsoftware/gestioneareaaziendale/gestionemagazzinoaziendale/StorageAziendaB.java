@@ -6,10 +6,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.stage.Stage;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.GestioneCatalogoController;
 import me.unipa.progettoingsoftware.utils.TempoC;
-import me.unipa.progettoingsoftware.utils.entity.User;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,6 +52,7 @@ public class StorageAziendaB extends Application {
         imageView.setFitWidth(20);
         imageView.setFitHeight(20);
         storageAziendaBController.getAlertButton().setGraphic(imageView);
+        storageAziendaBController.getAlertButton().setBackground(Background.EMPTY);
         storageAziendaBController.getWelcomeText().setText(storageAziendaBController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();

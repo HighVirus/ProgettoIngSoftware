@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.utils.entity;
+package me.unipa.progettoingsoftware.gestionedati.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

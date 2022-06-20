@@ -9,10 +9,13 @@ module me.unipa.progettoingsoftware {
 
     opens me.unipa.progettoingsoftware to javafx.fxml;
     exports me.unipa.progettoingsoftware;
+
     exports me.unipa.progettoingsoftware.autenticazione;
     opens me.unipa.progettoingsoftware.autenticazione to javafx.fxml;
+
     opens me.unipa.progettoingsoftware.gestioneareaaziendale to javafx.fxml;
     exports me.unipa.progettoingsoftware.gestioneareaaziendale;
+
     opens me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo to javafx.fxml;
     exports me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 
@@ -22,8 +25,11 @@ module me.unipa.progettoingsoftware {
     opens me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali to javafx.fxml;
     exports me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali;
 
+    opens me.unipa.progettoingsoftware.gestioneareafarmaceutica to javafx.fxml;
+    exports me.unipa.progettoingsoftware.gestioneareafarmaceutica;
+
     opens me.unipa.progettoingsoftware.utils to javafx.fxml;
     exports me.unipa.progettoingsoftware.utils;
-    exports me.unipa.progettoingsoftware.utils.entity;
-    opens me.unipa.progettoingsoftware.utils.entity to javafx.fxml;
+    exports me.unipa.progettoingsoftware.gestionedati.entity;
+    opens me.unipa.progettoingsoftware.gestionedati.entity to javafx.fxml;
 }

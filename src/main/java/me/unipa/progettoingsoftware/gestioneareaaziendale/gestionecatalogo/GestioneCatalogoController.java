@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.utils.Homepage;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 import java.util.Comparator;
 import java.util.List;

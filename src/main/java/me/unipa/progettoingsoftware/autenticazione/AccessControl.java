@@ -3,6 +3,7 @@ package me.unipa.progettoingsoftware.autenticazione;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
@@ -39,25 +40,23 @@ public class AccessControl {
                     FXMLLoader fxmlLoader;
 
                     int userType = user.getType();
+                    new TempoB();
                     switch (userType) {
-                        case 1: {
+                        case 1 -> {
                             fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
-                            break;
+                            new HomePageAzienda(this.stage, fxmlLoader);
                         }
-                        case 2: {
-                            fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
-                            break;
+                        case 2 -> {
+                            fxmlLoader = new FXMLLoader(HomePageFarmacia.class.getResource("HomePageFarmacia.fxml"));
+                            new HomePageFarmacia(this.stage, fxmlLoader);
                         }
-                        case 3: {
+                        case 3 -> {
                             fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
-                            break;
                         }
-                        default: {
-                            fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
+                        default -> {
+                            new ErrorsNotice("Qualcosa è andato storto, contatta l'amministratore.");
                         }
                     }
-                    new TempoB();  //avvia tutte le task
-                    new HomePageAzienda(this.stage, fxmlLoader);
                     new GenericNotice("Login effettuato con successo.");
                 } else
                     new ErrorsNotice("Login fallito, controlla i dati e riprova.");

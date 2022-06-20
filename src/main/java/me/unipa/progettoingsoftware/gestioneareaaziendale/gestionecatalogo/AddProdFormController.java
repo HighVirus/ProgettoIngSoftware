@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class AggiungiFarmacoController extends AnchorPane {
+public class AddProdFormController extends AnchorPane {
     private final CatalogoAzControl catalogoAzControl;
     @Getter
     private final Stage stage;

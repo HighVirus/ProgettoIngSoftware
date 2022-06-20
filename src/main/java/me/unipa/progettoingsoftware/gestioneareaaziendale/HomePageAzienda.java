@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 import me.unipa.progettoingsoftware.utils.TempoC;
-import me.unipa.progettoingsoftware.utils.entity.User;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.net.URL;
 import java.util.ResourceBundle;

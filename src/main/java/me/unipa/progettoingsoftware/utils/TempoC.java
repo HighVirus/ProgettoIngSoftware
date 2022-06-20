@@ -3,8 +3,8 @@ package me.unipa.progettoingsoftware.utils;
 import lombok.Getter;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
-import me.unipa.progettoingsoftware.utils.entity.Farmaco;
-import me.unipa.progettoingsoftware.utils.entity.User;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.util.Calendar;
 import java.util.Random;

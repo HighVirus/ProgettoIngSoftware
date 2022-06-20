@@ -41,7 +41,9 @@ CREATE TABLE `account` (
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
 INSERT INTO `account` (type, nome, cognome, email, password) VALUES
-(1,'Alessandro','Spank','ciao','ciao'),
+(1,'Alessandro','Spank','1','1'),
+(2,'Alessandro','Spank','2','2'),
+(3,'Alessandro','Spank','3','3'),
 (2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),
 (2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),
 (3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),
@@ -291,7 +293,7 @@ CREATE TABLE `ord_far` (
 
 LOCK TABLES `ord_far` WRITE;
 /*!40000 ALTER TABLE `ord_far` DISABLE KEYS */;
-INSERT INTO `ord_far` VALUES 
+INSERT INTO `ord_far` VALUES
 ('47811','24840074',550),
 ('47811','27860016',350);
 /*!40000 ALTER TABLE `ord_far` ENABLE KEYS */;
@@ -318,7 +320,7 @@ CREATE TABLE `ordini` (
 
 LOCK TABLES `ordini` WRITE;
 /*!40000 ALTER TABLE `ordini` DISABLE KEYS */;
-INSERT INTO `ordini` VALUES 
+INSERT INTO `ordini` VALUES
 ('47811','2022-07-05',3);
 /*!40000 ALTER TABLE `ordini` ENABLE KEYS */;
 UNLOCK TABLES;

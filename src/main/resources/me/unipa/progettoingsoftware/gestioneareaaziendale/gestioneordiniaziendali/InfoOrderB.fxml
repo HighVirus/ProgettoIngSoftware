@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyTableView?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import io.github.palexdev.materialfx.controls.MFXTableView?>
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="832.0" style="-fx-background-color: #DBDBDB;" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane layoutX="-2.0" prefHeight="706.0" prefWidth="832.0">
@@ -81,6 +79,16 @@
                </font>
             </Label>
             <MFXTableView fx:id="farmacoTable" layoutX="363.0" prefHeight="489.0" prefWidth="363.0" style="-fx-background-radius: 0 20 20 0;" />
+            <Text fill="#1c7c54" layoutX="35.0" layoutY="364.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stato">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+            <Label fx:id="deliveryStatus" layoutX="36.0" layoutY="369.0" text="\%StatoConsegna%">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
          </children>
       </Pane>
       <Label layoutX="61.0" layoutY="80.0" text="DETTAGLI ORDINE" textFill="#1c7c54">

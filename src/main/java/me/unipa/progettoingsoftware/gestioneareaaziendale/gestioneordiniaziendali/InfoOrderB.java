@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import me.unipa.progettoingsoftware.utils.entity.User;
 
 import java.net.URL;
 import java.util.ResourceBundle;
