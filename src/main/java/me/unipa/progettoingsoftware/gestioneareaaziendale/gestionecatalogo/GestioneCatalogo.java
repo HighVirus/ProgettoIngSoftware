@@ -49,8 +49,8 @@ public class GestioneCatalogo extends Application {
         gestioneCatalogoController.setupTable();
         Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
-        imageView.setFitWidth(20);
-        imageView.setFitHeight(20);
+        imageView.setFitWidth(27);
+        imageView.setFitHeight(27);
         gestioneCatalogoController.getAlertButton().setGraphic(imageView);
         gestioneCatalogoController.getAlertButton().setBackground(Background.EMPTY);
         gestioneCatalogoController.getWelcomeText().setText(gestioneCatalogoController.getWelcomeText().getText()

@@ -11,7 +11,7 @@
 
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650" prefWidth="1000" style="-fx-background-color: #DBDBDB;" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <BorderPane layoutY="-5.0" prefHeight="120.0" prefWidth="1000.0">
+      <BorderPane prefHeight="118.0" prefWidth="1000.0">
          <top>
             <AnchorPane prefHeight="118.0" prefWidth="1000.0" style="-fx-background-color: #1c7c54;" BorderPane.alignment="CENTER">
                <children>
@@ -26,7 +26,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </MFXButton>
-                  <MFXButton layoutX="684.0" layoutY="41.0" prefHeight="39.0" prefWidth="42.0" text=" " />
+                  <MFXButton fx:id="alertButton" onAction="#onClickAlertButton" layoutX="684.0" layoutY="41.0" prefHeight="39.0" prefWidth="42.0" text=" " />
                </children>
             </AnchorPane>
          </top>

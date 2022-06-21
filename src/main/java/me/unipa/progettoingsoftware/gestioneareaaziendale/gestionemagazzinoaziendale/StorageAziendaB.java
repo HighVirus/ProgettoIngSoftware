@@ -49,8 +49,8 @@ public class StorageAziendaB extends Application {
         storageAziendaBController.setupTable();
         Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
-        imageView.setFitWidth(20);
-        imageView.setFitHeight(20);
+        imageView.setFitWidth(27);
+        imageView.setFitHeight(27);
         storageAziendaBController.getAlertButton().setGraphic(imageView);
         storageAziendaBController.getAlertButton().setBackground(Background.EMPTY);
         storageAziendaBController.getWelcomeText().setText(storageAziendaBController.getWelcomeText().getText()

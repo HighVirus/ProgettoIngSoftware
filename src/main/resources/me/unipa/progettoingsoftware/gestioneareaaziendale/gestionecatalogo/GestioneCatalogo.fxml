@@ -26,7 +26,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </MFXButton>
-                  <MFXButton layoutX="684.0" layoutY="41.0" prefHeight="39.0" prefWidth="42.0" text=" " />
+                  <MFXButton fx:id="alertButton" onAction="#onClickAlertButton" layoutX="684.0" layoutY="41.0" prefHeight="39.0" prefWidth="42.0" text=" " />
                </children>
             </AnchorPane>
          </top>

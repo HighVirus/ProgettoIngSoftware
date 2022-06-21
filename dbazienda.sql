@@ -280,9 +280,8 @@ DROP TABLE IF EXISTS `ord_far`;
 CREATE TABLE `ord_far` (
   `codice_ordine_o` varchar(5) NOT NULL,
   `codice_aic_o` varchar(9) NOT NULL,
+  `lotto_o` varchar(9) NOT NULL,
   `unita` int NOT NULL,
-  PRIMARY KEY (`codice_ordine_o`,`codice_aic_o`),
-  KEY `codice_aic_o` (`codice_aic_o`),
   CONSTRAINT `ord_far_ibfk_1` FOREIGN KEY (`codice_ordine_o`) REFERENCES `ordini` (`codice_ordine`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -294,8 +293,10 @@ CREATE TABLE `ord_far` (
 LOCK TABLES `ord_far` WRITE;
 /*!40000 ALTER TABLE `ord_far` DISABLE KEYS */;
 INSERT INTO `ord_far` VALUES
-('47811','24840074',550),
-('47811','27860016',350);
+('47811','24840074', 'bgt541', 550),
+('47811','12745182', 'abe789', 23),
+('47811','12745182', 'abe790', 40),
+('47811','27860016', 'frt654', 350);
 /*!40000 ALTER TABLE `ord_far` ENABLE KEYS */;
 UNLOCK TABLES;
 

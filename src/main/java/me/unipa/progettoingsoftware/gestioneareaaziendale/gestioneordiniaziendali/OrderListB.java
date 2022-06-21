@@ -49,8 +49,8 @@ public class OrderListB extends Application {
         orderListBController.setupTable();
         Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
-        imageView.setFitWidth(20);
-        imageView.setFitHeight(20);
+        imageView.setFitWidth(27);
+        imageView.setFitHeight(27);
         orderListBController.getAlertButton().setGraphic(imageView);
         orderListBController.getAlertButton().setBackground(Background.EMPTY);
         orderListBController.getWelcomeText().setText(orderListBController.getWelcomeText().getText()

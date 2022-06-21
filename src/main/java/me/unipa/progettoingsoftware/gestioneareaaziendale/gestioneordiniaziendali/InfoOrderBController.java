@@ -51,13 +51,16 @@ public class InfoOrderBController extends AnchorPane {
 
         MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome Farmaco", true, Comparator.comparing(Farmaco::getFarmacoName));
         farmacoNameColumn.setPrefWidth(250);
+        MFXTableColumn<Farmaco> lottoColumn = new MFXTableColumn<>("Lotto", true, Comparator.comparing(Farmaco::getLotto));
+        farmacoNameColumn.setPrefWidth(100);
         MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getUnita));
         unitaColumn.setPrefWidth(130);
 
         farmacoNameColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
+        lottoColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Farmaco::getLotto));
         unitaColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Farmaco::getUnita));
 
-        farmacoTable.getTableColumns().addAll(farmacoNameColumn, unitaColumn);
+        farmacoTable.getTableColumns().addAll(farmacoNameColumn, lottoColumn, unitaColumn);
 
         farmacoTable.setItems(FXCollections.observableArrayList(order.getFarmacoList()));
     }
