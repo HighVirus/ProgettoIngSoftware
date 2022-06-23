@@ -325,6 +325,22 @@ INSERT INTO `ordini` VALUES
 ('47811','2022-07-05',3);
 /*!40000 ALTER TABLE `ordini` ENABLE KEYS */;
 UNLOCK TABLES;
+
+CREATE TABLE IF NOT EXISTS produzione_farmaco (
+    codice_aic_p varchar(9) NOT NULL PRIMARY KEY,
+    start_production_date DATE NOT NULL,
+    production_period INT NOT NULL,
+    unita_production INT NOT NULL
+)
+
+INSERT INTO produzione_farmaco VALUES
+('12745182', '2022-06-20', 2, 100),
+('12745232', '2022-06-20', 4, 200),
+('19655051', '2022-06-20', 6, 200),
+('24840074', '2022-06-20', 1, 100),
+('27860016', '2022-06-20', 7, 500),
+('34246013', '2022-06-20', 6, 700),
+('42386488', '2022-06-20', 9, 900);
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

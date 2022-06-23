@@ -36,14 +36,6 @@ public class StorageAziendaC {
         });
     }
 
-    public void showConfirmRemNotice(){
-        ConfirmRemNoticeController confirmRemNoticeController = new ConfirmRemNoticeController(this);
-        FXMLLoader fxmlLoader = new FXMLLoader(ConfirmRemNotice.class.getResource("ConfirmRemNotice.fxml"));
-        fxmlLoader.setRoot(confirmRemNoticeController);
-        fxmlLoader.setController(confirmRemNoticeController);
-        new ConfirmRemNotice(new Stage(), fxmlLoader);
-    }
-
     public void confirmRemProduct(){
         storageAziendaBController.getStorage().getItems().remove(this.farmacoToRemove);
         DBMSB.getAzienda().removeFarmacoFromStorage(this.farmacoToRemove.getCodAic(), this.farmacoToRemove.getLotto());

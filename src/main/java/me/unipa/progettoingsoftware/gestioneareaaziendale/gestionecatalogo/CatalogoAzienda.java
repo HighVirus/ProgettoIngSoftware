@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci;
+package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -8,19 +8,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.stage.Stage;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmaciaController;
 import me.unipa.progettoingsoftware.utils.TempoC;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class StorageFarmaciaB extends Application {
-    private final Stage stage;
+public class CatalogoAzienda extends Application {
+
     private final FXMLLoader fxmlLoader;
 
-    public StorageFarmaciaB(Stage stage, FXMLLoader fxmlLoader) {
-        this.stage = stage;
+    public CatalogoAzienda(Stage stage, FXMLLoader fxmlLoader) {
         this.fxmlLoader = fxmlLoader;
 
         try {
@@ -47,17 +45,16 @@ public class StorageFarmaciaB extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        StorageFarmaciaBController storageFarmaciaBController = fxmlLoader.getController();
-        storageFarmaciaBController.setupTable();
+        CatalogoAziendaController catalogoAziendaController = fxmlLoader.getController();
+        catalogoAziendaController.setupTable();
         Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
         imageView.setFitWidth(27);
         imageView.setFitHeight(27);
-        storageFarmaciaBController.getAlertButton().setGraphic(imageView);
-        storageFarmaciaBController.getAlertButton().setBackground(Background.EMPTY);
-        storageFarmaciaBController.getWelcomeText().setText(storageFarmaciaBController.getWelcomeText().getText()
+        catalogoAziendaController.getAlertButton().setGraphic(imageView);
+        catalogoAziendaController.getAlertButton().setBackground(Background.EMPTY);
+        catalogoAziendaController.getWelcomeText().setText(catalogoAziendaController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }
 }
-

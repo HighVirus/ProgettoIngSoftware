@@ -31,7 +31,6 @@ CREATE TABLE `farmaco` (
   `data_scadenza` date DEFAULT NULL,
   `costo` float DEFAULT '0',
   `unita` int NOT NULL DEFAULT '0',
-  PRIMARY KEY (`codice_aic`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,9 +41,11 @@ CREATE TABLE `farmaco` (
 LOCK TABLES `farmaco` WRITE;
 /*!40000 ALTER TABLE `farmaco` DISABLE KEYS */;
 INSERT INTO `farmaco` VALUES 
-('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',true,'2027-07-01',4.54,250),
+('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',true,'2027-07-01',4.54,350),
+('12745182','abe790','tachipirina 1000 mg 16 compresse','paracetamolo',true,'2027-08-01',4.54,250),
 ('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',false,'2025-06-01',12.5,15),
 ('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',true,'2022-07-01',1.35,19),
+('19655051','bfl855','bentelan 1 mg 10 compresse resistenti ','betametasone',true,'2022-10-01',1.35,200),
 ('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',true,'2022-09-01',2.35,40),
 ('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',true,'2023-05-01',8.5,21),
 ('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene', false,'2024-12-01',6.67,150),

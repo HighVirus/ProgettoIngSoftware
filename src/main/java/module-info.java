@@ -28,6 +28,9 @@ module me.unipa.progettoingsoftware {
     opens me.unipa.progettoingsoftware.gestioneareafarmaceutica to javafx.fxml;
     exports me.unipa.progettoingsoftware.gestioneareafarmaceutica;
 
+    opens me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci to javafx.fxml;
+    exports me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci;
+
     opens me.unipa.progettoingsoftware.utils to javafx.fxml;
     exports me.unipa.progettoingsoftware.utils;
     exports me.unipa.progettoingsoftware.gestionedati.entity;

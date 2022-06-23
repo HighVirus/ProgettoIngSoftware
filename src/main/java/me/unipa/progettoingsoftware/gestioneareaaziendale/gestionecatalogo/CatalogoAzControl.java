@@ -15,7 +15,7 @@ import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 public class CatalogoAzControl {
 
     private final Stage stage;
-    private GestioneCatalogoController gestioneCatalogoController;
+    private CatalogoAziendaController catalogoAziendaController;
     private AddProdFormController addProdFormController;
     @Getter
     @Setter
@@ -27,12 +27,12 @@ public class CatalogoAzControl {
                 throwable.printStackTrace();
         }).thenAccept(farmacoList -> {
             Platform.runLater(() -> {
-                this.gestioneCatalogoController = new GestioneCatalogoController(stage, this, farmacoList);
-                FXMLLoader fxmlLoader = new FXMLLoader(GestioneCatalogo.class.getResource("GestioneCatalogo.fxml"));
-                fxmlLoader.setRoot(this.gestioneCatalogoController);
-                fxmlLoader.setController(this.gestioneCatalogoController);
+                this.catalogoAziendaController = new CatalogoAziendaController(stage, this, farmacoList);
+                FXMLLoader fxmlLoader = new FXMLLoader(CatalogoAzienda.class.getResource("GestioneCatalogo.fxml"));
+                fxmlLoader.setRoot(this.catalogoAziendaController);
+                fxmlLoader.setController(this.catalogoAziendaController);
 
-                new GestioneCatalogo(this.stage, fxmlLoader);
+                new CatalogoAzienda(this.stage, fxmlLoader);
             });
         });
 
@@ -70,8 +70,8 @@ public class CatalogoAzControl {
                     if (farm != null)
                         new ErrorsNotice("Il prodotto è gia presente all'interno del catalogo.");
                     else {
-                        gestioneCatalogoController.getCatalogo().getItems().add(farmaco);
-                        gestioneCatalogoController.getCatalogo().update();
+                        catalogoAziendaController.getCatalogo().getItems().add(farmaco);
+                        catalogoAziendaController.getCatalogo().update();
                         DBMSB.getAzienda().addFarmacoToCatalog(farmaco.getCodAic(), farmaco.getFarmacoName(),
                                 farmaco.getPrincipioAttivo(), farmaco.isPrescrivibile(), farmaco.getCosto());
                         addProdFormController.getStage().close();
@@ -92,7 +92,7 @@ public class CatalogoAzControl {
     }
 
     public void confirmRemProduct(){
-        gestioneCatalogoController.getCatalogo().getItems().remove(this.farmacoToRemove);
+        catalogoAziendaController.getCatalogo().getItems().remove(this.farmacoToRemove);
         DBMSB.getAzienda().removeFarmacoToCatalog(this.farmacoToRemove.getCodAic());
         new GenericNotice("Prodotto rimosso con successo dal catalogo.");
     }

@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo;
+package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
@@ -14,22 +14,24 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
-import me.unipa.progettoingsoftware.utils.Homepage;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.utils.Homepage;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class GestioneCatalogoController extends Homepage {
+public class CatalogProductsBController extends Homepage {
 
     @FXML
     @Getter
-    private MFXTableView<Farmaco> catalogo;
+    private MFXTableView<Farmaco> catalogTable;
     private final Stage stage;
     private final CatalogoAzControl catalogoAzControl;
     private final List<Farmaco> catalogList;
 
-    public GestioneCatalogoController(Stage stage, CatalogoAzControl catalogoAzControl, List<Farmaco> catalogList) {
+    public CatalogProductsBController(Stage stage, CatalogoAzControl catalogoAzControl, List<Farmaco> catalogList) {
         super(stage);
         this.stage = stage;
         this.catalogoAzControl = catalogoAzControl;
@@ -73,15 +75,15 @@ public class GestioneCatalogoController extends Homepage {
         principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
 
-        catalogo.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, removeColumn);
-        catalogo.getFilters().addAll(
+        catalogTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, removeColumn);
+        catalogTable.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
                 new StringFilter<>("Nome", Farmaco::getFarmacoName),
                 new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
                 new DoubleFilter<>("Costo", Farmaco::getCosto)
         );
 
-        catalogo.setItems(FXCollections.observableArrayList(catalogList));
+        catalogTable.setItems(FXCollections.observableArrayList(catalogList));
 
 
     }
@@ -93,6 +95,6 @@ public class GestioneCatalogoController extends Homepage {
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {
-        new HomePageAzienda(this.stage, new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml")));
+        new HomePageFarmacia(this.stage, new FXMLLoader(HomePageFarmacia.class.getResource("HomePageFarmacia.fxml")));
     }
 }

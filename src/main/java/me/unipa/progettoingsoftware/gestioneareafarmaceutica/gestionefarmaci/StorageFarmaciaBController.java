@@ -1,4 +1,4 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale.gestionemagazzinoaziendale;
+package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci;
 
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
@@ -13,26 +13,25 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import lombok.Getter;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class StorageAziendaBController extends Homepage {
-
+public class StorageFarmaciaBController extends Homepage {
+    private final Stage stage;
     @FXML
     @Getter
     private MFXTableView<Farmaco> storage;
-    private final Stage stage;
-    private final StorageAziendaC storageAziendaC;
+    private final StorageFarmaciaC storageFarmaciaC;
     private final List<Farmaco> storageList;
 
-    public StorageAziendaBController(Stage stage, StorageAziendaC storageAziendaC, List<Farmaco> storageList) {
+    public StorageFarmaciaBController(Stage stage, StorageFarmaciaC storageFarmaciaC, List<Farmaco> storageList) {
         super(stage);
         this.stage = stage;
-        this.storageAziendaC = storageAziendaC;
+        this.storageFarmaciaC = storageFarmaciaC;
         this.storageList = storageList;
     }
 
@@ -85,11 +84,22 @@ public class StorageAziendaBController extends Homepage {
 
         storage.setItems(FXCollections.observableArrayList(storageList));
 
+    }
 
+    @FXML
+    public void onClickSellButton(ActionEvent event) {
+        System.out.println("porcodio");
+    }
+
+    @FXML
+    public void onClickCaricaProductsButton(ActionEvent event) {
+        System.out.println("allahkìakbar");
     }
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {
-        new HomePageAzienda(this.stage, new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml")));
+        new HomePageFarmacia(this.stage, new FXMLLoader(HomePageFarmacia.class.getResource("HomePageFarmacia.fxml")));
     }
+
+
 }

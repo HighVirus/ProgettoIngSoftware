@@ -9,17 +9,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.stage.Stage;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmaciaController;
-import me.unipa.progettoingsoftware.utils.TempoC;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
+import me.unipa.progettoingsoftware.utils.TempoC;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class StorageFarmaciaB extends Application {
+public class GestioneFarmaciB extends Application {
     private final Stage stage;
     private final FXMLLoader fxmlLoader;
 
-    public StorageFarmaciaB(Stage stage, FXMLLoader fxmlLoader) {
+    public GestioneFarmaciB(Stage stage, FXMLLoader fxmlLoader) {
         this.stage = stage;
         this.fxmlLoader = fxmlLoader;
 
@@ -47,15 +47,14 @@ public class StorageFarmaciaB extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        StorageFarmaciaBController storageFarmaciaBController = fxmlLoader.getController();
-        storageFarmaciaBController.setupTable();
+        GestioneFarmaciBController gestioneFarmaciBController = fxmlLoader.getController();
         Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
         imageView.setFitWidth(27);
         imageView.setFitHeight(27);
-        storageFarmaciaBController.getAlertButton().setGraphic(imageView);
-        storageFarmaciaBController.getAlertButton().setBackground(Background.EMPTY);
-        storageFarmaciaBController.getWelcomeText().setText(storageFarmaciaBController.getWelcomeText().getText()
+        gestioneFarmaciBController.getAlertButton().setGraphic(imageView);
+        gestioneFarmaciBController.getAlertButton().setBackground(Background.EMPTY);
+        gestioneFarmaciBController.getWelcomeText().setText(gestioneFarmaciBController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }
