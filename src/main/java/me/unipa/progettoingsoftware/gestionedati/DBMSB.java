@@ -235,7 +235,7 @@ public class DBMSB {
                     String codAic = resultSet.getString("codice_aic");
                     String farmacoName = resultSet.getString("nome_farmaco");
                     String principioAttivo = resultSet.getString("principio_attivo");
-                    boolean prescrivibilita = resultSet.getBoolean("prescrivilita");
+                    boolean prescrivibilita = resultSet.getBoolean("prescrivibilita");
                     Date expireDate = resultSet.getDate("data_scadenza");
                     double costo = resultSet.getDouble("costo");
                     int unita = resultSet.getInt("unita");
@@ -532,6 +532,29 @@ public class DBMSB {
             }
             return null;
         }, executor);
+    }
+
+    public void confirmSell(List<Farmaco> farmaciList) {
+        //CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement updateStatement = connection.prepareStatement("UDPATE farmaco SET unita = ? WHERE codice_aic = ? AND lotto = ?");
+                 PreparedStatement removeStatement = connection.prepareStatement("DELETE FROM farmaco WHERE codice_aic = ? AND lotto = ?")) {
+                for (Farmaco farmacoSold : farmaciList) {
+                    Farmaco farmacoStor = this.getFarmacoFromStorage(farmacoSold.getCodAic(), farmacoSold.getLotto()).join();
+                    if ((farmacoStor.getUnita() - farmacoSold.getUnita()) <= 0) {
+                        removeStatement.setString(1, farmacoSold.getCodAic());
+                        removeStatement.setString(2, farmacoSold.getLotto());
+                        removeStatement.executeUpdate();
+                    } else {
+                        updateStatement.setString(1, farmacoSold.getCodAic());
+                        updateStatement.setString(2, farmacoSold.getLotto());
+                        updateStatement.executeUpdate();
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+       // }, executor);
     }
 
 }

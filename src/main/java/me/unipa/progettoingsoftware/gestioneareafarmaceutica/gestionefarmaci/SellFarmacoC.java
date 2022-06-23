@@ -99,7 +99,7 @@ public class SellFarmacoC {
     }
 
     public void emettiScontrino() {
-        System.out.println("emesso");
+        DBMSB.getFarmacia().confirmSell(sellWindowBController.getCarrelloTable().getItems());
         this.sellStage.close();
     }
 
