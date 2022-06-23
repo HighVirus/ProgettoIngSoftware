@@ -303,17 +303,33 @@ public class DBMSB {
 
     public CompletableFuture<Boolean> checkFarmacoAvailability(String codice_aic, int quantity) {
         String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "farmaco";
-        return CompletableFuture.supplyAsync(() -> {
-            try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("select sum(unita) from " + STORAGE_TABLE + " where codice_aic=? group by codice_aic having sum(unita)>=?")) {
-                preparedStatement.setString(1, codice_aic);
-                preparedStatement.setInt(2, quantity);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                return resultSet.next();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }, executor);
+        if (STORAGE_TABLE.equals("magazzino_aziendale")) {
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement preparedStatement = connection.prepareStatement("select sum(unita) from " + STORAGE_TABLE + " where codice_aic=? group by codice_aic having sum(unita)>=?")) {
+                    preparedStatement.setString(1, codice_aic);
+                    preparedStatement.setInt(2, quantity);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    return resultSet.next();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+        } else {
+            return CompletableFuture.supplyAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement preparedStatement = connection.prepareStatement("select sum(unita) from " + STORAGE_TABLE + " where codice_aic=? group by codice_aic having sum(unita)>=?")) {
+                    preparedStatement.setString(1, codice_aic);
+                    preparedStatement.setInt(2, quantity);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    return resultSet.next();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+        }
+
+
     }
 
     public void removeFarmacoFromStorage(String codiceAic, String lotto) {
@@ -502,7 +518,7 @@ public class DBMSB {
                     Calendar now = Calendar.getInstance();
                     now.setTime(new Date(System.currentTimeMillis()));
                     while (tempAmount < quantity) {
-                        if (calendar.before(now)){
+                        if (calendar.before(now)) {
                             calendar.add(Calendar.DAY_OF_YEAR, period);
                         } else {
                             calendar.add(Calendar.DAY_OF_YEAR, period);

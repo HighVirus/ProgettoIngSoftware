@@ -93,6 +93,6 @@ public class CatalogoAziendaController extends Homepage {
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {
-        new HomePageAzienda(this.stage, new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml")));
+        catalogoAzControl.showHomePageAzienda();
     }
 }

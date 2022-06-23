@@ -30,7 +30,7 @@ CREATE TABLE `farmaco` (
   `prescrivibilita` boolean NOT NULL,
   `data_scadenza` date DEFAULT NULL,
   `costo` float DEFAULT '0',
-  `unita` int NOT NULL DEFAULT '0',
+  `unita` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

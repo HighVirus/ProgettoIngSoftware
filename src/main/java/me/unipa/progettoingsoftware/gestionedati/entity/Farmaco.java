@@ -17,7 +17,8 @@ public class Farmaco {
     private final String principioAttivo;
     private final boolean prescrivibile;
     private final Date scadenza;
-    private final Double costo;
+    @Setter
+    private double costo;
     @Setter
     private int unita;
 
@@ -33,6 +34,6 @@ public class Farmaco {
         this(codAic, null, farmacoName, principioAttivo, isPrescrivibile, null, costo, 0);
     }
     public Farmaco(String codAic, String lotto, String farmacoName, String principioAttivo, boolean isPrescrivibile, Date expireDate, int unita){
-        this(codAic, lotto, farmacoName, principioAttivo, isPrescrivibile, expireDate, null, unita);
+        this(codAic, lotto, farmacoName, principioAttivo, isPrescrivibile, expireDate, 0, unita);
     }
 }

@@ -17,7 +17,7 @@ public class GestioneFarmaciBController extends Homepage {
 
     @FXML
     public void onClickSellButton(ActionEvent event) {
-        System.out.println("porcodio");
+        new SellFarmacoC(stage).showSellWindowB();
     }
 
     @FXML

@@ -98,7 +98,7 @@ public class StorageFarmaciaBController extends Homepage {
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {
-        new HomePageFarmacia(this.stage, new FXMLLoader(HomePageFarmacia.class.getResource("HomePageFarmacia.fxml")));
+        storageFarmaciaC.showGestioneFarmaciB();
     }
 
 
