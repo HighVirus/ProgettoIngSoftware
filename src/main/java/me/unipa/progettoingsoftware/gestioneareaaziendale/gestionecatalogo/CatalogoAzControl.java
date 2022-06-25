@@ -98,7 +98,7 @@ public class CatalogoAzControl {
 
     public void confirmRemProduct(){
         catalogoAziendaController.getCatalogo().getItems().remove(this.farmacoToRemove);
-        DBMSB.getAzienda().removeFarmacoToCatalog(this.farmacoToRemove.getCodAic());
+        DBMSB.getAzienda().removeFarmacoFromCatalog(this.farmacoToRemove.getCodAic());
         new GenericNotice("Prodotto rimosso con successo dal catalogo.");
     }
 

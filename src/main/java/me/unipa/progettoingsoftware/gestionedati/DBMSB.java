@@ -185,7 +185,7 @@ public class DBMSB {
         }, executor);
     }
 
-    public void removeFarmacoToCatalog(String codiceAic) {
+    public void removeFarmacoFromCatalog(String codiceAic) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM catalogo_aziendale WHERE codice_aic = ?")) {
@@ -197,7 +197,7 @@ public class DBMSB {
         }, executor);
     }
 
-    public CompletableFuture<List<Farmaco>> getFarmaciListFromStorage() {
+    public CompletableFuture<List<Farmaco>> getFarmacoListFromStorage() {
         String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "farmaco";
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
@@ -402,7 +402,29 @@ public class DBMSB {
         }, executor);
     }
 
-    public void addFarmaciToStorage(Farmaco farmaco) {
+    public CompletableFuture<List<Farmaco>> getFarmaciFromOrder(String orderCode) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.stato, ord.data_consegna, far.partita_iva, far.nome_farmacia, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, farmlistord.lotto_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
+                         " WHERE farord.codice_ordine_fo=ord.codice_ordine AND farord.partita_iva_fo=far.partita_iva AND ord.codice_ordine=farmlistord.codice_ordine_o AND cat.codice_aic=farmlistord.codice_aic_o AND far.partita_iva=faracc.partita_iva AND faracc.idaccount_f=acc.ID AND ord.codice_ordine = ?")) {
+                List<Farmaco> farmacoList = new ArrayList<>();
+                preparedStatement.setString(1, orderCode);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    String codAic = resultSet.getString("codice_aic_o");
+                    String codLotto = resultSet.getString("lotto_o");
+                    String farmacoName = resultSet.getString("nome_farmaco");
+                    int unita = resultSet.getInt("unita");
+                    farmacoList.add(new Farmaco(codAic, codLotto, farmacoName, unita));
+                }
+                return farmacoList;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public void addFarmacoToStorage(Farmaco farmaco) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO magazzino_aziendale (?,?,?,?,?,?,?,?)")) {
@@ -535,15 +557,16 @@ public class DBMSB {
     }
 
     public void confirmSell(List<Farmaco> farmaciList) {
-        //CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement updateStatement = connection.prepareStatement("UDPATE farmaco SET unita = ? WHERE codice_aic = ? AND lotto = ?");
                  PreparedStatement removeStatement = connection.prepareStatement("DELETE FROM farmaco WHERE codice_aic = ? AND lotto = ?")) {
                 for (Farmaco farmacoSold : farmaciList) {
                     Farmaco farmacoStor = this.getFarmacoFromStorage(farmacoSold.getCodAic(), farmacoSold.getLotto()).join();
                     if ((farmacoStor.getUnita() - farmacoSold.getUnita()) <= 0) {
-                        removeStatement.setString(1, farmacoSold.getCodAic());
-                        removeStatement.setString(2, farmacoSold.getLotto());
+                        removeStatement.setInt(1, farmacoStor.getUnita() - farmacoSold.getUnita());
+                        removeStatement.setString(2, farmacoSold.getCodAic());
+                        removeStatement.setString(3, farmacoSold.getLotto());
                         removeStatement.executeUpdate();
                     } else {
                         updateStatement.setString(1, farmacoSold.getCodAic());
@@ -554,7 +577,7 @@ public class DBMSB {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-       // }, executor);
+        }, executor);
     }
 
 }

@@ -23,7 +23,6 @@ public abstract class Homepage extends AnchorPane {
     }
 
     @FXML
-    @Setter
     @Getter
     private Label welcomeText;
 

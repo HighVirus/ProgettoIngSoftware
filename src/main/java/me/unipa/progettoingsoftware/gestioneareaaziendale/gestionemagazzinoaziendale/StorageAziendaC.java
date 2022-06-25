@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.ConfirmRemNotice;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.ConfirmRemNoticeController;
 import me.unipa.progettoingsoftware.utils.GenericNotice;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
@@ -21,7 +19,7 @@ public class StorageAziendaC {
     private Farmaco farmacoToRemove;
 
     public void showAziendaStorage() {
-        DBMSB.getAzienda().getFarmaciListFromStorage().whenComplete((farmacoList, throwable) -> {
+        DBMSB.getAzienda().getFarmacoListFromStorage().whenComplete((farmacoList, throwable) -> {
             if (throwable != null)
                 throwable.printStackTrace();
         }).thenAccept(farmacoList -> {

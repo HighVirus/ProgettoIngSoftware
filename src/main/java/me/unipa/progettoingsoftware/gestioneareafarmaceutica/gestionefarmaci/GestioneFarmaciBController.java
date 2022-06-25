@@ -22,7 +22,7 @@ public class GestioneFarmaciBController extends Homepage {
 
     @FXML
     public void onClickCaricaProductsButton(ActionEvent event) {
-        System.out.println("allahkìakbar");
+        new StorageFarmaciaC(stage).showCaricaMerci();
     }
 
     @FXML

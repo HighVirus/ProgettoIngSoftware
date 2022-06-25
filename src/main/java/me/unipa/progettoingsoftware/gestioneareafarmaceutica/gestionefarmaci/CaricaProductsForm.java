@@ -45,16 +45,9 @@ public class CaricaProductsForm extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        CaricaProductsFormController catalogoAziendaController = fxmlLoader.getController();
-        catalogoAziendaController.setupTable();
-        Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
-        ImageView imageView = new ImageView(buttonImage);
-        imageView.setFitWidth(27);
-        imageView.setFitHeight(27);
-        catalogoAziendaController.getAlertButton().setGraphic(imageView);
-        catalogoAziendaController.getAlertButton().setBackground(Background.EMPTY);
-        catalogoAziendaController.getWelcomeText().setText(catalogoAziendaController.getWelcomeText().getText()
-                .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
+        CaricaProductsFormController caricaProductsFormController = fxmlLoader.getController();
+        caricaProductsFormController.setupTable();
+        caricaProductsFormController.setupPrescrivibilitaComboBox();
         stage.show();
     }
 }

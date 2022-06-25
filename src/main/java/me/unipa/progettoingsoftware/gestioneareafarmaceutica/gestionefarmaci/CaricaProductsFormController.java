@@ -1,47 +1,85 @@
 package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci;
 
-import io.github.palexdev.materialfx.controls.MFXButton;
-import io.github.palexdev.materialfx.controls.MFXTableColumn;
-import io.github.palexdev.materialfx.controls.MFXTableView;
+import io.github.palexdev.materialfx.controls.*;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
+import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
+import me.unipa.progettoingsoftware.Init;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
+import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
+import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
-public class CaricaProductsFormController extends Homepage {
+public class CaricaProductsFormController extends MFXScrollPane {
 
     @FXML
     @Getter
-    private MFXTableView<Farmaco> catalogo;
+    private MFXTableView<Farmaco> caricoList;
     private final Stage stage;
-    private final CatalogoAzControl catalogoAzControl;
-    private final List<Farmaco> catalogList;
+    private final StorageFarmaciaC storageFarmaciaC;
 
-    public CaricaProductsFormController(Stage stage, CatalogoAzControl catalogoAzControl, List<Farmaco> catalogList) {
-        super(stage);
+    @FXML
+    @Getter
+    private MFXTextField orderCode;
+    @FXML
+    @Getter
+    private MFXTextField aicCode;
+    @FXML
+    @Getter
+    private MFXTextField lottoCode;
+    @FXML
+    @Getter
+    private MFXTextField farmacoName;
+    @FXML
+    @Getter
+    private MFXTextField principioAttivo;
+    @FXML
+    @Getter
+    private MFXComboBox<String> prescrivibilita;
+    @FXML
+    @Getter
+    private MFXDatePicker expireDate;
+    @FXML
+    @Getter
+    private MFXTextField costo;
+    @FXML
+    @Getter
+    private MFXTextField unita;
+
+    public CaricaProductsFormController(Stage stage, StorageFarmaciaC storageFarmaciaC) {
         this.stage = stage;
-        this.catalogoAzControl = catalogoAzControl;
-        this.catalogList = catalogList;
+        this.storageFarmaciaC = storageFarmaciaC;
+    }
+
+    public void setupPrescrivibilitaComboBox() {
+        prescrivibilita.setItems(FXCollections.observableArrayList("Sì", "No"));
     }
 
     public void setupTable() {
+        MFXTableColumn<Farmaco> orderCodeColumn = new MFXTableColumn<>("Ordine", true, Comparator.comparing(Farmaco::getOrderCode));
         MFXTableColumn<Farmaco> codAicColumn = new MFXTableColumn<>("Codice AIC", true, Comparator.comparing(Farmaco::getCodAic));
+        MFXTableColumn<Farmaco> lottoColumn = new MFXTableColumn<>("Lotto", true, Comparator.comparing(Farmaco::getLotto));
         MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome", true, Comparator.comparing(Farmaco::getFarmacoName));
         farmacoNameColumn.setPrefWidth(350);
-        MFXTableColumn<Farmaco> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        principioAttivoColumn.setPrefWidth(200);
-        MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
+        MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getCosto));
+        MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getCosto));
 
 
         MFXTableColumn<Farmaco> removeColumn = new MFXTableColumn<>("", false);
@@ -60,38 +98,55 @@ public class CaricaProductsFormController extends Homepage {
 
                 setGraphic(deleteButton);
                 deleteButton.setOnAction(event -> {
-                    catalogoAzControl.setFarmacoToRemove(farmaco);
-                    catalogoAzControl.showConfirmRemNotice();
+                    //storageFarmaciaC.addProductToCaricoList();
                 });
             }
         });
 
 
+        orderCodeColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getOrderCode));
         codAicColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCodAic));
+        lottoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getLotto));
         farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
-        principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
+        unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
 
-        catalogo.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, removeColumn);
-        catalogo.getFilters().addAll(
+        caricoList.getTableColumns().addAll(orderCodeColumn, codAicColumn, lottoColumn, farmacoNameColumn, costoColumn, unitaColumn, removeColumn);
+        caricoList.getFilters().addAll(
+                new StringFilter<>("Ordine", Farmaco::getOrderCode),
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
+                new StringFilter<>("Lotto", Farmaco::getLotto),
                 new StringFilter<>("Nome", Farmaco::getFarmacoName),
-                new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
-                new DoubleFilter<>("Costo", Farmaco::getCosto)
+                new DoubleFilter<>("Costo", Farmaco::getCosto),
+                new IntegerFilter<>("Unità", Farmaco::getUnita)
         );
 
-        catalogo.setItems(FXCollections.observableArrayList(catalogList));
-
 
     }
 
     @FXML
-    public void onClickAggiungiButton(ActionEvent event) {
-        catalogoAzControl.addProductRequest();
+    public void onClickAddButton(ActionEvent event) {
+        storageFarmaciaC.addProductToCaricoList();
     }
 
     @FXML
-    public void onClickTornaButton(ActionEvent event) {
-        catalogoAzControl.showHomePageAzienda();
+    public void onClickFarmFromOrder(ActionEvent event) {
+
     }
+
+    @FXML
+    public void onClickConfirmButton(ActionEvent event) {
+        storageFarmaciaC.clickConfirmButton();
+    }
+
+    @FXML
+    public void onClickAnnullaButton(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
+    public int checkList() {
+        return caricoList.getItems().size();
+    }
+
 }

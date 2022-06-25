@@ -3,10 +3,7 @@ package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.ConfirmRemNotice;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.ConfirmRemNoticeController;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
@@ -26,7 +23,7 @@ public class SellFarmacoC {
     }
 
     public void showSellWindowB() {
-        DBMSB.getFarmacia().getFarmaciListFromStorage().whenComplete((farmacos, throwable) -> {
+        DBMSB.getFarmacia().getFarmacoListFromStorage().whenComplete((farmacos, throwable) -> {
             if (throwable != null)
                 throwable.printStackTrace();
         }).thenAccept(farmacos -> {

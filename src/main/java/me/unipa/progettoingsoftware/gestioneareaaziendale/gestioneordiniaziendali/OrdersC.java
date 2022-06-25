@@ -81,7 +81,7 @@ public class OrdersC {
         }
     }
 
-    public void confirmOrder() {
+    public void submitOrder() {
         if (orderWindowBController.getFarmaciTable().getItems().isEmpty()) {
             new ErrorsNotice("Non ci sono farmaci nella lista dei farmaci da ordinare.");
             return;

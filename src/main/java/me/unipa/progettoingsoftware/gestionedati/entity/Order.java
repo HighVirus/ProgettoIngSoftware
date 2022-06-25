@@ -30,4 +30,5 @@ public class Order {
         this.email = email;
         this.status = OrderStatus.getFromType(stato);
     }
+
 }

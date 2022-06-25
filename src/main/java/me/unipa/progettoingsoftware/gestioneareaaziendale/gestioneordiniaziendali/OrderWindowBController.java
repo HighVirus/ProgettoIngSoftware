@@ -180,6 +180,6 @@ public class OrderWindowBController extends AnchorPane {
 
     @FXML
     public void onClickConfirmButton(ActionEvent event) {
-        ordersC.confirmOrder();
+        ordersC.submitOrder();
     }
 }

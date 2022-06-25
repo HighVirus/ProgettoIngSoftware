@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXComboBox?>
+<?import io.github.palexdev.materialfx.controls.MFXDatePicker?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import io.github.palexdev.materialfx.controls.MFXTextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<fx:root prefHeight="600.0" prefWidth="800.0" type="MFXScrollPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <content>
+      <javafx.scene.layout.AnchorPane accessibleRole="SCROLL_PANE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1431.0" prefWidth="800.0" style="-fx-background-color: #DBDBDB;">
+         <children>
+            <MFXScrollPane layoutX="-6.0" layoutY="-8.0" opacity="0.0" prefHeight="1415.0" prefWidth="800.0" AnchorPane.bottomAnchor="-115.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <MFXTextField fx:id="aicCode" layoutX="130.0" layoutY="228.0" prefHeight="50.0" prefWidth="533.0" style="-mfx-main: #1c7c54;" />
+            <MFXDatePicker fx:id="expireDate" layoutX="130.0" layoutY="620.0" style="-mfx-main: #1c7c54;" />
+            <MFXComboBox fx:id="prescrivibilita" layoutX="131.0" layoutY="515.0" prefHeight="40.0" prefWidth="198.0" />
+            <MFXTextField fx:id="farmacoName" layoutX="130.0" layoutY="323.0" prefHeight="50.0" prefWidth="534.0" style="-mfx-main: #1c7c54;" />
+            <MFXTextField fx:id="principioAttivo" layoutX="130.0" layoutY="420.0" prefHeight="50.0" prefWidth="534.0" style="-mfx-main: #1c7c54;" />
+            <MFXTextField fx:id="costo" layoutX="130.0" layoutY="702.0" measureUnit="euro" prefHeight="21.0" prefWidth="534.0" style="-mfx-main: #1c7c54;">
+               <textFill>
+                  <Color red="0.10980392247438431" green="0.48627451062202454" blue="0.3294117748737335" opacity="0.8700000047683716" />
+               </textFill>
+            </MFXTextField>
+            <Text fill="#1c7c54" layoutX="130.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codice AIC">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Text fill="#1c7c54" layoutX="130.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nome Farmaco">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Text fill="#1c7c54" layoutX="130.0" layoutY="412.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Principio Attivo">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <Text fill="#1c7c54" layoutX="130.0" layoutY="695.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Costo">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <MFXButton layoutX="564.0" layoutY="878.0" onAction="#onClickAddButton" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Aggiungi" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </MFXButton>
+            <MFXButton layoutX="132.0" layoutY="879.0" onAction="#onClickFarmFromOrder" style="-fx-background-color: #ca3c25; -fx-background-radius: 20; -fx-border-radius: 20;" text="Carica Farmaci da ordine" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </MFXButton>
+            <Text fill="#1c7c54" layoutX="130.0" layoutY="604.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data di Scadenza">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <MFXTextField fx:id="unita" layoutX="130.0" layoutY="790.0" prefHeight="21.0" prefWidth="534.0" style="-mfx-main: #1c7c54;">
+               <textFill>
+                  <Color red="0.10980392247438431" green="0.48627451062202454" blue="0.3294117748737335" opacity="0.8700000047683716" />
+               </textFill>
+            </MFXTextField>
+            <Text fill="#1c7c54" layoutX="130.0" layoutY="783.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Unità">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <MFXTextField fx:id="lottoCode" layoutX="130.0" layoutY="137.0" prefHeight="50.0" prefWidth="533.0" style="-mfx-main: #1c7c54;" />
+            <Text fill="#1c7c54" layoutX="130.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Numero Lotto">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <MFXTextField fx:id="orderCode" layoutX="130.0" layoutY="57.0" prefHeight="50.0" prefWidth="533.0" style="-mfx-main: #1c7c54;" />
+            <Text fill="#1c7c54" layoutX="130.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Codice Ordine">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+            <MFXTableView fx:id="caricoList" layoutX="35.0" layoutY="954.0" prefHeight="363.0" prefWidth="737.0" />
+            <MFXButton layoutX="664.0" layoutY="1340.0" onAction="#onClickConfirmButton" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Conferma" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </MFXButton>
+            <MFXButton layoutX="36.0" layoutY="1340.0" onAction="#onClickAnnullaButton" style="-fx-background-color: #ca3c25; -fx-background-radius: 20; -fx-border-radius: 20;" text="Annulla" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </MFXButton>
+            <Text fill="#1c7c54" layoutX="129.0" layoutY="506.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Prescrivibilità">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Text>
+         </children>
+      </javafx.scene.layout.AnchorPane>
+   </content>
+</fx:root>

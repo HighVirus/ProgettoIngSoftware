@@ -47,7 +47,7 @@ public class TempoC {
                     for (Farmaco farmaco : farmacos) {
                         farmaco.setLotto(getRandomLottoCode());
                         farmaco.setUnita(1000);
-                        DBMSB.getAzienda().addFarmaciToStorage(farmaco);
+                        DBMSB.getAzienda().addFarmacoToStorage(farmaco);
                     }
                 });
             }
