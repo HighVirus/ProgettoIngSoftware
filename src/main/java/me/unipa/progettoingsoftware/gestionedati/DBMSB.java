@@ -116,9 +116,9 @@ public class DBMSB {
                 preparedStatement.setString(1, email);
                 preparedStatement.setString(2, password);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                if (resultSet.next())
+                if (resultSet.next()) {
                     return User.createInstance(resultSet.getInt("ID"), resultSet.getInt("type"), resultSet.getString("email"), resultSet.getString("nome"), resultSet.getString("cognome"));
-                else return null;
+                } else return null;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -402,6 +402,41 @@ public class DBMSB {
         }, executor);
     }
 
+    public CompletableFuture<List<Order>> getOrderList(String farmaciaPiva) {  //TODO: DA SISTEMARE LA QUERY
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.stato, ord.data_consegna, far.partita_iva, far.nome_farmacia, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, farmlistord.lotto_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
+                         " WHERE farord.codice_ordine_fo=ord.codice_ordine AND farord.partita_iva_fo=far.partita_iva AND ord.codice_ordine=farmlistord.codice_ordine_o AND cat.codice_aic=farmlistord.codice_aic_o AND far.partita_iva=faracc.partita_iva AND faracc.idaccount_f=acc.ID")) {
+                Map<String, Order> orderMap = new HashMap<>();
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    String orderCode = resultSet.getString("codice_ordine");
+                    String codAic = resultSet.getString("codice_aic_o");
+                    String codLotto = resultSet.getString("lotto_o");
+                    String farmacoName = resultSet.getString("nome_farmaco");
+                    int unita = resultSet.getInt("unita");
+                    if (!orderMap.containsKey(orderCode)) {
+                        Date deliveryDate = resultSet.getDate("data_consegna");
+                        String pivaFarmacia = resultSet.getString("partita_iva");
+                        String farmaciaName = resultSet.getString("nome_farmacia");
+                        String indirizzo = resultSet.getString("indirizzo");
+                        String cap = resultSet.getString("cap");
+                        String email = resultSet.getString("email");
+                        int status = resultSet.getInt("stato");
+                        Order order = new Order(orderCode, deliveryDate, pivaFarmacia, farmaciaName, indirizzo, cap, email, status);
+                        order.getFarmacoList().add(new Farmaco(codAic, codLotto, farmacoName, unita));
+                        orderMap.put(orderCode, order);
+                    } else {
+                        orderMap.get(orderCode).getFarmacoList().add(new Farmaco(codAic, codLotto, farmacoName, unita));
+                    }
+                }
+                return new ArrayList<>(orderMap.values());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
     public CompletableFuture<List<Farmaco>> getFarmaciFromOrder(String orderCode) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
@@ -425,6 +460,25 @@ public class DBMSB {
     }
 
     public void addFarmacoToStorage(Farmaco farmaco) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO magazzino_aziendale (?,?,?,?,?,?,?,?)")) {
+                preparedStatement.setString(1, farmaco.getCodAic());
+                preparedStatement.setString(2, farmaco.getLotto());
+                preparedStatement.setString(3, farmaco.getFarmacoName());
+                preparedStatement.setString(4, farmaco.getPrincipioAttivo());
+                preparedStatement.setBoolean(5, farmaco.isPrescrivibile());
+                preparedStatement.setDate(6, farmaco.getScadenza());
+                preparedStatement.setDouble(7, farmaco.getCosto());
+                preparedStatement.setInt(8, farmaco.getUnita());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
+    public void addFarmacoListToStorage(List<Farmaco> farmacoList) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO magazzino_aziendale (?,?,?,?,?,?,?,?)")) {

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXTableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650" prefWidth="1000" style="-fx-background-color: #DBDBDB;" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MFXButton layoutX="51.0" layoutY="582.0" onAction="#onClickTornaButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </MFXButton>
+      <Text fill="#1c7c54" layoutX="51.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lista ordini">
+         <font>
+            <Font name="System Bold" size="48.0" />
+         </font>
+      </Text>
+      <MFXTableView fx:id="orderTable" layoutX="51.0" layoutY="79.0" prefHeight="492.0" prefWidth="898.0" />
+   </children>
+</fx:root>

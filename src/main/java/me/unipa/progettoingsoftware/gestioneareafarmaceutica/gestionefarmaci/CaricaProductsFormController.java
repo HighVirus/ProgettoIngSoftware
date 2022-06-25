@@ -98,7 +98,7 @@ public class CaricaProductsFormController extends MFXScrollPane {
 
                 setGraphic(deleteButton);
                 deleteButton.setOnAction(event -> {
-                    //storageFarmaciaC.addProductToCaricoList();
+                    storageFarmaciaC.removeProductFromCaricoList(farmaco);
                 });
             }
         });
@@ -131,7 +131,7 @@ public class CaricaProductsFormController extends MFXScrollPane {
 
     @FXML
     public void onClickFarmFromOrder(ActionEvent event) {
-
+        storageFarmaciaC.showCaricoOrderListB();
     }
 
     @FXML

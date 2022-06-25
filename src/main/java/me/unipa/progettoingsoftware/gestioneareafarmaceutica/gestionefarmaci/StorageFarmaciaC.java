@@ -6,14 +6,20 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
+import me.unipa.progettoingsoftware.utils.GenericNotice;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 @RequiredArgsConstructor
 public class StorageFarmaciaC {
     private final Stage stage;
     private CaricaProductsFormController caricaProductsFormController;
+    private CaricoOrderListBController caricoOrderListBController;
 
     public void showGestioneFarmaciB() {
         GestioneFarmaciBController gestioneFarmaciBController = new GestioneFarmaciBController(stage);
@@ -29,6 +35,22 @@ public class StorageFarmaciaC {
         fxmlLoader.setRoot(caricaProductsFormController);
         fxmlLoader.setController(caricaProductsFormController);
         new CaricaProductsForm(new Stage(), fxmlLoader);
+    }
+
+    public void showCaricoOrderListB() {
+        DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
+            String piva = strings.get(0);
+            DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
+                Platform.runLater(() -> {
+                    this.caricoOrderListBController = new CaricoOrderListBController(orders, this, new Stage());
+                    FXMLLoader fxmlLoader = new FXMLLoader(CaricoOrderListB.class.getResource("CaricoOrderListB.fxml"));
+                    fxmlLoader.setRoot(caricaProductsFormController);
+                    fxmlLoader.setController(caricaProductsFormController);
+                    new CaricoOrderListB(new Stage(), fxmlLoader);
+                });
+            });
+        });
+
     }
 
     public void showStorageFarmaciaB() {
@@ -68,11 +90,35 @@ public class StorageFarmaciaC {
         }
     }
 
+    public void removeProductFromCaricoList(Farmaco farmaco) {
+        this.caricaProductsFormController.getCaricoList().getItems().remove(farmaco);
+    }
+
     public void clickConfirmButton() {
-        if (this.caricaProductsFormController.checkList() == 0) {
-            new ErrorsNotice("La lista dei farmaci da caricare è vuota.");
-            return;
+        Set<String> orderCodeSet = new HashSet<>();
+        for (Farmaco farmaco : this.caricaProductsFormController.getCaricoList().getItems())
+            orderCodeSet.add(farmaco.getFarmacoName());
+
+        Iterator<String> orderCodeIterator = orderCodeSet.iterator();
+        while (orderCodeIterator.hasNext()) {
+            DBMSB.getAzienda().getFarmaciFromOrder(orderCodeIterator.next());   //continuare
+            if (this.caricaProductsFormController.checkList() == 0) {
+                new ErrorsNotice("La lista dei farmaci da caricare è vuota.");
+                return;
+            }
+            //continuare col la lista ottenuta
+            String farmaciaName = DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).join().get(1);
+            DBMSB.getAzienda().sendAlert(AlertType alertType, farmaciaName);
         }
+
+        DBMSB.getFarmacia().getFarmaciAlreadyOrdered().thenAccept(farmacoList -> {
+            for (Farmaco farmaco : farmacoList){
+                DBMSB.getFarmacia().removeFarmacoFromAlreadyOrdered(farmaco.getCodAic());
+            }
+        });
+
+        new GenericNotice("messaggio di conferma");
+
     }
 
     private boolean allFieldAreFilled() {
