@@ -45,6 +45,35 @@ INSERT INTO `account` VALUES (1,1,'Alessandro','Spank','1','1'),(2,2,'Alessandro
 UNLOCK TABLES;
 
 --
+-- Table structure for table `alert_azienda`
+--
+
+DROP TABLE IF EXISTS `alert_azienda`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `alert_azienda` (
+  `codice_alert` int NOT NULL AUTO_INCREMENT,
+  `codice_ordine_aa` varchar(5) NOT NULL,
+  `partita_iva_aa` varchar(11) NOT NULL,
+  PRIMARY KEY (`codice_alert`,`codice_ordine_aa`,`partita_iva_aa`),
+  KEY `codice_ordine_aa` (`codice_ordine_aa`),
+  KEY `partita_iva_aa` (`partita_iva_aa`),
+  CONSTRAINT `alert_azienda_ibfk_1` FOREIGN KEY (`codice_ordine_aa`) REFERENCES `ordini` (`codice_ordine`),
+  CONSTRAINT `alert_azienda_ibfk_2` FOREIGN KEY (`partita_iva_aa`) REFERENCES `farmacia` (`partita_iva`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `alert_azienda`
+--
+
+LOCK TABLES `alert_azienda` WRITE;
+/*!40000 ALTER TABLE `alert_azienda` DISABLE KEYS */;
+INSERT INTO `alert_azienda` VALUES (1,'47811','15486232231');
+/*!40000 ALTER TABLE `alert_azienda` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `catalogo_aziendale`
 --
 
@@ -348,4 +377,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-23 20:57:48
+-- Dump completed on 2022-06-24 20:50:28
