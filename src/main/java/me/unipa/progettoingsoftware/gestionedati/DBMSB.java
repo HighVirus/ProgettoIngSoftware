@@ -125,6 +125,10 @@ public class DBMSB {
         }, executor);
     }
 
+    public CompletableFuture<List<String>> getFarmaciaFromUserId(int id) {  //TODO: list(0) restituisce la piva, list(1) il nome della farmacia
+        return null;
+    }
+
     public CompletableFuture<List<Farmaco>> getFarmaciCatalogList() {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
@@ -634,4 +638,85 @@ public class DBMSB {
         }, executor);
     }
 
+    public void makeDeliveryCompleted(String orderCode, int status) {
+
+    }
+
+    public void makeOrderDeliveredReadyToLoad() {
+
+    }
+
+    public CompletableFuture<List<Farmaco>> getFarmaciAlreadyOrdered() {
+        return CompletableFuture.supplyAsync(() -> {
+            return null;
+        }
+    }
+
+    public void removeFarmacoFromAlreadyOrdered(String codAic) {
+
+    }
+
+    public CompletableFuture<Boolean> isFarmacoOrdered() {
+        return null;
+    }
+
+    public CompletableFuture<List<Order>> getDeliveryList() {
+        return null;
+    }
+
+    public CompletableFuture<List<Order>> getDeliveryInfo() {
+        return null;
+    }
+
+    public CompletableFuture<List<Order>> getDeliveryDate() {
+        return null;
+    }
+
+    public CompletableFuture<String> getAlertsAzienda() {
+        return null;
+    }
+
+    public CompletableFuture<String> getAlertList() {
+        return null;
+    }
+
+    public void sendAlert() {
+
+    }
+
+    public void addFarmaciToOrdered() {
+
+    }
+
+    public CompletableFuture<List<Farmaco>> getFarmaciBanco() {
+        return null;
+    }
+
+    public void addFarmaciBancoToStorage() {
+
+    }
+
+    public void deleteOrder() {
+
+    }
+
+    public CompletableFuture<List<Order>> getOrderReadyToLoadList() {
+        return null;
+    }
+
+    public void updateOrder() {
+
+    }
+
+    public CompletableFuture<Date> getFarmacoExpireDate() {
+        return null;
+    }
+
+    public CompletableFuture<int> getFarmacoUnitaPeriodic() {
+        return null;
+    }
+
+    public void updateUnitaPeriodicOrder() {
+
+    }
 }
