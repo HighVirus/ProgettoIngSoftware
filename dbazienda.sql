@@ -302,7 +302,6 @@ DROP TABLE IF EXISTS `ordine_periodico`;
 CREATE TABLE `ordine_periodico` (
   `codice_ordine` varchar(5) NOT NULL,
   `periodo_consegna` int NOT NULL,
-  `stato` int NOT NULL,
   PRIMARY KEY (`codice_ordine`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
