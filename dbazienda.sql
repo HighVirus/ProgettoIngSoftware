@@ -216,13 +216,14 @@ DROP TABLE IF EXISTS `magazzino_aziendale`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `magazzino_aziendale` (
   `codice_aic` varchar(9) NOT NULL,
-  `lotto` varchar(9) DEFAULT NULL,
+  `lotto` varchar(9) NOT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) NOT NULL,
   `prescrivibilita` tinyint(1) NOT NULL,
   `data_scadenza` date DEFAULT NULL,
   `costo` double DEFAULT '0',
   `unita` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`codice_aic`,`lotto`),
   UNIQUE KEY `lotto` (`lotto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -292,6 +293,29 @@ INSERT INTO `ord_far` VALUES ('47811','24840074','bgt541',550),('47811','1274518
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ordine_periodico`
+--
+
+DROP TABLE IF EXISTS `ordine_periodico`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ordine_periodico` (
+  `codice_ordine` varchar(5) NOT NULL,
+  `periodo_consegna` int NOT NULL,
+  PRIMARY KEY (`codice_ordine`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ordine_periodico`
+--
+
+LOCK TABLES `ordine_periodico` WRITE;
+/*!40000 ALTER TABLE `ordine_periodico` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ordine_periodico` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ordini`
 --
 
@@ -314,6 +338,34 @@ LOCK TABLES `ordini` WRITE;
 /*!40000 ALTER TABLE `ordini` DISABLE KEYS */;
 INSERT INTO `ordini` VALUES ('47811','2022-07-05',3);
 /*!40000 ALTER TABLE `ordini` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `permag`
+--
+
+DROP TABLE IF EXISTS `permag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `permag` (
+  `codice_ordine_pm` varchar(5) NOT NULL,
+  `codice_aic_pm` varchar(9) NOT NULL,
+  `lotto_pm` varchar(9) NOT NULL,
+  `unita` int NOT NULL,
+  PRIMARY KEY (`codice_ordine_pm`,`codice_aic_pm`,`lotto_pm`),
+  KEY `codice_aic_pm` (`codice_aic_pm`,`lotto_pm`),
+  CONSTRAINT `permag_ibfk_1` FOREIGN KEY (`codice_ordine_pm`) REFERENCES `ordini` (`codice_ordine`),
+  CONSTRAINT `permag_ibfk_2` FOREIGN KEY (`codice_aic_pm`, `lotto_pm`) REFERENCES `magazzino_aziendale` (`codice_aic`, `lotto`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `permag`
+--
+
+LOCK TABLES `permag` WRITE;
+/*!40000 ALTER TABLE `permag` DISABLE KEYS */;
+/*!40000 ALTER TABLE `permag` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -377,4 +429,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-24 20:50:28
+-- Dump completed on 2022-06-26 20:32:57
