@@ -6,7 +6,9 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
+import me.unipa.progettoingsoftware.utils.AlertType;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.utils.GenericNotice;
 
@@ -106,9 +108,16 @@ public class StorageFarmaciaC {
                 new ErrorsNotice("La lista dei farmaci da caricare è vuota.");
                 return;
             }
-            //continuare col la lista ottenuta
+            //continuare con la lista ottenuta
             String farmaciaName = DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).join().get(1);
-            DBMSB.getAzienda().sendAlert(AlertType alertType, farmaciaName);
+            DBMSB.getAzienda().sendAlert(AlertType.AZIENDA, farmaciaName);
+        }
+
+        DBMSB.getFarmacia().addFarmacoListToStorage(this.caricaProductsFormController.getCaricoList().getItems());
+
+        while (orderCodeIterator.hasNext()){
+            DBMSB.getFarmacia().makeDeliveryCompleted(orderCodeIterator.next());
+            DBMSB.getAzienda().makeDeliveryCompleted(orderCodeIterator.next());
         }
 
         DBMSB.getFarmacia().getFarmaciAlreadyOrdered().thenAccept(farmacoList -> {
@@ -120,6 +129,11 @@ public class StorageFarmaciaC {
         new GenericNotice("messaggio di conferma");
 
     }
+
+    public void addFarmaciFromOrder(Order order){
+
+    }
+
 
     private boolean allFieldAreFilled() {
         if (this.caricaProductsFormController.getOrderCode().getText().length() == 0)

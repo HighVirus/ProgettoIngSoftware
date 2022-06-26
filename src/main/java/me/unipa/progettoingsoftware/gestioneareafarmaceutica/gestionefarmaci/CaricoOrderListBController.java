@@ -61,8 +61,8 @@ public class CaricoOrderListBController extends AnchorPane {
             private final MFXButton addUnitProduct = new MFXButton("+");
 
             @Override
-            public void update(Farmaco farmaco) {
-                if (farmaco == null) {
+            public void update(Order order) {
+                if (order == null) {
                     setGraphic(null);
                     return;
                 }

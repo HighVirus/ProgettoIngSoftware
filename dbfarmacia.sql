@@ -118,7 +118,10 @@ CREATE TABLE `farmaci_ordinati` (
 
 LOCK TABLES `farmaci_ordinati` WRITE;
 /*!40000 ALTER TABLE `farmaci_ordinati` DISABLE KEYS */;
-INSERT INTO `farmaci_ordinati` VALUES ('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',23),('12745182','abe790','tachipirina 1000 mg 16 compresse','paracetamolo',40),('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',550),('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',350);
+INSERT INTO `farmaci_ordinati` VALUES ('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',23),
+                                      ('12745182','abe790','tachipirina 1000 mg 16 compresse','paracetamolo',40),
+                                      ('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',550),
+                                      ('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',350);
 /*!40000 ALTER TABLE `farmaci_ordinati` ENABLE KEYS */;
 UNLOCK TABLES;
 

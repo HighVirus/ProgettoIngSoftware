@@ -8,6 +8,7 @@ import lombok.Getter;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
+import me.unipa.progettoingsoftware.utils.AlertType;
 import me.unipa.progettoingsoftware.utils.RestoreConnectionC;
 
 import java.sql.*;
@@ -486,14 +487,14 @@ public class DBMSB {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO magazzino_aziendale (?,?,?,?,?,?,?,?)")) {
-                preparedStatement.setString(1, farmaco.getCodAic());
+                /*preparedStatement.setString(1, farmaco.getCodAic());
                 preparedStatement.setString(2, farmaco.getLotto());
                 preparedStatement.setString(3, farmaco.getFarmacoName());
                 preparedStatement.setString(4, farmaco.getPrincipioAttivo());
                 preparedStatement.setBoolean(5, farmaco.isPrescrivibile());
                 preparedStatement.setDate(6, farmaco.getScadenza());
                 preparedStatement.setDouble(7, farmaco.getCosto());
-                preparedStatement.setInt(8, farmaco.getUnita());
+                preparedStatement.setInt(8, farmaco.getUnita());*/
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -638,7 +639,7 @@ public class DBMSB {
         }, executor);
     }
 
-    public void makeDeliveryCompleted(String orderCode, int status) {
+    public void makeDeliveryCompleted(String orderCode) {
 
     }
 
@@ -647,9 +648,7 @@ public class DBMSB {
     }
 
     public CompletableFuture<List<Farmaco>> getFarmaciAlreadyOrdered() {
-        return CompletableFuture.supplyAsync(() -> {
-            return null;
-        }
+        return null;
     }
 
     public void removeFarmacoFromAlreadyOrdered(String codAic) {
@@ -668,10 +667,6 @@ public class DBMSB {
         return null;
     }
 
-    public CompletableFuture<List<Order>> getDeliveryDate() {
-        return null;
-    }
-
     public CompletableFuture<String> getAlertsAzienda() {
         return null;
     }
@@ -680,7 +675,7 @@ public class DBMSB {
         return null;
     }
 
-    public void sendAlert() {
+    public void sendAlert(AlertType alertType, String farmaciaName) {
 
     }
 
@@ -712,11 +707,15 @@ public class DBMSB {
         return null;
     }
 
-    public CompletableFuture<int> getFarmacoUnitaPeriodic() {
+    public CompletableFuture<Integer> getFarmacoUnitaPeriodic() {
         return null;
     }
 
     public void updateUnitaPeriodicOrder() {
 
+    }
+
+    public CompletableFuture<List<Farmaco>> getFarmacoListCheckStorage() {
+        return null;
     }
 }
