@@ -1,40 +1,38 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali;
+package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
-import io.github.palexdev.materialfx.filter.EnumFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
-import me.unipa.progettoingsoftware.utils.Homepage;
+import lombok.Getter;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
-import me.unipa.progettoingsoftware.utils.OrderStatus;
+import me.unipa.progettoingsoftware.utils.Homepage;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class OrderListBController extends Homepage {
+public class ViewOrdiniController extends Homepage {
 
     @FXML
-    private MFXTableView<Order> orderTable;
+    @Getter
     private final Stage stage;
-    private final OrdersC ordersC;
+    private final OrdersFarC ordersFarC;
+    @FXML
+    @Getter
+    private MFXTableView<Order> orderTable;
     private final List<Order> orderList;
 
-    public OrderListBController(Stage stage, OrdersC ordersC, List<Order> orderList) {
+    public ViewOrdiniController(Stage stage, OrdersFarC ordersFarC, List<Order> orderList) {
         super(stage);
         this.stage = stage;
-        this.ordersC = ordersC;
+        this.ordersFarC = ordersFarC;
         this.orderList = orderList;
     }
 
@@ -51,7 +49,7 @@ public class OrderListBController extends Homepage {
         farmaciaEmailColumn.setPrefWidth(230);
         MFXTableColumn<Order> infoOrderColumn = new MFXTableColumn<>("", false);
         infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
-            private final MFXButton infoOrderButton = new MFXButton("");
+            private final MFXButton infoOrderButton = new MFXButton("!");
 
             @Override
             public void update(Order order) {
@@ -67,7 +65,57 @@ public class OrderListBController extends Homepage {
                 infoOrderButton.setGraphic(imageView);
 
                 setGraphic(infoOrderButton);
-                infoOrderButton.setOnAction(event -> ordersC.showInfoOrder(order));
+                infoOrderButton.setOnAction(event -> {
+
+                });
+            }
+        });
+
+        MFXTableColumn<Order> modOrderColumn = new MFXTableColumn<>("", false);
+        infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
+            private final MFXButton modOrderButton = new MFXButton("?");
+
+            @Override
+            public void update(Order order) {
+                if (order == null) {
+                    setGraphic(null);
+                    return;
+                }
+                Image buttonImage = new Image(getClass().getResourceAsStream("/images/info.png"));
+                ImageView imageView = new ImageView(buttonImage);
+                imageView.setFitWidth(15);
+                imageView.setFitHeight(17);
+                infoOrderButton.setTextFill(Paint.valueOf("WHITE"));
+                infoOrderButton.setGraphic(imageView);
+
+                setGraphic(infoOrderButton);
+                infoOrderButton.setOnAction(event -> {
+                    ordersFarC.showModOrderForm(order);
+                });
+            }
+        });
+
+        MFXTableColumn<Order> cancelOrderColumn = new MFXTableColumn<>("", false);
+        infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
+            private final MFXButton cancelOrderButton = new MFXButton("X");
+
+            @Override
+            public void update(Order order) {
+                if (order == null) {
+                    setGraphic(null);
+                    return;
+                }
+                Image buttonImage = new Image(getClass().getResourceAsStream("/images/info.png"));
+                ImageView imageView = new ImageView(buttonImage);
+                imageView.setFitWidth(15);
+                imageView.setFitHeight(17);
+                cancelOrderButton.setTextFill(Paint.valueOf("WHITE"));
+                cancelOrderButton.setGraphic(imageView);
+
+                setGraphic(cancelOrderButton);
+                cancelOrderButton.setOnAction(event -> {
+                    ordersFarC.setOrderToCancel(order);
+                });
             }
         });
 
@@ -88,17 +136,11 @@ public class OrderListBController extends Homepage {
         );
 
         orderTable.setItems(FXCollections.observableArrayList(orderList));
-
-
     }
 
     @FXML
-    public void onClickTornaButton(ActionEvent event) {
-        ordersC.showHomePageAzienda();
+    public void onClickTornaButton() {
+        ordersFarC.showHomePageFarmacia();
     }
 
-    @FXML
-    public void onClickCreateOrderButton(ActionEvent event) {
-        ordersC.showCreateOrder();
-    }
 }

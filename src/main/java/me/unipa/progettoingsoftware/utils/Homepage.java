@@ -6,11 +6,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.Init;
+import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.io.IOException;
@@ -50,6 +53,13 @@ public abstract class Homepage extends AnchorPane {
 
     @FXML
     public void onClickAlertButton(ActionEvent event) {
+        DBMSB.getAzienda().getAlertsAzienda();
+        TempoC.getInstance().setAlertsToRead(false);
+        Image buttonImage = new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
+        ImageView imageView = new ImageView(buttonImage);
+        imageView.setFitWidth(27);
+        imageView.setFitHeight(27);
+        this.alertButton.setGraphic(imageView);
 
     }
 

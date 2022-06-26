@@ -9,33 +9,30 @@ import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class CatalogProductsBController extends Homepage {
+public class ViewCarrelloController extends Homepage {
 
     @FXML
     @Getter
-    private MFXTableView<Farmaco> catalogTable;
+    private MFXTableView<Farmaco> carrello;
     private final Stage stage;
-    private final CatalogoAzControl catalogoAzControl;
-    private final List<Farmaco> catalogList;
+    private final OrdersFarC ordersFarC;
+    private final List<Farmaco> carrelloList;
 
-    public CatalogProductsBController(Stage stage, CatalogoAzControl catalogoAzControl, List<Farmaco> catalogList) {
+    public ViewCarrelloController(Stage stage, OrdersFarC ordersFarC, List<Farmaco> carrelloList) {
         super(stage);
         this.stage = stage;
-        this.catalogoAzControl = catalogoAzControl;
-        this.catalogList = catalogList;
+        this.ordersFarC = ordersFarC;
+        this.carrelloList = carrelloList;
     }
 
     public void setupTable() {
@@ -63,8 +60,8 @@ public class CatalogProductsBController extends Homepage {
 
                 setGraphic(deleteButton);
                 deleteButton.setOnAction(event -> {
-                    catalogoAzControl.setFarmacoToRemove(farmaco);
-                    catalogoAzControl.showConfirmRemNotice();
+                    ordersFarC.setFarmacoToRemove(farmaco);
+                    ordersFarC.showConfirmRemNotice();
                 });
             }
         });
@@ -75,26 +72,30 @@ public class CatalogProductsBController extends Homepage {
         principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
 
-        catalogTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, removeColumn);
-        catalogTable.getFilters().addAll(
+        carrello.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, removeColumn);
+        carrello.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
                 new StringFilter<>("Nome", Farmaco::getFarmacoName),
                 new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
                 new DoubleFilter<>("Costo", Farmaco::getCosto)
         );
 
-        catalogTable.setItems(FXCollections.observableArrayList(catalogList));
+        carrello.setItems(FXCollections.observableArrayList(carrelloList));
 
 
     }
 
     @FXML
-    public void onClickAggiungiButton(ActionEvent event) {
-        catalogoAzControl.addProductRequest();
+    public void onClickOrdinaButton(ActionEvent event) {
+        ordersFarC.clickOrdinaButton();
+    }
+
+    public void onClickEmptyCarrelloButton(ActionEvent event){
+        ordersFarC.showEmptyNotice();
     }
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {
-        new HomePageFarmacia(this.stage, new FXMLLoader(HomePageFarmacia.class.getResource("HomePageFarmacia.fxml")));
+        ordersFarC.showHomePageFarmacia();
     }
 }

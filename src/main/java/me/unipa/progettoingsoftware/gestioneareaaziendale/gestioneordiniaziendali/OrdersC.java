@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
@@ -32,6 +33,10 @@ public class OrdersC {
                 new OrderListB(this.stage, fxmlLoader);
             });
         });
+    }
+
+    public void showHomePageAzienda() {
+        new HomePageAzienda(this.stage, new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml")));
     }
 
     public void showInfoOrder(Order order) {

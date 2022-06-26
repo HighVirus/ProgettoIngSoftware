@@ -24,6 +24,9 @@ public class TempoC {
     private TempoC() {
         this.rifonisciMagazzinoAziendale();
         this.removeFarmaciScaduti();
+        this.checkAlerts();
+        this.addPeriodicOrder();
+        this.addPeriodicOrder();
     }
 
 
@@ -71,7 +74,7 @@ public class TempoC {
         }, calendar.getTime(), TimeUnit.HOURS.toMillis(24));
     }
 
-    private void checkAlerts() {  //da aggiungere quando maria fa il database
+    private void checkAlerts() {
         Timer time = new Timer();
         time.schedule(new TimerTask() {
             @Override
@@ -89,6 +92,21 @@ public class TempoC {
                 }
             }
         }, 0, TimeUnit.MINUTES.toMillis(10));
+    }
+
+    private void addPeriodicOrder() {  //ogni lunedì
+
+    }
+
+    private void checkOrderReadyToLoadList() {  //ogni giorno alle 20:00
+        Timer time = new Timer();
+        time.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                DBMSB.getFarmacia().getOrderReadyToLoadList();
+            }
+        }, 0, TimeUnit.MINUTES.toMillis(10));
+
     }
 
     private String getRandomLottoCode() {

@@ -16,7 +16,7 @@
             <AnchorPane prefHeight="118.0" prefWidth="1000.0" style="-fx-background-color: #1c7c54;" BorderPane.alignment="CENTER">
                <children>
                   <Circle fill="#d4d4d4" layoutX="105.0" layoutY="61.0" radius="49.0" stroke="TRANSPARENT" strokeType="INSIDE" />
-                  <Label fx:id="welcomeText" layoutX="184.0" layoutY="31.0" text="Benvenuto/a, %utente%" textFill="WHITE">
+                  <Label fx:id="welcomeText1" layoutX="184.0" layoutY="31.0" text="Benvenuto/a, %utente%" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -36,16 +36,11 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </MFXButton>
-      <MFXButton layoutX="726.0" layoutY="582.0" onAction="#onClickAggiungiButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Aggiungi Farmaco" textFill="WHITE">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </MFXButton>
-      <Text fill="#1c7c54" layoutX="51.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gestione Catalogo">
+      <MFXTableView fx:id="orderTable" layoutX="51.0" layoutY="184.0" prefHeight="387.0" prefWidth="898.0" />
+      <Text fill="#1c7c54" layoutX="51.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualizza Ordini">
          <font>
             <Font name="System Bold" size="48.0" />
          </font>
       </Text>
-      <MFXTableView fx:id="catalogo" layoutX="51.0" layoutY="186.0" prefHeight="385.0" prefWidth="898.0" />
    </children>
 </AnchorPane>

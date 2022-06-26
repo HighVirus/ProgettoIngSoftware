@@ -19,17 +19,15 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </MFXButton>
-      <Label fx:id="textToShow" alignment="CENTER" layoutX="77.0" layoutY="24.0" prefHeight="81.0" prefWidth="466.0" text="Inserisci le unità del seguente farmaco che vengono inviate periodicamente:" textAlignment="CENTER" wrapText="true">
+      <Label alignment="CENTER" layoutX="77.0" layoutY="24.0" prefHeight="81.0" prefWidth="466.0" text="Inserisci le unità del seguente farmaco che vengono inviate periodicamente:" textAlignment="CENTER" wrapText="true">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
       <Pane prefHeight="24.0" prefWidth="620.0" style="-fx-background-color: #1c7c54; -fx-background-radius: 10 10 0 0;" />
-      <MFXTextField layoutX="99.0" layoutY="131.0" prefHeight="49.0" prefWidth="150.0" style="-fx-background-radius: 20;" />
-      <MFXTextField layoutX="348.0" layoutY="131.0" prefHeight="49.0" prefWidth="150.0" style="-fx-background-radius: 20;" />
-      <Label fx:id="textToShow1" alignment="CENTER" layoutX="249.0" layoutY="131.0" prefHeight="49.0" prefWidth="78.0" text="UNITA OGNI" textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="textToShow11" alignment="CENTER" layoutX="498.0" layoutY="131.0" prefHeight="49.0" prefWidth="64.0" text="GIORNI" textAlignment="CENTER" wrapText="true" />
-      <Label fx:id="textToShow12" alignment="CENTER" layoutX="99.0" layoutY="91.0" prefHeight="39.0" prefWidth="409.0" text="\%NomeFarmaco%" textAlignment="CENTER" wrapText="true">
+      <MFXTextField fx:id="unita" layoutX="153.0" layoutY="130.0" prefHeight="49.0" prefWidth="150.0" style="-fx-background-radius: 20;" />
+      <Label alignment="CENTER" layoutX="310.0" layoutY="129.0" prefHeight="50.0" prefWidth="170.0" text="UNITA OGNI 7 GIORNI" textAlignment="CENTER" wrapText="true" />
+      <Label fx:id="textToShow" alignment="CENTER" layoutX="99.0" layoutY="91.0" prefHeight="39.0" prefWidth="409.0" text="\%NomeFarmaco%" textAlignment="CENTER" wrapText="true">
          <font>
             <Font size="14.0" />
          </font>

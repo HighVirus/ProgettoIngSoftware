@@ -683,7 +683,7 @@ public class DBMSB {
 
     }
 
-    public CompletableFuture<List<Farmaco>> getFarmaciBanco() {
+    public CompletableFuture<List<Farmaco>> getFarmaciBanco() { //le unità del farmaco rappresentano la quantità di farmaco di ordinare periodicamente.
         return null;
     }
 
@@ -699,11 +699,11 @@ public class DBMSB {
         return null;
     }
 
-    public void updateOrder() {
+    public void updateOrder(String orderCode, List<Farmaco> farmacoList) {
 
     }
 
-    public CompletableFuture<Date> getFarmacoExpireDate() {
+    public CompletableFuture<Date> getFarmacoExpireDate(String codAic) {
         return null;
     }
 

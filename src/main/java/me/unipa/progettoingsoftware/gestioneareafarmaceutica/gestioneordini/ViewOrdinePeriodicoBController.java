@@ -1,41 +1,40 @@
-package me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali;
+package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
-import io.github.palexdev.materialfx.filter.EnumFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
-import me.unipa.progettoingsoftware.utils.Homepage;
+import lombok.Getter;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
-import me.unipa.progettoingsoftware.utils.OrderStatus;
+import me.unipa.progettoingsoftware.utils.Homepage;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class OrderListBController extends Homepage {
+public class ViewOrdinePeriodicoBController extends Homepage {
 
     @FXML
-    private MFXTableView<Order> orderTable;
+    @Getter
     private final Stage stage;
-    private final OrdersC ordersC;
-    private final List<Order> orderList;
+    private final OrdersFarC ordersFarC;
+    @FXML
+    @Getter
+    private MFXTableView<Farmaco> farmacoTable;
+    private final List<Farmaco> farmacoList;
 
-    public OrderListBController(Stage stage, OrdersC ordersC, List<Order> orderList) {
+    public ViewOrdinePeriodicoBController(Stage stage, OrdersFarC ordersFarC, List<Farmaco> farmacoList) {
         super(stage);
         this.stage = stage;
-        this.ordersC = ordersC;
-        this.orderList = orderList;
+        this.ordersFarC = ordersFarC;
+        this.farmacoList = farmacoList;
     }
 
     public void setupTable() {
@@ -51,7 +50,7 @@ public class OrderListBController extends Homepage {
         farmaciaEmailColumn.setPrefWidth(230);
         MFXTableColumn<Order> infoOrderColumn = new MFXTableColumn<>("", false);
         infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
-            private final MFXButton infoOrderButton = new MFXButton("");
+            private final MFXButton modOrdPerButton = new MFXButton("");
 
             @Override
             public void update(Order order) {
@@ -63,11 +62,13 @@ public class OrderListBController extends Homepage {
                 ImageView imageView = new ImageView(buttonImage);
                 imageView.setFitWidth(15);
                 imageView.setFitHeight(17);
-                infoOrderButton.setTextFill(Paint.valueOf("WHITE"));
-                infoOrderButton.setGraphic(imageView);
+                modOrdPerButton.setTextFill(Paint.valueOf("WHITE"));
+                modOrdPerButton.setGraphic(imageView);
 
-                setGraphic(infoOrderButton);
-                infoOrderButton.setOnAction(event -> ordersC.showInfoOrder(order));
+                setGraphic(modOrdPerButton);
+                modOrdPerButton.setOnAction(event -> {
+                    //ordersFarC.showModOrderForm(order);
+                });
             }
         });
 
@@ -78,8 +79,8 @@ public class OrderListBController extends Homepage {
         farmaciaEmailColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getEmail));
         statoColumn.setRowCellFactory(order -> new MFXTableRowCell<>(order1 -> order1.getStatus().getValue()));
 
-        orderTable.getTableColumns().addAll(orderCodeColumn, pivaColumn, farmaciaNameColumn, farmaciaEmailColumn, statoColumn, infoOrderColumn);
-        orderTable.getFilters().addAll(
+        farmacoTable.getTableColumns().addAll(orderCodeColumn, pivaColumn, farmaciaNameColumn, farmaciaEmailColumn, statoColumn, infoOrderColumn);
+        farmacoTable.getFilters().addAll(
                 new StringFilter<>("Codice Ordine", Order::getOrderCode),
                 new StringFilter<>("P.IVA Farmacia", Order::getPivaFarmacia),
                 new StringFilter<>("Nome Farmacia", Order::getFarmaciaName),
@@ -87,18 +88,12 @@ public class OrderListBController extends Homepage {
                 new StringFilter<>("Stato Consegna", order -> order.getStatus().getValue())
         );
 
-        orderTable.setItems(FXCollections.observableArrayList(orderList));
-
-
+        farmacoTable.setItems(FXCollections.observableArrayList(farmacoList));
     }
 
     @FXML
-    public void onClickTornaButton(ActionEvent event) {
-        ordersC.showHomePageAzienda();
+    public void onClickTornaButton() {
+        ordersFarC.showHomePageFarmacia();
     }
 
-    @FXML
-    public void onClickCreateOrderButton(ActionEvent event) {
-        ordersC.showCreateOrder();
-    }
 }

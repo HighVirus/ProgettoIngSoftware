@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<fx:root type="javafx.scene.layout.AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #DBDBDB;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" style="-fx-background-color: #DBDBDB;" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane layoutY="-5.0" prefHeight="170.0" prefWidth="1000.0">
          <top>
@@ -34,22 +34,17 @@
             <Font size="24.0" />
          </font>
       </MFXButton>
-      <MFXButton layoutX="376.0" layoutY="187.0" onAction="#onClickVisualizzaButton" prefHeight="170.0" prefWidth="248.0" style="-fx-background-radius: 20;" text="VISUALIZZA CATALOGO" textFill="#1c7c54" wrapText="true">
+      <MFXButton layoutX="51.0" layoutY="187.0" onAction="#onClickOrdFarmaciButton" prefHeight="170.0" prefWidth="248.0" style="-fx-background-radius: 20;" text="ORDINA FARMACI" textFill="#1c7c54" wrapText="true">
          <font>
             <Font size="24.0" />
          </font>
       </MFXButton>
-      <MFXButton layoutX="51.0" layoutY="187.0" onAction="#onClickOrdinaButton" prefHeight="170.0" prefWidth="248.0" style="-fx-background-radius: 20;" text="ORDINA FARMACI" textFill="#1c7c54" wrapText="true">
+      <MFXButton layoutX="579.0" layoutY="385.0" onAction="#onClickViewOrderButtonB" prefHeight="170.0" prefWidth="248.0" style="-fx-background-radius: 20;" text="VISUALIZZA ORDINI" textFill="#1c7c54" wrapText="true">
          <font>
             <Font size="24.0" />
          </font>
       </MFXButton>
-      <MFXButton layoutX="579.0" layoutY="385.0" onAction="#onClickOrdiniButton" prefHeight="170.0" prefWidth="248.0" style="-fx-background-radius: 20;" text="VISUALIZZA ORDINI" textFill="#1c7c54" wrapText="true">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </MFXButton>
-      <MFXButton layoutX="175.0" layoutY="385.0" onAction="#onClickPeriodicButton" prefHeight="170.0" prefWidth="248.0" style="-fx-background-radius: 20;" text="MODIFICA ORDINE PERIODICO" textFill="#1c7c54" wrapText="true">
+      <MFXButton layoutX="175.0" layoutY="385.0" onAction="#onClickViewOrderPerButton" prefHeight="170.0" prefWidth="248.0" style="-fx-background-radius: 20;" text="VISUALIZZA ORDINI PERIODICI" textFill="#1c7c54" wrapText="true">
          <font>
             <Font size="24.0" />
          </font>
