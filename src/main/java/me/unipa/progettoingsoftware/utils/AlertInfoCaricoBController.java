@@ -13,25 +13,22 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.StorageFarmaciaC;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class AlertInfoBController extends AnchorPane {
+@RequiredArgsConstructor
+public class AlertInfoCaricoBController extends AnchorPane {
     private final Stage stage;
     @FXML
     @Getter
-    private MFXTableView<Farmaco> storage;
-    private final StorageFarmaciaC storageFarmaciaC;
-    private final List<Farmaco> storageList;
-
-    public AlertInfoBController(Stage stage, StorageFarmaciaC storageFarmaciaC, List<Farmaco> storageList) {
-        this.stage = stage;
-        this.storageFarmaciaC = storageFarmaciaC;
-        this.storageList = storageList;
-    }
+    private MFXTableView<Order> orderTable;
+    private final AlertC alertC;
+    private final List<Order> orderList;
 
     public void setupTable() {
         MFXTableColumn<Farmaco> codAicColumn = new MFXTableColumn<>("Codice AIC", true, Comparator.comparing(Farmaco::getCodAic));
@@ -69,8 +66,8 @@ public class AlertInfoBController extends AnchorPane {
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
         unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
 
-        storage.getTableColumns().addAll(codAicColumn, lottoColumn, farmacoNameColumn, principioAttivoColumn, prescrivibileColumn, expireDateColumn, costoColumn, unitaColumn);
-        storage.getFilters().addAll(
+        orderTable.getTableColumns().addAll(codAicColumn, lottoColumn, farmacoNameColumn, principioAttivoColumn, prescrivibileColumn, expireDateColumn, costoColumn, unitaColumn);
+        orderTable.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
                 new StringFilter<>("Lotto", Farmaco::getLotto),
                 new StringFilter<>("Nome", Farmaco::getFarmacoName),
@@ -80,24 +77,20 @@ public class AlertInfoBController extends AnchorPane {
                 new IntegerFilter<>("Unita", Farmaco::getUnita)
         );
 
-        storage.setItems(FXCollections.observableArrayList(storageList));
+        orderTable.setItems(FXCollections.observableArrayList(orderList));
 
     }
 
     @FXML
-    public void onClickSellButton(ActionEvent event) {
-        System.out.println("porcodio");
+    public void onClickConfirmAll(ActionEvent event) {
+        alertC.clickConfirmAll();
     }
 
     @FXML
-    public void onClickCaricaProductsButton(ActionEvent event) {
-        System.out.println("allahkìakbar");
+    public void onClickConfirmNotAll(ActionEvent event) {
+        alertC.showCaricaMerci();
     }
 
-    @FXML
-    public void onClickTornaButton(ActionEvent event) {
-        storageFarmaciaC.showGestioneFarmaciB();
-    }
 
 
 }

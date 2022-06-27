@@ -679,10 +679,6 @@ public class DBMSB {
 
     }
 
-    public void addFarmaciToOrdered() {
-
-    }
-
     public CompletableFuture<List<Farmaco>> getFarmaciBanco() { //le unità del farmaco rappresentano la quantità di farmaco di ordinare periodicamente.
         return null;
     }
@@ -717,5 +713,9 @@ public class DBMSB {
 
     public CompletableFuture<List<Farmaco>> getFarmacoListCheckStorage() {
         return null;
+    }
+
+    public void addFarmaciToOrdered(List<Farmaco> farmacoList){
+
     }
 }

@@ -1,33 +1,34 @@
 package me.unipa.progettoingsoftware.gestioneconsegne;
 
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.ConfirmRemNotice;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
-import me.unipa.progettoingsoftware.gestionedati.entity.CarrelloE;
-import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
-import me.unipa.progettoingsoftware.gestionedati.entity.Order;
-import me.unipa.progettoingsoftware.gestionedati.entity.User;
-
-import java.sql.Date;
+import me.unipa.progettoingsoftware.utils.GenericNotice;
 
 @RequiredArgsConstructor
 public class DeliveriesC {
     private final Stage stage;
-    private ViewDeliveriesController viewDeliveriesController;
+    private DeliveryListBController deliveryListBController;
 
     public void showDeliveryList() {
         DBMSB.getAzienda().getDeliveryList();
-        FXMLLoader fxmlLoader = new FXMLLoader(ViewDeliveries.class.getResource("ViewDeliveries.fxml"));
-        fxmlLoader.setRoot(viewDeliveriesController);
-        fxmlLoader.setController(viewDeliveriesController);
-        new ViewDeliveries(stage, fxmlLoader);
+        FXMLLoader fxmlLoader = new FXMLLoader(DeliveryListB.class.getResource("ViewDeliveries.fxml"));
+        fxmlLoader.setRoot(deliveryListBController);
+        fxmlLoader.setController(deliveryListBController);
+        new DeliveryListB(stage, fxmlLoader);
+    }
+
+    public void clickConfirmDeliveryButton() {
+
+    }
+
+    public void showSignNotice() {
+
+    }
+
+    public void submitSign() {
+        new GenericNotice("Consegna confermta");
     }
 
 
@@ -38,4 +39,4 @@ public class DeliveriesC {
     public void showConfirmDelivery() {
 
     }
- }
+}

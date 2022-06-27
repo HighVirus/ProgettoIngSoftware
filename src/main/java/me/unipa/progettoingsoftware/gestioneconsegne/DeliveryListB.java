@@ -1,20 +1,22 @@
-package me.unipa.progettoingsoftware.utils;
+package me.unipa.progettoingsoftware.gestioneconsegne;
 
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.SellWindowBController;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini.ViewOrdiniController;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AlertInfoB extends Application {
+public class DeliveryListB extends Application {
+
+
     private final FXMLLoader fxmlLoader;
 
-    public AlertInfoB(Stage stage, FXMLLoader fxmlLoader) {
+    public DeliveryListB(Stage stage, FXMLLoader fxmlLoader) {
         this.fxmlLoader = fxmlLoader;
 
         try {
@@ -41,9 +43,11 @@ public class AlertInfoB extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        stage.initStyle(StageStyle.UNDECORATED);
-        SellWindowBController sellWindowBController = fxmlLoader.getController();
-        sellWindowBController.setup();
+        ViewOrdiniController viewOrdiniController = fxmlLoader.getController();
+        viewOrdiniController.setupTable();
+        viewOrdiniController.getWelcomeText().setText(viewOrdiniController.getWelcomeText().getText()
+                .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }
+
 }

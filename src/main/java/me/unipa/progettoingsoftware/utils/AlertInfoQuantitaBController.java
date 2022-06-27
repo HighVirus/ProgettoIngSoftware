@@ -16,20 +16,20 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.StorageFarmaciaC;
-import me.unipa.progettoingsoftware.gestionedati.entity.AlertE;
+import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 import java.util.Comparator;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class AlertReportController extends AnchorPane {
+public class AlertInfoQuantitaBController extends AnchorPane {
     private final Stage stage;
     @FXML
     @Getter
-    private MFXTableView<AlertE> alertTable;
+    private MFXTableView<Farmaco> farmacoTable;
     private final AlertC alertC;
-    private final List<AlertE> alertList;
+    private final List<Farmaco> farmacoList;
 
 
     public void setupTable() {
@@ -68,8 +68,8 @@ public class AlertReportController extends AnchorPane {
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
         unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
 
-        alertTable.getTableColumns().addAll(codAicColumn, lottoColumn, farmacoNameColumn, principioAttivoColumn, prescrivibileColumn, expireDateColumn, costoColumn, unitaColumn);
-        alertTable.getFilters().addAll(
+        farmacoTable.getTableColumns().addAll(codAicColumn, lottoColumn, farmacoNameColumn, principioAttivoColumn, prescrivibileColumn, expireDateColumn, costoColumn, unitaColumn);
+        farmacoTable.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
                 new StringFilter<>("Lotto", Farmaco::getLotto),
                 new StringFilter<>("Nome", Farmaco::getFarmacoName),
@@ -79,12 +79,17 @@ public class AlertReportController extends AnchorPane {
                 new IntegerFilter<>("Unita", Farmaco::getUnita)
         );
 
-        alertTable.setItems(FXCollections.observableArrayList(storageList));
+        farmacoTable.setItems(FXCollections.observableArrayList(farmacoList));
 
     }
 
     @FXML
-    public void onClickTornaButton(ActionEvent event) {
+    public void onClickAlreadyOrdered(ActionEvent event) {
+        alertC.clickAlreadyOrdered();
+    }
+
+    @FXML
+    public void onClickNotOrdered(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }

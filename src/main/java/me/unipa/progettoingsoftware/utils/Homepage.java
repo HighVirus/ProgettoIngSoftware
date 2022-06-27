@@ -53,14 +53,21 @@ public abstract class Homepage extends AnchorPane {
 
     @FXML
     public void onClickAlertButton(ActionEvent event) {
-        DBMSB.getAzienda().getAlertsAzienda();
+        if (User.isAuthenticated()) {
+            if (User.getUser().getType() == 1) {
+                DBMSB.getAzienda().getAlertsAzienda();
+                new AlertC(stage).showAlertReport();
+            } else if (User.getUser().getType() == 2) {
+                DBMSB.getFarmacia().getAlertList();
+                new AlertC(stage).showAlertList();
+            }
+        }
         TempoC.getInstance().setAlertsToRead(false);
         Image buttonImage = new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
         imageView.setFitWidth(27);
         imageView.setFitHeight(27);
         this.alertButton.setGraphic(imageView);
-
     }
 
 }
