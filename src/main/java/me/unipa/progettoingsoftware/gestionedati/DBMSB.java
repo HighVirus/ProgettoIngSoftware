@@ -126,8 +126,32 @@ public class DBMSB {
         }, executor);
     }
 
-    public CompletableFuture<List<String>> getFarmaciaFromUserId(int id) {  //TODO: list(0) restituisce la piva, list(1) il nome della farmacia
-        return null;
+    /**
+     * Metodo per ottenere le informazioni di base di una farmacia(piva e nome)
+     *
+     * @param userId
+     * @return list(0)=piva, list(1)=nome farmacia
+     */
+
+    public CompletableFuture<List<String>> getFarmaciaFromUserId(int userId) {  //TODO: list(0) restituisce la piva, list(1) il nome della farmacia
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT f.partita_iva, f.nome_farmacia FROM farmacia f,account a, farmaccount fa WHERE a.ID=fa.IDACCOUNT_F AND fa.partita_iva=f.partita_iva AND a.ID=?")) {
+                preparedStatement.setInt(1, userId);
+                List<String> farmaciaInfo = new ArrayList<>();
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    String piva = resultSet.getString("partita_iva");
+                    String farmaciaName = resultSet.getString("nome_farmacia");
+                    farmaciaInfo.add(piva);
+                    farmaciaInfo.add(farmaciaName);
+                }
+                return farmaciaInfo;
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
     }
 
     public CompletableFuture<List<Farmaco>> getFarmaciCatalogList() {
@@ -487,14 +511,16 @@ public class DBMSB {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO magazzino_aziendale (?,?,?,?,?,?,?,?)")) {
-                /*preparedStatement.setString(1, farmaco.getCodAic());
-                preparedStatement.setString(2, farmaco.getLotto());
-                preparedStatement.setString(3, farmaco.getFarmacoName());
-                preparedStatement.setString(4, farmaco.getPrincipioAttivo());
-                preparedStatement.setBoolean(5, farmaco.isPrescrivibile());
-                preparedStatement.setDate(6, farmaco.getScadenza());
-                preparedStatement.setDouble(7, farmaco.getCosto());
-                preparedStatement.setInt(8, farmaco.getUnita());*/
+                for (Farmaco farmaco : farmacoList) {
+                    preparedStatement.setString(1, farmaco.getCodAic());
+                    preparedStatement.setString(2, farmaco.getLotto());
+                    preparedStatement.setString(3, farmaco.getFarmacoName());
+                    preparedStatement.setString(4, farmaco.getPrincipioAttivo());
+                    preparedStatement.setBoolean(5, farmaco.isPrescrivibile());
+                    preparedStatement.setDate(6, farmaco.getScadenza());
+                    preparedStatement.setDouble(7, farmaco.getCosto());
+                    preparedStatement.setInt(8, farmaco.getUnita());
+                }
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -640,7 +666,27 @@ public class DBMSB {
     }
 
     public void makeDeliveryCompleted(String orderCode) {
-
+        String orderTable = (this == DBMSB.getAzienda()) ? "ordini" : "ordine";
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement updateStatement = connection.prepareStatement("UDPATE " +  orderTable + " SET unita = ? WHERE codice_aic = ? AND lotto = ?")) {
+                for (Farmaco farmacoSold : farmaciList) {
+                    Farmaco farmacoStor = this.getFarmacoFromStorage(farmacoSold.getCodAic(), farmacoSold.getLotto()).join();
+                    if ((farmacoStor.getUnita() - farmacoSold.getUnita()) <= 0) {
+                        removeStatement.setInt(1, farmacoStor.getUnita() - farmacoSold.getUnita());
+                        removeStatement.setString(2, farmacoSold.getCodAic());
+                        removeStatement.setString(3, farmacoSold.getLotto());
+                        removeStatement.executeUpdate();
+                    } else {
+                        updateStatement.setString(1, farmacoSold.getCodAic());
+                        updateStatement.setString(2, farmacoSold.getLotto());
+                        updateStatement.executeUpdate();
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
     }
 
     public void makeOrderDeliveredReadyToLoad() {
@@ -715,7 +761,7 @@ public class DBMSB {
         return null;
     }
 
-    public void addFarmaciToOrdered(List<Farmaco> farmacoList){
+    public void addFarmaciToOrdered(List<Farmaco> farmacoList) {
 
     }
 }

@@ -15,6 +15,7 @@ import me.unipa.progettoingsoftware.utils.GenericNotice;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
@@ -97,31 +98,52 @@ public class StorageFarmaciaC {
     }
 
     public void clickConfirmButton() {
+        if (this.caricaProductsFormController.checkList() == 0) {
+            new ErrorsNotice("La lista dei farmaci da caricare è vuota.");
+            return;
+        }
+
         Set<String> orderCodeSet = new HashSet<>();
         for (Farmaco farmaco : this.caricaProductsFormController.getCaricoList().getItems())
             orderCodeSet.add(farmaco.getFarmacoName());
 
         Iterator<String> orderCodeIterator = orderCodeSet.iterator();
-        while (orderCodeIterator.hasNext()) {
-            DBMSB.getAzienda().getFarmaciFromOrder(orderCodeIterator.next());   //continuare
-            if (this.caricaProductsFormController.checkList() == 0) {
-                new ErrorsNotice("La lista dei farmaci da caricare è vuota.");
-                return;
+        DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(farmaciaInfo -> {
+            while (orderCodeIterator.hasNext()) {
+                List<Farmaco> farmacoList = DBMSB.getAzienda().getFarmaciFromOrder(orderCodeIterator.next()).join();
+                if (farmacoList.isEmpty()) {
+                    new ErrorsNotice("Il codice d'ordine non esiste.");
+                    return;
+                }
+
+                for (Farmaco farmaco : farmacoList) {
+                    boolean found = false;
+                    for (Farmaco f : this.caricaProductsFormController.getCaricoList().getItems()){
+                        if (f.getCodAic().equals(farmaco.getCodAic())) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found){
+                        DBMSB.getAzienda().sendAlert(AlertType.AZIENDA, farmaciaInfo.get(1));
+                        break;
+                    }
+                }
+
+                String farmaciaName = farmaciaInfo.get(1);
+                DBMSB.getAzienda().sendAlert(AlertType.AZIENDA, farmaciaName);
             }
-            //continuare con la lista ottenuta
-            String farmaciaName = DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).join().get(1);
-            DBMSB.getAzienda().sendAlert(AlertType.AZIENDA, farmaciaName);
-        }
+        });
 
         DBMSB.getFarmacia().addFarmacoListToStorage(this.caricaProductsFormController.getCaricoList().getItems());
 
-        while (orderCodeIterator.hasNext()){
+        while (orderCodeIterator.hasNext()) {
             DBMSB.getFarmacia().makeDeliveryCompleted(orderCodeIterator.next());
             DBMSB.getAzienda().makeDeliveryCompleted(orderCodeIterator.next());
         }
 
         DBMSB.getFarmacia().getFarmaciAlreadyOrdered().thenAccept(farmacoList -> {
-            for (Farmaco farmaco : farmacoList){
+            for (Farmaco farmaco : farmacoList) {
                 DBMSB.getFarmacia().removeFarmacoFromAlreadyOrdered(farmaco.getCodAic());
             }
         });
@@ -130,7 +152,7 @@ public class StorageFarmaciaC {
 
     }
 
-    public void addFarmaciFromOrder(Order order){
+    public void addFarmaciFromOrder(Order order) {
 
     }
 
