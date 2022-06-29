@@ -669,20 +669,10 @@ public class DBMSB {
         String orderTable = (this == DBMSB.getAzienda()) ? "ordini" : "ordine";
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement updateStatement = connection.prepareStatement("UDPATE " +  orderTable + " SET unita = ? WHERE codice_aic = ? AND lotto = ?")) {
-                for (Farmaco farmacoSold : farmaciList) {
-                    Farmaco farmacoStor = this.getFarmacoFromStorage(farmacoSold.getCodAic(), farmacoSold.getLotto()).join();
-                    if ((farmacoStor.getUnita() - farmacoSold.getUnita()) <= 0) {
-                        removeStatement.setInt(1, farmacoStor.getUnita() - farmacoSold.getUnita());
-                        removeStatement.setString(2, farmacoSold.getCodAic());
-                        removeStatement.setString(3, farmacoSold.getLotto());
-                        removeStatement.executeUpdate();
-                    } else {
-                        updateStatement.setString(1, farmacoSold.getCodAic());
-                        updateStatement.setString(2, farmacoSold.getLotto());
-                        updateStatement.executeUpdate();
-                    }
-                }
+                 PreparedStatement updateStatement = connection.prepareStatement("UDPATE " + orderTable + " SET stato = ? WHERE codice_ordine = ?")) {
+                updateStatement.setInt(1, 3);
+                updateStatement.setString(2, orderCode);
+                updateStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
