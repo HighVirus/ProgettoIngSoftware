@@ -11,10 +11,11 @@ import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.Sel
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AlertReport extends Application {
+public class AlertListB extends Application{
+
     private final FXMLLoader fxmlLoader;
 
-    public AlertReport(Stage stage, FXMLLoader fxmlLoader) {
+    public AlertListB(Stage stage, FXMLLoader fxmlLoader) {
         this.fxmlLoader = fxmlLoader;
 
         try {
@@ -46,4 +47,5 @@ public class AlertReport extends Application {
         sellWindowBController.setup();
         stage.show();
     }
+
 }

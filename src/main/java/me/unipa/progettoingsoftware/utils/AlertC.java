@@ -13,12 +13,21 @@ public class AlertC {
     private AlertInfoCaricoBController alertInfoCaricoBController;
     private AlertInfoQuantitaBController alertInfoQuantitaBController;
 
-    public void showAlertReport() { //lato azienda
+    private AlertReportBController alertReportController;
 
+    private AlertListBController alertListBController;
+
+    public void showAlertReport() { //lato azienda, sistemare la control
+        new AlertReportB(this.stage, new FXMLLoader(AlertReportB.class.getResource( "AlertReportB.fxml")));
     }
 
-    public void showAlertList() {  //lato farmacia
-
+    public void showAlertList(AlertE alertE) {  //lato farmacia, sistemare la control
+        if (alertListBController.getAlertList().isEmpty()) {
+            // GenericNotice
+        }
+        else {
+            new AlertListB(this.stage, new FXMLLoader(AlertListB.class.getResource("AlertListB.fxml")));
+        }
     }
 
     public void showViewAlertFarmacia(AlertE alertE) { //quantita DA SISTEMARE LA CONTROL MANUALE

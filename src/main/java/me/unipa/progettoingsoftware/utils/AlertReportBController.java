@@ -15,7 +15,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.StorageFarmaciaC;
 import me.unipa.progettoingsoftware.gestionedati.entity.AlertE;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
@@ -23,7 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class AlertReportController extends AnchorPane {
+public class AlertReportBController extends AnchorPane {
     private final Stage stage;
     @FXML
     @Getter
