@@ -10,11 +10,11 @@ import javafx.stage.StageStyle;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PerFarmForm extends Application {
+public class PrenFarmForm extends Application {
 
     private final FXMLLoader fxmlLoader;
 
-    public PerFarmForm(Stage stage, FXMLLoader fxmlLoader) {
+    public PrenFarmForm(Stage stage, FXMLLoader fxmlLoader) {
         this.fxmlLoader = fxmlLoader;
 
         try {

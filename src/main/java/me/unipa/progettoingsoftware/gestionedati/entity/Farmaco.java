@@ -36,6 +36,10 @@ public class Farmaco {
         this(null, codAic, lotto, farmacoName, null, false, null, 0D, unita);
     }
 
+    public Farmaco(String codAic, String lotto, String farmacoName) {
+        this(null, codAic, lotto, farmacoName, null, false, null, 0D, 0);
+    }
+
     public Farmaco(String codAic, String farmacoName, String principioAttivo, boolean isPrescrivibile, Double costo) {
         this(null, codAic, null, farmacoName, principioAttivo, isPrescrivibile, null, costo, 0);
     }

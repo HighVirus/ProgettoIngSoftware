@@ -5,6 +5,7 @@ import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
+import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -12,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
@@ -41,6 +41,7 @@ public class ViewCarrelloController extends Homepage {
         farmacoNameColumn.setPrefWidth(350);
         MFXTableColumn<Farmaco> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
         principioAttivoColumn.setPrefWidth(200);
+        MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getUnita));
         MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
 
 
@@ -60,8 +61,7 @@ public class ViewCarrelloController extends Homepage {
 
                 setGraphic(deleteButton);
                 deleteButton.setOnAction(event -> {
-                    ordersFarC.setFarmacoToRemove(farmaco);
-                    ordersFarC.showConfirmRemNotice();
+                    ordersFarC.removeFromCarrello(farmaco);
                 });
             }
         });
@@ -71,13 +71,15 @@ public class ViewCarrelloController extends Homepage {
         farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
         principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
+        unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
 
-        carrello.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, removeColumn);
+        carrello.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, unitaColumn, costoColumn, removeColumn);
         carrello.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
                 new StringFilter<>("Nome", Farmaco::getFarmacoName),
                 new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
-                new DoubleFilter<>("Costo", Farmaco::getCosto)
+                new DoubleFilter<>("Costo", Farmaco::getCosto),
+                new IntegerFilter<>("Unità", Farmaco::getUnita)
         );
 
         carrello.setItems(FXCollections.observableArrayList(carrelloList));
@@ -90,7 +92,7 @@ public class ViewCarrelloController extends Homepage {
         ordersFarC.clickOrdinaButton();
     }
 
-    public void onClickEmptyCarrelloButton(ActionEvent event){
+    public void onClickEmptyCarrelloButton(ActionEvent event) {
         ordersFarC.showEmptyNotice();
     }
 

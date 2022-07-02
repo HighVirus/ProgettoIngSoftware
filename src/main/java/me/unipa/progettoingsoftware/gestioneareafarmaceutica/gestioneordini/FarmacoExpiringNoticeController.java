@@ -8,10 +8,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 @RequiredArgsConstructor
 public class FarmacoExpiringNoticeController extends AnchorPane {
     private final OrdersFarC ordersFarC;
+    private final Farmaco farmaco;
     @FXML
     @Getter
     private Label textToShow;
@@ -19,7 +21,7 @@ public class FarmacoExpiringNoticeController extends AnchorPane {
     @FXML
     public void onClickConfirmButton(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        ordersFarC.confirmAddExpiringFarmaco();
+        ordersFarC.confirmAddExpiringFarmaco(farmaco);
         stage.close();
     }
 
