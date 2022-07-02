@@ -21,6 +21,7 @@ import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 import java.util.Comparator;
 import java.util.List;
+import java.sql.Date;
 
 @RequiredArgsConstructor
 public class AlertListBController extends AnchorPane {
