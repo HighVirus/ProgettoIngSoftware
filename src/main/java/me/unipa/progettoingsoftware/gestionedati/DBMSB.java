@@ -836,7 +836,7 @@ public class DBMSB {
         return null;
     }
 
-    public CompletableFuture<List<AlertE>> getAlertList() {
+    public CompletableFuture<List<AlertE>> getAlertList(String piva) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM alert_farmacia")) {
@@ -861,12 +861,13 @@ public class DBMSB {
         }, executor);
     }
 
-    public CompletableFuture<List<Farmaco>> getAlertListFarm(String codAlert) {
+    public CompletableFuture<List<Farmaco>> getAlertListFarm(String codAlert, String piva) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT alefam.codice_aic_af, alefam.lotto_af, farmaco.nome_farmaco FROM alefam, farmaco WHERE codice_alert_af=? alefam.codice_aic_af=farmaco.codice_aic")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT alefam.codice_aic_af, alefam.lotto_af, farmaco.nome_farmaco FROM alefam, farmaco, alert_farmacia WHERE alefam.codice_alert_af=? alefam.codice_aic_af=farmaco.codice_aic AND alert_farmacia.codice_alert=alefam.codice_alert_af AND alert_farmacia.piva=?")) {
                 List<Farmaco> farmacoList = new ArrayList<>();
                 preparedStatement.setString(1, codAlert);
+                preparedStatement.setString(2, piva);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     farmacoList.add(new Farmaco(resultSet.getString("codice_aic_af"), resultSet.getString("lotto_af"), resultSet.getString("nome_farmaco")));
@@ -881,9 +882,10 @@ public class DBMSB {
     public CompletableFuture<List<Order>> getAlertListOrd(String codAlert, String piva) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM aleord WHERE codice_alert_ao=?")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM aleord, alert_farmacia WHERE aleord.codice_alert_ao=? AND alert_farmacia.codice_alert=aleord.codice_alert_ao AND alert_farmacia.piva=?")) {
                 List<Order> orderList = new ArrayList<>();
                 preparedStatement.setString(1, codAlert);
+                preparedStatement.setString(2, piva);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     orderList.addAll(DBMSB.getAzienda().getOrderList(piva).join());

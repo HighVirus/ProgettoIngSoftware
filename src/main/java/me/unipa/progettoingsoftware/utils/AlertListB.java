@@ -43,8 +43,8 @@ public class AlertListB extends Application{
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UNDECORATED);
-        SellWindowBController sellWindowBController = fxmlLoader.getController();
-        sellWindowBController.setup();
+        AlertListBController alertListBController = fxmlLoader.getController();
+        alertListBController.setupTable();
         stage.show();
     }
 
