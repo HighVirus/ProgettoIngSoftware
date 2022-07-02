@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.ConfirmRemNotice;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.InfoOrderB;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.InfoOrderBController;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.CarrelloE;
@@ -17,15 +19,18 @@ import me.unipa.progettoingsoftware.utils.GenericNotice;
 
 import java.sql.Date;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class OrdersFarC {
     private final Stage stage;
     private ViewCarrelloController viewCarrelloController;
+    private InfoOrderBController infoOrderBController;
     private ViewOrdiniController viewOrdiniController;
     private OrderFarmaWindowBController orderFarmaWindowBController;
+    private ConfirmCancelOrderNoticeController confirmCancelOrderNoticeController;
     private ModOrdFormController modOrdFormController;
-    private UnitOrderPerReportController unitOrderPerReportController;
+
     private PrenFarmFormController prenFarmFormController;
     private Farmaco expiringFarmacoToOrder = null;
     @Setter
@@ -54,11 +59,16 @@ public class OrdersFarC {
         });
     }
 
-    public void showViewOrdinePeriodicoB() {
 
+    public void showOrderInfoB(Order order) {public void showHomePageFarmacia() {
+        new HomePageFarmacia(this.stage, new FXMLLoader(HomePageFarmacia.class.getResource("HomePageFarmacia.fxml")));
     }
-
-    public void showOrderInfoB(Order order) {
+        //Order.getOrderInfo().thenAccept(orders -> { info dalla entity --classe identica a InfoOrderB dell azienda
+            InfoOrderBController infoOrderBController = new InfoOrderBController(order);
+            FXMLLoader fxmlLoader = new FXMLLoader(InfoOrderB.class.getResource("InfoOrderB.fxml"));
+            fxmlLoader.setRoot(infoOrderBController);
+            fxmlLoader.setController(infoOrderBController);
+            new InfoOrderB(new Stage(), fxmlLoader);
 
     }
 
@@ -67,26 +77,24 @@ public class OrdersFarC {
             new ErrorsNotice("Ordine non modificabile");
         } else {
             modOrdFormController = new ModOrdFormController(order, this);
-            FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ViewOrdini.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ModOrderForm.fxml"));
             fxmlLoader.setRoot(modOrdFormController);
             fxmlLoader.setController(modOrdFormController);
             new ModOrdForm(stage, fxmlLoader);
         }
     }
 
-    public void showUnitOrderPerReport(Farmaco farmaco) {
 
-    }
 
-    public void clickConfirmModifyOrderPeriodic(Farmaco farmaco) {
-
-    }
-
-    public void confirmCancelOrder() {
+    public void showConfirmCancelOrderNotice(Order order) {
         if ((ChronoUnit.DAYS.between(this.orderToCancel.getDeliveryDate().toLocalDate(), new Date(System.currentTimeMillis()).toLocalDate())) < 2) {
             new ErrorsNotice("Ordine non annullabile");
         } else {
-            //qui si mette la funzione per cancellare l'ordine porco dio
+            confirmCancelOrderNoticeController = new ConfirmCancelOrderNoticeController(order, this);
+            FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ConfirmCancelOrderNotice.fxml"));
+            fxmlLoader.setRoot(confirmCancelOrderNoticeController);
+            fxmlLoader.setController(confirmCancelOrderNoticeController);
+            new ConfirmCancelOrderNotice(stage, fxmlLoader);
         }
     }
 
@@ -113,9 +121,14 @@ public class OrdersFarC {
     }
 
     public void clickConfirmModifyButton(String orderCode) {
-        DBMSB.getAzienda().updateOrder();
-        DBMSB.getFarmacia().updateOrder();
-        new GenericNotice("Modifica effettuata");
+        DBMSB.getAzienda().updateOrder(orderCode);
+        DBMSB.getFarmacia().updateOrder(orderCode);
+        new GenericNotice("Ordine modificato con successo");
+    }
+    public void clickConfirmCancelButton(String orderCode) {
+        DBMSB.getAzienda().deleteOrder(orderCode);
+        DBMSB.getFarmacia().deleteOrder(orderCode);
+        new GenericNotice("Ordine annullato con successo");
     }
 
     private boolean isModifiedValueValid(String codAic, String lotto, int unita) {

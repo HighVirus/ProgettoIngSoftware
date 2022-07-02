@@ -15,7 +15,7 @@
             <Font name="System Bold" size="48.0" />
          </font>
       </Text>
-      <MFXButton layoutX="795.0" layoutY="665.0" onAction="#onClickConfirmButton" prefWidth="107.0" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Conferma" textFill="WHITE">
+      <MFXButton layoutX="713.0" layoutY="665.0" onAction="#onClickConfirmButton" prefHeight="33.0" prefWidth="189.0" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Conferma" textFill="WHITE">
          <font>
             <Font name="System Bold" size="18.0" />
          </font></MFXButton>

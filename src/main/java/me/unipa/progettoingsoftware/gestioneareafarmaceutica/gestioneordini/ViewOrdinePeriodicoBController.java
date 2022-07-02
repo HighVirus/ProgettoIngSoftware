@@ -21,19 +21,21 @@ import java.util.List;
 
 public class ViewOrdinePeriodicoBController extends Homepage {
 
+    private final OrderPeriodicoC orderPeriodicoC;
     @FXML
     @Getter
     private final Stage stage;
-    private final OrdersFarC ordersFarC;
+
+
     @FXML
     @Getter
     private MFXTableView<Farmaco> farmacoTable;
     private final List<Farmaco> farmacoList;
 
-    public ViewOrdinePeriodicoBController(Stage stage, OrdersFarC ordersFarC, List<Farmaco> farmacoList) {
+    public ViewOrdinePeriodicoBController(Stage stage, OrderPeriodicoC orderPeriodicoC, List<Farmaco> farmacoList) {
         super(stage);
         this.stage = stage;
-        this.ordersFarC = ordersFarC;
+        this.orderPeriodicoC = orderPeriodicoC;
         this.farmacoList = farmacoList;
     }
 
@@ -93,7 +95,7 @@ public class ViewOrdinePeriodicoBController extends Homepage {
 
     @FXML
     public void onClickTornaButton() {
-        ordersFarC.showHomePageFarmacia();
+        orderPeriodicoC.showHomePageFarmacia();
     }
 
 }

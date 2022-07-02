@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
+import me.unipa.progettoingsoftware.gestioneconsegne.HomePageCorriere;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
@@ -51,7 +52,7 @@ public class AccessControl {
                             new HomePageFarmacia(this.stage, fxmlLoader);
                         }
                         case 3 -> {
-                            fxmlLoader = new FXMLLoader(HomePageAzienda.class.getResource("HomePageAzienda.fxml"));
+                            fxmlLoader = new FXMLLoader(HomePageCorriere.class.getResource("HomePageCorriere.fxml"));
                         }
                         default -> {
                             new ErrorsNotice("Qualcosa è andato storto, contatta l'amministratore.");

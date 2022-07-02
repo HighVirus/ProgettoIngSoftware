@@ -95,8 +95,34 @@ public class TempoC {
     }
 
     private void addPeriodicOrder() {  //ogni lunedì
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(
+                Calendar.DAY_OF_WEEK,
+                Calendar.MONDAY
+        );
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
+        Timer time = new Timer();
+        time.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                DBMSB.getFarmacia().getFarmaciBanco().thenAccept(farmacos -> {
+                    if (farmacos.isEmpty()) return;
+                    for (Farmaco farmaco : farmacos) {
+                        farmaco.setLotto(getRandomLottoCode());
+                        farmaco.setUnita(1000);
+                        DBMSB.getFarmacia().addFarmaciBancoToStorage(farmaco.getCodAic(), farmaco.getLotto(), farmaco.getFarmacoName(), farmaco.getPrincipioAttivo(), farmaco.isPrescrivibile(), farmaco.getScadenza(), farmaco.getCosto(), farmaco.getUnita());
+                    }
+                });
+            }
+        }, calendar.getTime(), TimeUnit.DAYS.toMillis(7));
     }
+
+}
+
 
     private void checkOrderReadyToLoadList() {  //ogni giorno alle 20:00
         Timer time = new Timer();

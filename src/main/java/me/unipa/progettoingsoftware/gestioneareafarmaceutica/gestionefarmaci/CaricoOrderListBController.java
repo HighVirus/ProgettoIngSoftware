@@ -37,7 +37,7 @@ public class CaricoOrderListBController extends AnchorPane {
     @Getter
     private final Stage stage;
 
-    public void setup() {
+    /*public void setup() {
         MFXTableColumn<Order> codAicColumn = new MFXTableColumn<>("Codice AIC", false, Comparator.comparing(Farmaco::getCodAic));
         codAicColumn.setMinWidth(90);
         codAicColumn.resize(90, codAicColumn.getHeight());
@@ -94,7 +94,7 @@ public class CaricoOrderListBController extends AnchorPane {
         );
 
         orderTable.setItems(FXCollections.observableArrayList(orderList));
-    }
+    }*/
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {

@@ -47,15 +47,9 @@ public class HomePageCorriere extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        HomePageCorriereController homePageAziendaController = fxmlLoader.getController();
-        Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
-        ImageView imageView = new ImageView(buttonImage);
-        imageView.setFitWidth(27);
-        imageView.setFitHeight(27);
-        homePageAziendaController.getAlertButton().setGraphic(imageView);
-        homePageAziendaController.getAlertButton().setBackground(Background.EMPTY);
-        homePageAziendaController.getWelcomeText().setText(homePageAziendaController.getWelcomeText().getText()
-                .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
+        HomePageCorriereController homePageCorriereController = fxmlLoader.getController();
+        //homePageCorriereController.getWelcomeText().setText(homePageCorriereController.getWelcomeText().getText()
+        //        .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }
 }

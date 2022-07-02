@@ -33,10 +33,10 @@ public class GestioneOrdiniBController extends Homepage {
         new OrdersFarC(stage).showOrderList();
     }
 
-    @FXML
+    /* @FXML
     public void onClickViewOrderPerButton(ActionEvent event){
-        new OrdersFarC(stage).show
-    }
+        new OrdersFarC(stage).show;
+    }*/
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {

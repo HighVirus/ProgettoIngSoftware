@@ -18,6 +18,7 @@ public class OrdersC {
     private final Stage stage;
     private OrderListBController orderListBController;
     private OrderWindowBController orderWindowBController;
+    private String nomeCorriere;
 
     public void showOrderList() {
         DBMSB.getAzienda().getOrderList().whenComplete((orders, throwable) -> {
@@ -103,7 +104,7 @@ public class OrdersC {
                     return;
                 }
                 String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
-                Order order = new Order(orderCode, new Date(System.currentTimeMillis() + 3000), piva, strings.get(0), strings.get(2), strings.get(3), strings.get(1), 1);
+                Order order = new Order(nomeCorriere, orderCode, new Date(System.currentTimeMillis() + 3000), piva, strings.get(0), strings.get(2), strings.get(3), strings.get(1), 1);
                 for (Farmaco farmaco : orderWindowBController.getFarmaciTable().getItems())
                     order.getFarmacoList().add(farmaco);
                 DBMSB.getAzienda().createNewOrder(order);

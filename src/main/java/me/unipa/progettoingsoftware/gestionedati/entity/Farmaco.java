@@ -43,4 +43,5 @@ public class Farmaco {
     public Farmaco(String codAic, String lotto, String farmacoName, String principioAttivo, boolean isPrescrivibile, Date expireDate, int unita) {
         this(null, codAic, lotto, farmacoName, principioAttivo, isPrescrivibile, expireDate, 0, unita);
     }
+
 }

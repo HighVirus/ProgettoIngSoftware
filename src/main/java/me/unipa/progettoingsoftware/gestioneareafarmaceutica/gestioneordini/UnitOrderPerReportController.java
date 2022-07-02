@@ -15,7 +15,7 @@ import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 public class UnitOrderPerReportController extends AnchorPane {
 
     private final Farmaco farmaco;
-    private final OrdersFarC ordersFarC;
+    private final OrderPeriodicoC orderPeriodicoC;
 
     @FXML
     @Getter
@@ -26,7 +26,8 @@ public class UnitOrderPerReportController extends AnchorPane {
 
     @FXML
     public void onClickConfirmButton(ActionEvent event) {
-        ordersFarC.clickConfirmModifyOrderPeriodic(farmaco);
+
+        orderPeriodicoC.clickConfirmModifyOrderPeriodic(farmaco);
     }
 
     @FXML

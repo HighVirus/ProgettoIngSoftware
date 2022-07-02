@@ -12,13 +12,13 @@ import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 
 @RequiredArgsConstructor
 public class ConfirmCancelOrderNoticeController extends AnchorPane {
+
+    private final Order order;
     private final OrdersFarC ordersFarC;
 
     @FXML
-    public void onClickConfirmButton(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        ordersFarC.confirmCancelOrder();
-        stage.close();
+    public void onclickConfirmCancelButton(ActionEvent event) {
+        ordersFarC.clickConfirmCancelButton(order.getOrderCode());
     }
 
     @FXML

@@ -85,11 +85,11 @@ public class ViewOrdiniController extends Homepage {
                 ImageView imageView = new ImageView(buttonImage);
                 imageView.setFitWidth(15);
                 imageView.setFitHeight(17);
-                infoOrderButton.setTextFill(Paint.valueOf("WHITE"));
-                infoOrderButton.setGraphic(imageView);
+                modOrderButton.setTextFill(Paint.valueOf("WHITE"));
+                modOrderButton.setGraphic(imageView);
 
-                setGraphic(infoOrderButton);
-                infoOrderButton.setOnAction(event -> {
+                setGraphic(modOrderButton);
+                modOrderButton.setOnAction(event -> {
                     ordersFarC.showModOrderForm(order);
                 });
             }
@@ -98,6 +98,7 @@ public class ViewOrdiniController extends Homepage {
         MFXTableColumn<Order> cancelOrderColumn = new MFXTableColumn<>("", false);
         infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
             private final MFXButton cancelOrderButton = new MFXButton("X");
+
 
             @Override
             public void update(Order order) {

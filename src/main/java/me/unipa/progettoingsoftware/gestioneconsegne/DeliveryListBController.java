@@ -7,7 +7,10 @@ import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -31,50 +34,60 @@ public class DeliveryListBController extends AnchorPane {
 
 
     public void setupTable() {
-        MFXTableColumn<Farmaco> codAicColumn = new MFXTableColumn<>("Codice AIC", true, Comparator.comparing(Farmaco::getCodAic));
-        MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome", true, Comparator.comparing(Farmaco::getFarmacoName));
-        farmacoNameColumn.setPrefWidth(350);
-        MFXTableColumn<Farmaco> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        principioAttivoColumn.setPrefWidth(200);
-        MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
-
-
-        MFXTableColumn<Farmaco> removeColumn = new MFXTableColumn<>("", false);
-        removeColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
-            private final MFXButton deleteButton = new MFXButton("X");
+        MFXTableColumn<Order> orderCodeColumn = new MFXTableColumn<>("Codice Ordine", true, Comparator.comparing(Order::getOrderCode));
+        orderCodeColumn.setPrefWidth(130);
+        MFXTableColumn<Order> pivaColumn = new MFXTableColumn<>("P.IVA Farmacia", true, Comparator.comparing(Order::getPivaFarmacia));
+        pivaColumn.setPrefWidth(130);
+        MFXTableColumn<Order> farmaciaNameColumn = new MFXTableColumn<>("Nome Farmacia", true, Comparator.comparing(Order::getFarmaciaName));
+        farmaciaNameColumn.setPrefWidth(130);
+        MFXTableColumn<Order> farmaciaEmailColumn = new MFXTableColumn<>("Indirizzo E-Mail", true, Comparator.comparing(Order::getEmail));
+        farmaciaEmailColumn.setPrefWidth(230);
+        MFXTableColumn<Order> statoColumn = new MFXTableColumn<>("Stato Consegna", true, Comparator.comparing(Order::getStatus));
+        farmaciaEmailColumn.setPrefWidth(230);
+        MFXTableColumn<Order> infoOrderColumn = new MFXTableColumn<>("", false);
+        infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
+            private final MFXButton infoOrderButton = new MFXButton("");
 
             @Override
-            public void update(Farmaco farmaco) {
-                if (farmaco == null) {
+            public void update(Order order) {
+                if (order == null) {
                     setGraphic(null);
                     return;
                 }
+                Image buttonImage = new Image(getClass().getResourceAsStream("/images/info.png"));
+                ImageView imageView = new ImageView(buttonImage);
+                imageView.setFitWidth(15);
+                imageView.setFitHeight(17);
+                infoOrderButton.setTextFill(Paint.valueOf("WHITE"));
+                infoOrderButton.setGraphic(imageView);
 
-                deleteButton.setStyle("-fx-background-color: #FF595E;" + "-fx-font-weight: bold;");
-                deleteButton.setTextFill(Paint.valueOf("WHITE"));
-
-                setGraphic(deleteButton);
-                deleteButton.setOnAction(event -> {
-                    catalogoAzControl.setFarmacoToRemove(farmaco);
-                    catalogoAzControl.showConfirmRemNotice();
-                });
+                setGraphic(infoOrderButton);
+                infoOrderButton.setOnAction(event -> deliveriesC.showInfoDelivery());
             }
         });
 
 
-        codAicColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCodAic));
-        farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
-        principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
-        costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
+        orderCodeColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getOrderCode));
+        pivaColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getPivaFarmacia));
+        farmaciaNameColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getFarmaciaName));
+        farmaciaEmailColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getEmail));
+        statoColumn.setRowCellFactory(order -> new MFXTableRowCell<>(order1 -> order1.getStatus().getValue()));
 
-        orderTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, removeColumn);
+        orderTable.getTableColumns().addAll(orderCodeColumn, pivaColumn, farmaciaNameColumn, farmaciaEmailColumn, statoColumn, infoOrderColumn);
         orderTable.getFilters().addAll(
-                new StringFilter<>("Codice AIC", Farmaco::getCodAic),
-                new StringFilter<>("Nome", Farmaco::getFarmacoName),
-                new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
-                new DoubleFilter<>("Costo", Farmaco::getCosto)
+                new StringFilter<>("Codice Ordine", Order::getOrderCode),
+                new StringFilter<>("P.IVA Farmacia", Order::getPivaFarmacia),
+                new StringFilter<>("Nome Farmacia", Order::getFarmaciaName),
+                new StringFilter<>("Indirizzo E-Mail", Order::getEmail),
+                new StringFilter<>("Stato Consegna", order -> order.getStatus().getValue())
         );
 
         orderTable.setItems(FXCollections.observableArrayList(orderList));
+
+
+    }
+    @FXML
+    public void onClickTornaButton(ActionEvent event) {
+        deliveriesC.showHomePageCorriere();
     }
 }

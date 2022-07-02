@@ -10,6 +10,7 @@ import java.util.List;
 
 @Getter
 public class Order {
+    private final String nomeCorriere;
     private final String orderCode;
     private final Date deliveryDate;
     private final String pivaFarmacia;
@@ -20,7 +21,8 @@ public class Order {
     private final OrderStatus status;
     private final List<Farmaco> farmacoList = new ArrayList<>();
 
-    public Order(String orderCode, Date deliveryDate, String pivaFarmacia, String farmaciaName, String indirizzo, String cap, String email, int stato){
+    public Order( String nomeCorriere, String orderCode, Date deliveryDate, String pivaFarmacia, String farmaciaName, String indirizzo, String cap, String email, int stato){
+        this. nomeCorriere = nomeCorriere;
         this.orderCode = orderCode;
         this.deliveryDate = deliveryDate;
         this.pivaFarmacia = pivaFarmacia;
@@ -30,5 +32,6 @@ public class Order {
         this.email = email;
         this.status = OrderStatus.getFromType(stato);
     }
+    public static void getOrderInfo(){return;};
 
 }
