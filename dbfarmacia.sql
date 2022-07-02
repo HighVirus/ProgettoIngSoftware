@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.29, for Linux (x86_64)
 --
--- Host: localhost    Database: dbfarmacia
+-- Host: localhost    Database: dbfarmaciafinale
 -- ------------------------------------------------------
 -- Server version	8.0.29
 
@@ -57,7 +57,7 @@ CREATE TABLE `aleord` (
   KEY `codice_ordine_ao` (`codice_ordine_ao`),
   CONSTRAINT `aleord_ibfk_1` FOREIGN KEY (`codice_alert_ao`) REFERENCES `alert_farmacia` (`codice_alert`),
   CONSTRAINT `aleord_ibfk_2` FOREIGN KEY (`codice_ordine_ao`) REFERENCES `ordine` (`codice_ordine`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,6 @@ CREATE TABLE `aleord` (
 LOCK TABLES `aleord` WRITE;
 /*!40000 ALTER TABLE `aleord` DISABLE KEYS */;
 INSERT INTO `aleord` VALUES (6,'47811');
-
 /*!40000 ALTER TABLE `aleord` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -103,9 +102,9 @@ DROP TABLE IF EXISTS `farmaci_ordinati`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `farmaci_ordinati` (
-  codice_aic varchar(11) NOT NULL,
+  `codice_aic` varchar(11) NOT NULL,
   PRIMARY KEY (`codice_aic`),
-  FOREIGN KEY (`codice_aic`) REFERENCES `farmaco` (`codice_aic`)
+  CONSTRAINT `farmaci_ordinati_ibfk_1` FOREIGN KEY (`codice_aic`) REFERENCES `farmaco` (`codice_aic`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -115,10 +114,7 @@ CREATE TABLE `farmaci_ordinati` (
 
 LOCK TABLES `farmaci_ordinati` WRITE;
 /*!40000 ALTER TABLE `farmaci_ordinati` DISABLE KEYS */;
-INSERT INTO `farmaci_ordinati` VALUES ('12745182'),
-                                      ('12745182'),
-                                      ('24840074'),
-                                      ('27860016');
+INSERT INTO `farmaci_ordinati` VALUES ('12745182'),('24840074'),('27860016');
 /*!40000 ALTER TABLE `farmaci_ordinati` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -134,7 +130,7 @@ CREATE TABLE `farmaco` (
   `lotto` varchar(9) NOT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) DEFAULT NULL,
-  `prescrivibilita` BOOLEAN NOT NULL,
+  `prescrivibilita` tinyint(1) NOT NULL,
   `data_scadenza` date DEFAULT NULL,
   `costo` double DEFAULT NULL,
   `unita` int NOT NULL,
@@ -148,14 +144,7 @@ CREATE TABLE `farmaco` (
 
 LOCK TABLES `farmaco` WRITE;
 /*!40000 ALTER TABLE `farmaco` DISABLE KEYS */;
-INSERT INTO `farmaco` VALUES 
-('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',false,'2027-07-01',4.53,450),
-('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',false,'2025-06-01',12.5,15),
-('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',false,'2027-07-01',1.35,219),
-('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',true,'2027-09-01',2.34,40),
-('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',true,'2026-05-01',8.5,21),
-('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',true,'2027-12-01',6,150),
-('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',true,'2025-07-01',4.75,25);
+INSERT INTO `farmaco` VALUES ('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',0,'2027-07-01',4.53,450),('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',0,'2025-06-01',12.5,15),('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',0,'2027-07-01',1.35,219),('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',1,'2027-09-01',2.34,40),('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',1,'2026-05-01',8.5,21),('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',1,'2027-12-01',6,150),('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',1,'2025-07-01',4.75,25);
 /*!40000 ALTER TABLE `farmaco` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,7 +159,7 @@ CREATE TABLE `ord_farmaci` (
   `codice_ordine_of` varchar(5) NOT NULL,
   `codice_aic_of` varchar(11) NOT NULL,
   `lotto_of` varchar(9) NOT NULL,
-  unita INTEGER NOT NULL,
+  `unita` int NOT NULL,
   PRIMARY KEY (`codice_ordine_of`,`codice_aic_of`,`lotto_of`),
   KEY `codice_aic_of` (`codice_aic_of`,`lotto_of`),
   CONSTRAINT `ord_farmaci_ibfk_1` FOREIGN KEY (`codice_ordine_of`) REFERENCES `ordine` (`codice_ordine`)
@@ -183,7 +172,6 @@ CREATE TABLE `ord_farmaci` (
 
 LOCK TABLES `ord_farmaci` WRITE;
 /*!40000 ALTER TABLE `ord_farmaci` DISABLE KEYS */;
-INSERT INTO `ord_farmaci` VALUES ('47811','12745182','abe789'),('47811','12745182','abe790'),('47811','24840074','bgt541'),('47811','27860016','frt654');
 /*!40000 ALTER TABLE `ord_farmaci` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -221,8 +209,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-24 19:47:46
-/* seleziona tutti i farmaci presenti all'interno del database */ 
+-- Dump completed on 2022-07-02 14:15:31
+
 
 select *
 from farmaco;
