@@ -28,15 +28,15 @@ public class AlertC {
     }
 
     public void showAlertList() {  //lato farmacia, sistemare la control
-        User.getUser().getFarmaciaPiva().getAlertList().thenAccept(AlertE -> {
-            if (alertListBController.getAlertList().isEmpty()) {
+        DBMSB.getFarmacia().getAlertList(User.getUser().getFarmaciaPiva()).thenAccept(alertEList -> {
+            if (alertEList.isEmpty()) {
                 new ErrorsNotice("Non ci sono alert da visualizzare");
             }
             else {
-                AlertListBController prenFarmFormController = new AlertListBController(farmaco, this, new Date(calendar.getTimeInMillis()));
+                alertListBController = new AlertListBController(this.stage, this, alertEList);
                 FXMLLoader fxmlLoader = new FXMLLoader(AlertListB.class.getResource("AlertListB.fxml"));
-                fxmlLoader.setRoot(prenFarmFormController);
-                fxmlLoader.setController(prenFarmFormController);
+                fxmlLoader.setRoot(alertListBController);
+                fxmlLoader.setController(alertListBController);
                 new AlertListB(new Stage(), fxmlLoader);
             }
         });
