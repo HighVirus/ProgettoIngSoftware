@@ -36,46 +36,20 @@ public class AlertInfoQuantitaBController extends AnchorPane {
         MFXTableColumn<Farmaco> codAicColumn = new MFXTableColumn<>("Codice AIC", true, Comparator.comparing(Farmaco::getCodAic));
         codAicColumn.setMinWidth(80);
         codAicColumn.resize(80, codAicColumn.getHeight());
-        MFXTableColumn<Farmaco> lottoColumn = new MFXTableColumn<>("Lotto", false, Comparator.comparing(Farmaco::getLotto));
-        lottoColumn.setMinWidth(80);
-        lottoColumn.resize(80, lottoColumn.getHeight());
-        MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome", false, Comparator.comparing(Farmaco::getFarmacoName));
+        MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome Farmaco", false, Comparator.comparing(Farmaco::getFarmacoName));
         farmacoNameColumn.setPrefWidth(250);
-        MFXTableColumn<Farmaco> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        principioAttivoColumn.setPrefWidth(100);
-        MFXTableColumn<Farmaco> prescrivibileColumn = new MFXTableColumn<>("Prescrivibile", false, Comparator.comparing(Farmaco::isPrescrivibile));
-        prescrivibileColumn.setMinWidth(80);
-        prescrivibileColumn.resize(80, prescrivibileColumn.getHeight());
-
-        MFXTableColumn<Farmaco> expireDateColumn = new MFXTableColumn<>("Data di scadenza", false, Comparator.comparing(Farmaco::getScadenza));
-        expireDateColumn.setMinWidth(90);
-        expireDateColumn.resize(90, expireDateColumn.getHeight());
-
-        MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        costoColumn.setMinWidth(65);
-        costoColumn.resize(65, costoColumn.getHeight());
-
         MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", false, Comparator.comparing(Farmaco::getUnita));
         unitaColumn.setMinWidth(70);
         unitaColumn.resize(70, unitaColumn.getHeight());
 
         codAicColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCodAic));
-        lottoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getLotto));
         farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
-        principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
-        prescrivibileColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::isPrescrivibile));
-        expireDateColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getScadenza));
-        costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
         unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
 
-        farmacoTable.getTableColumns().addAll(codAicColumn, lottoColumn, farmacoNameColumn, principioAttivoColumn, prescrivibileColumn, expireDateColumn, costoColumn, unitaColumn);
+        farmacoTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, unitaColumn);
         farmacoTable.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
-                new StringFilter<>("Lotto", Farmaco::getLotto),
-                new StringFilter<>("Nome", Farmaco::getFarmacoName),
-                new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
-                new BooleanFilter<>("Prescrivibilità", Farmaco::isPrescrivibile),
-                new DoubleFilter<>("Costo", Farmaco::getCosto),
+                new StringFilter<>("Nome Farmaco", Farmaco::getFarmacoName),
                 new IntegerFilter<>("Unita", Farmaco::getUnita)
         );
 
@@ -90,6 +64,12 @@ public class AlertInfoQuantitaBController extends AnchorPane {
 
     @FXML
     public void onClickNotOrdered(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    public void onClickTornaButton(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }

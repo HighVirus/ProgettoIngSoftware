@@ -42,8 +42,8 @@ public class AlertReportB extends Application {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UNDECORATED);
-        SellWindowBController sellWindowBController = fxmlLoader.getController();
-        sellWindowBController.setup();
+        AlertReportBController alertReportBController = fxmlLoader.getController();
+        alertReportBController.setupTable();
         stage.show();
     }
 }

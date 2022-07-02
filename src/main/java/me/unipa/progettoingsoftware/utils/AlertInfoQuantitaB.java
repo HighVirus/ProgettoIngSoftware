@@ -42,8 +42,8 @@ public class AlertInfoQuantitaB extends Application {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UNDECORATED);
-        SellWindowBController sellWindowBController = fxmlLoader.getController();
-        sellWindowBController.setup();
+        AlertInfoQuantitaBController alertInfoQuantitaBController = fxmlLoader.getController();
+        alertInfoQuantitaBController.setupTable();
         stage.show();
     }
 }

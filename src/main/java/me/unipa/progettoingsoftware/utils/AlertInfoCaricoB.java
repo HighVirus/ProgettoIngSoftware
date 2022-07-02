@@ -42,8 +42,8 @@ public class AlertInfoCaricoB extends Application {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UNDECORATED);
-        SellWindowBController sellWindowBController = fxmlLoader.getController();
-        sellWindowBController.setup();
+        AlertInfoCaricoBController alertInfoCaricoBController = fxmlLoader.getController();
+        alertInfoCaricoBController.setupTable();
         stage.show();
     }
 }
