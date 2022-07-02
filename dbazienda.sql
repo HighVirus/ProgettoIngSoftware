@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.29, for Linux (x86_64)
 --
--- Host: localhost    Database: dbazienda
+-- Host: localhost    Database: dbaziendafinale
 -- ------------------------------------------------------
 -- Server version	8.0.29
 
@@ -300,11 +300,10 @@ DROP TABLE IF EXISTS `ordine_periodico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ordine_periodico` (
-  `piva` varchar(5) NOT NULL,
+  `piva` varchar(11) NOT NULL,
   `codice_aic_pm` varchar(9) NOT NULL,
   `unita` int NOT NULL,
-  `periodo_consegna` int NOT NULL,
-  PRIMARY KEY (`codice_ordine`)
+  `periodo_consegna` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -314,6 +313,7 @@ CREATE TABLE `ordine_periodico` (
 
 LOCK TABLES `ordine_periodico` WRITE;
 /*!40000 ALTER TABLE `ordine_periodico` DISABLE KEYS */;
+INSERT INTO `ordine_periodico` VALUES ('15486232231','24840074',50,7),('45781004476','27860016',120,7),('15486232231','34246023',300,7),('45781004476','42386488',150,7);
 /*!40000 ALTER TABLE `ordine_periodico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -403,4 +403,5 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-26 20:32:57
+-- Dump completed on 2022-07-02 14:15:41
+
