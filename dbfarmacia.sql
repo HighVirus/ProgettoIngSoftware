@@ -104,7 +104,7 @@ DROP TABLE IF EXISTS `farmaci_ordinati`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `farmaci_ordinati` (
   codice_aic varchar(11) NOT NULL,
-  PRIMARY KEY (`codice_aic_ord`),
+  PRIMARY KEY (`codice_aic`),
   FOREIGN KEY (`codice_aic`) REFERENCES `farmaco` (`codice_aic`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
