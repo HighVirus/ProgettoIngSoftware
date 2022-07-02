@@ -2,10 +2,12 @@ package me.unipa.progettoingsoftware.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini.PeriodicOrder;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
+import java.sql.Date;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.Timer;
@@ -26,7 +28,7 @@ public class TempoC {
         this.removeFarmaciScaduti();
         this.checkAlerts();
         this.addPeriodicOrder();
-        this.addPeriodicOrder();
+        this.checkOrderReadyToLoadList();
     }
 
 
@@ -85,7 +87,7 @@ public class TempoC {
                             alertsToRead = aBoolean;
                         });
                     } else if (User.getUser().getType() == 2) {
-                        DBMSB.getFarmacia().thereIsAlertsNotRead().thenAccept(aBoolean -> {
+                        DBMSB.getFarmacia().thereIsAlertsNotRead(User.getUser().getFarmaciaPiva()).thenAccept(aBoolean -> {
                             alertsToRead = aBoolean;
                         });
                     }
@@ -109,19 +111,35 @@ public class TempoC {
         time.schedule(new TimerTask() {
             @Override
             public void run() {
-                DBMSB.getFarmacia().getFarmaciBanco().thenAccept(farmacos -> {
-                    if (farmacos.isEmpty()) return;
-                    for (Farmaco farmaco : farmacos) {
-                        farmaco.setLotto(getRandomLottoCode());
-                        farmaco.setUnita(1000);
-                        DBMSB.getFarmacia().addFarmaciBancoToStorage(farmaco.getCodAic(), farmaco.getLotto(), farmaco.getFarmacoName(), farmaco.getPrincipioAttivo(), farmaco.isPrescrivibile(), farmaco.getScadenza(), farmaco.getCosto(), farmaco.getUnita());
+                DBMSB.getAzienda().getFarmaciePivaList().thenAccept(pivaList -> {
+                    if (pivaList.isEmpty()) return;
+                    for (String piva : pivaList) {
+                        DBMSB.getFarmacia().getFarmacoUnitaPeriodic(piva).thenAccept(periodicOrders -> {
+                            if (periodicOrders.isEmpty()) return;
+                            for (PeriodicOrder periodicOrder : periodicOrders) {
+                                DBMSB.getFarmacia().getFarmacoListFromStorage(periodicOrder.getCodAic()).thenAccept(farmacoList -> {
+                                    Farmaco farmaco = farmacoList.get(0);
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTime(new Date(System.currentTimeMillis()));
+                                    calendar.add(Calendar.YEAR, 2);
+                                    DBMSB.getFarmacia().addFarmaciBancoToStorage(periodicOrder.getCodAic(),
+                                            getRandomLottoCode(),
+                                            periodicOrder.getFarmacoName(),
+                                            periodicOrder.getPrincipioAttivo(),
+                                            farmaco.isPrescrivibile(),
+                                            new Date(calendar.getTimeInMillis()),
+                                            farmaco.getCosto(),
+                                            periodicOrder.getUnita());
+                                });
+
+                            }
+                        });
                     }
                 });
+
             }
         }, calendar.getTime(), TimeUnit.DAYS.toMillis(7));
     }
-
-}
 
 
     private void checkOrderReadyToLoadList() {  //ogni giorno alle 20:00
@@ -129,7 +147,9 @@ public class TempoC {
         time.schedule(new TimerTask() {
             @Override
             public void run() {
-                DBMSB.getFarmacia().getOrderReadyToLoadList();
+                if (User.isAuthenticated() && User.getUser().getType() == 2){
+                    DBMSB.getFarmacia().getOrderReadyToLoadList(User.getUser().getFarmaciaPiva());
+                }
             }
         }, 0, TimeUnit.MINUTES.toMillis(10));
 

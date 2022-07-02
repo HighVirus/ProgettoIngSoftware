@@ -19,7 +19,8 @@ import me.unipa.progettoingsoftware.utils.GenericNotice;
 
 import java.sql.Date;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Random;
 
 @RequiredArgsConstructor
 public class OrdersFarC {
@@ -47,28 +48,23 @@ public class OrdersFarC {
     }
 
     public void showOrderList() {
-        DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
-            String piva = strings.get(0);
-            DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
-                viewOrdiniController = new ViewOrdiniController(stage, this, orders);
-                FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ViewOrdini.fxml"));
-                fxmlLoader.setRoot(viewOrdiniController);
-                fxmlLoader.setController(viewOrdiniController);
-                new ViewOrdini(stage, fxmlLoader);
-            });
+        String piva = User.getUser().getFarmaciaPiva();
+        DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
+            viewOrdiniController = new ViewOrdiniController(stage, this, orders);
+            FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ViewOrdini.fxml"));
+            fxmlLoader.setRoot(viewOrdiniController);
+            fxmlLoader.setController(viewOrdiniController);
+            new ViewOrdini(stage, fxmlLoader);
         });
     }
 
-
-    public void showOrderInfoB(Order order) {public void showHomePageFarmacia() {
-        new HomePageFarmacia(this.stage, new FXMLLoader(HomePageFarmacia.class.getResource("HomePageFarmacia.fxml")));
-    }
+    public void showOrderInfoB(Order order) {
         //Order.getOrderInfo().thenAccept(orders -> { info dalla entity --classe identica a InfoOrderB dell azienda
-            InfoOrderBController infoOrderBController = new InfoOrderBController(order);
-            FXMLLoader fxmlLoader = new FXMLLoader(InfoOrderB.class.getResource("InfoOrderB.fxml"));
-            fxmlLoader.setRoot(infoOrderBController);
-            fxmlLoader.setController(infoOrderBController);
-            new InfoOrderB(new Stage(), fxmlLoader);
+        InfoOrderBController infoOrderBController = new InfoOrderBController(order);
+        FXMLLoader fxmlLoader = new FXMLLoader(InfoOrderB.class.getResource("InfoOrderB.fxml"));
+        fxmlLoader.setRoot(infoOrderBController);
+        fxmlLoader.setController(infoOrderBController);
+        new InfoOrderB(new Stage(), fxmlLoader);
 
     }
 
@@ -77,7 +73,7 @@ public class OrdersFarC {
             new ErrorsNotice("Ordine non modificabile");
         } else {
             modOrdFormController = new ModOrdFormController(order, this);
-            FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ModOrderForm.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(ModOrdForm.class.getResource("ModOrderForm.fxml"));
             fxmlLoader.setRoot(modOrdFormController);
             fxmlLoader.setController(modOrdFormController);
             new ModOrdForm(stage, fxmlLoader);
@@ -85,21 +81,16 @@ public class OrdersFarC {
     }
 
 
-
     public void showConfirmCancelOrderNotice(Order order) {
         if ((ChronoUnit.DAYS.between(this.orderToCancel.getDeliveryDate().toLocalDate(), new Date(System.currentTimeMillis()).toLocalDate())) < 2) {
             new ErrorsNotice("Ordine non annullabile");
         } else {
             confirmCancelOrderNoticeController = new ConfirmCancelOrderNoticeController(order, this);
-            FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ConfirmCancelOrderNotice.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(ConfirmCancelOrderNotice.class.getResource("ConfirmCancelOrderNotice.fxml"));
             fxmlLoader.setRoot(confirmCancelOrderNoticeController);
             fxmlLoader.setController(confirmCancelOrderNoticeController);
             new ConfirmCancelOrderNotice(stage, fxmlLoader);
         }
-    }
-
-    public void clickConfirmPrenFarmForm(Farmaco farmaco){
-
     }
 
     public void onClickApplyModifyToFarmaco(Farmaco farmaco, String unita) {
@@ -125,6 +116,7 @@ public class OrdersFarC {
         DBMSB.getFarmacia().updateOrder(orderCode);
         new GenericNotice("Ordine modificato con successo");
     }
+
     public void clickConfirmCancelButton(String orderCode) {
         DBMSB.getAzienda().deleteOrder(orderCode);
         DBMSB.getFarmacia().deleteOrder(orderCode);
@@ -139,13 +131,52 @@ public class OrdersFarC {
     public void clickOrdinaButton() {
         if (orderFarmaWindowBController.getOrderList().getItems().isEmpty() || CarrelloE.getInstance().getFarmaci().isEmpty()) {
             new ErrorsNotice("Il carrello è vuoto.");
-            return;
+        } else if (orderFarmaWindowBController.getOrderList().getItems().isEmpty() && !CarrelloE.getInstance().getFarmaci().isEmpty()) {
+            String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date(System.currentTimeMillis()));
+            calendar.add(Calendar.DAY_OF_YEAR, 2);
+            DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
+                String piva = strings.get(0);
+                String farmaciaName = strings.get(1);
+                DBMSB.getAzienda().getFarmaciaInfo(piva).thenAccept(strings1 -> {
+                    String indirizzo = strings1.get(2);
+                    String cap = strings1.get(3);
+                    String email = strings1.get(1);
+                    Order order = new Order(orderCode, new Date(calendar.getTimeInMillis()),
+                            piva, farmaciaName, indirizzo, cap, email, 1);
+                    order.getFarmacoList().addAll(CarrelloE.getInstance().getFarmaci());
+                    DBMSB.getAzienda().createNewOrder(order);
+                    DBMSB.getFarmacia().createNewOrder(order);
+                    Platform.runLater(() -> {
+                        new GenericNotice("Ordine creato conferma");
+                    });
+                });
+            });
+        } else if (!orderFarmaWindowBController.getOrderList().getItems().isEmpty() && CarrelloE.getInstance().getFarmaci().isEmpty()) {
+            String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date(System.currentTimeMillis()));
+            calendar.add(Calendar.DAY_OF_YEAR, 2);
+            DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
+                String piva = strings.get(0);
+                String farmaciaName = strings.get(1);
+                DBMSB.getAzienda().getFarmaciaInfo(piva).thenAccept(strings1 -> {
+                    String indirizzo = strings1.get(2);
+                    String cap = strings1.get(3);
+                    String email = strings1.get(1);
+                    Order order = new Order(orderCode, new Date(calendar.getTimeInMillis()),
+                            piva, farmaciaName, indirizzo, cap, email, 1);
+                    order.getFarmacoList().addAll(orderFarmaWindowBController.getOrderList().getItems());
+                    DBMSB.getAzienda().createNewOrder(order);
+                    DBMSB.getFarmacia().createNewOrder(order);
+                    Platform.runLater(() -> {
+                        new GenericNotice("Ordine creato conferma");
+                    });
+                });
+            });
         }
 
-        Order order = new Order();
-        DBMSB.getAzienda().createNewOrder(order);
-        DBMSB.getFarmacia().createNewOrder(order);
-        new GenericNotice("Ordine creato conferma");
     }
 
     public void showEmptyNotice() {
@@ -194,7 +225,7 @@ public class OrdersFarC {
 
                         DBMSB.getAzienda().getFarmacoExpireDate(farmaco.getCodAic()).thenAccept(date -> {
                             if ((ChronoUnit.DAYS.between(date.toLocalDate(), new Date(System.currentTimeMillis()).toLocalDate())) < 60) {
-                                this.showFarmacoExpiringNotice();
+                                this.showFarmacoExpiringNotice(farmaco);
                                 while (expiringFarmacoToOrder == null && !refuseAddExpiringFarmaco) ;
                             }
                         });
@@ -204,7 +235,7 @@ public class OrdersFarC {
                     } else {
                         DBMSB.getAzienda().getFarmacoAvailabilityDate(farmaco.getCodAic(), farmaco.getUnita()).thenAccept(date -> {
                             Platform.runLater(() -> {
-                                this.showNoAvailabilityNotice(date);
+                                this.showNoAvailabilityNotice(date, farmaco);
                             });
                         });
                     }
@@ -216,16 +247,18 @@ public class OrdersFarC {
         }
     }
 
-    public void showFarmacoExpiringNotice() {
-        FarmacoExpiringNoticeController farmacoExpiringNoticeController = new FarmacoExpiringNoticeController(this);
+    public void showFarmacoExpiringNotice(Farmaco farmaco) {
+        FarmacoExpiringNoticeController farmacoExpiringNoticeController = new FarmacoExpiringNoticeController(this, farmaco);
         FXMLLoader fxmlLoader = new FXMLLoader(FarmacoExpiringNotice.class.getResource("FarmacoExpiringNotice.fxml"));
         fxmlLoader.setRoot(farmacoExpiringNoticeController);
         fxmlLoader.setController(farmacoExpiringNoticeController);
         new FarmacoExpiringNotice(new Stage(), fxmlLoader);
     }
 
-    public void confirmAddExpiringFarmaco() {
-
+    public void confirmAddExpiringFarmaco(Farmaco farmaco) {
+        orderFarmaWindowBController.getOrderList().getItems().add(farmaco);
+        CarrelloE.getInstance().getFarmaci().add(farmaco);
+        new GenericNotice("Prodotto aggiunto con successo.");
     }
 
     public void showHomePageFarmacia() {
@@ -241,7 +274,35 @@ public class OrdersFarC {
     }
 
     public void showPrenFarmForm(Date date, Farmaco farmaco) {
-        //crea l'ordine
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        PrenFarmFormController prenFarmFormController = new PrenFarmFormController(farmaco, this, new Date(calendar.getTimeInMillis()));
+        FXMLLoader fxmlLoader = new FXMLLoader(PrenFarmForm.class.getResource("PrenFarmForm.fxml"));
+        fxmlLoader.setRoot(prenFarmFormController);
+        fxmlLoader.setController(prenFarmFormController);
+        new NoAvailabilityNotice(new Stage(), fxmlLoader, date);
+
+    }
+
+    public void clickConfirmPrenFarmForm(Farmaco farmaco, Date date) {
+        String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
+        DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
+            String piva = strings.get(0);
+            String farmaciaName = strings.get(1);
+            DBMSB.getAzienda().getFarmaciaInfo(piva).thenAccept(strings1 -> {
+                String indirizzo = strings1.get(2);
+                String cap = strings1.get(3);
+                String email = strings1.get(1);
+                Order order = new Order(orderCode, date,
+                        piva, farmaciaName, indirizzo, cap, email, 1);
+                order.getFarmacoList().add(farmaco);
+                DBMSB.getAzienda().createNewOrder(order);
+                DBMSB.getFarmacia().createNewOrder(order);
+            });
+        });
+
+
         new GenericNotice("Ordine creato correttamente, data di consegna: " + date);
     }
 
@@ -254,5 +315,10 @@ public class OrdersFarC {
         } catch (NumberFormatException ex) {
             return false;
         }
+    }
+
+    public void removeFromCarrello(Farmaco farmaco) {
+        viewCarrelloController.getCarrello().getItems().remove(farmaco);
+        CarrelloE.getInstance().getFarmaci().remove(farmaco);
     }
 }

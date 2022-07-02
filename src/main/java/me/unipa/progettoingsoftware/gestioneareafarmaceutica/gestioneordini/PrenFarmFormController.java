@@ -11,11 +11,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
+import java.sql.Date;
+
 @RequiredArgsConstructor
 public class PrenFarmFormController extends AnchorPane {
 
     private final Farmaco farmaco;
     private final OrdersFarC ordersFarC;
+    private final Date date;
 
     @FXML
     @Getter
@@ -26,7 +29,7 @@ public class PrenFarmFormController extends AnchorPane {
 
     @FXML
     public void onClickConfirmButton(ActionEvent event) {
-        ordersFarC.clickConfirmPrenFarmForm(farmaco);
+        ordersFarC.clickConfirmPrenFarmForm(farmaco, date);
     }
 
     @FXML

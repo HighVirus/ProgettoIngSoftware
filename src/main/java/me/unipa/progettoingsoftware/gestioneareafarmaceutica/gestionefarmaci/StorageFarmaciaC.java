@@ -41,19 +41,16 @@ public class StorageFarmaciaC {
     }
 
     public void showCaricoOrderListB() {
-        DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
-            String piva = strings.get(0);
-            DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
-                Platform.runLater(() -> {
-                    this.caricoOrderListBController = new CaricoOrderListBController(orders, this, new Stage());
-                    FXMLLoader fxmlLoader = new FXMLLoader(CaricoOrderListB.class.getResource("CaricoOrderListB.fxml"));
-                    fxmlLoader.setRoot(caricaProductsFormController);
-                    fxmlLoader.setController(caricaProductsFormController);
-                    new CaricoOrderListB(new Stage(), fxmlLoader);
-                });
+        String piva = User.getUser().getFarmaciaPiva();
+        DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
+            Platform.runLater(() -> {
+                this.caricoOrderListBController = new CaricoOrderListBController(orders, this, new Stage());
+                FXMLLoader fxmlLoader = new FXMLLoader(CaricoOrderListB.class.getResource("CaricoOrderListB.fxml"));
+                fxmlLoader.setRoot(caricaProductsFormController);
+                fxmlLoader.setController(caricaProductsFormController);
+                new CaricoOrderListB(new Stage(), fxmlLoader);
             });
         });
-
     }
 
     public void showStorageFarmaciaB() {
@@ -118,13 +115,13 @@ public class StorageFarmaciaC {
 
                 for (Farmaco farmaco : farmacoList) {
                     boolean found = false;
-                    for (Farmaco f : this.caricaProductsFormController.getCaricoList().getItems()){
+                    for (Farmaco f : this.caricaProductsFormController.getCaricoList().getItems()) {
                         if (f.getCodAic().equals(farmaco.getCodAic())) {
                             found = true;
                             break;
                         }
                     }
-                    if (!found){
+                    if (!found) {
                         DBMSB.getAzienda().sendAlert(AlertType.AZIENDA, farmaciaInfo.get(1));
                         break;
                     }
