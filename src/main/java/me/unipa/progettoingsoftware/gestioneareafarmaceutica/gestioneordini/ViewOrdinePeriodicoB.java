@@ -45,15 +45,15 @@ public class ViewOrdinePeriodicoB extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        ViewOrdiniController viewOrdiniController = fxmlLoader.getController();
-        viewOrdiniController.setupTable();
+        ViewOrdinePeriodicoBController viewOrdinePeriodicoBController = fxmlLoader.getController();
+        viewOrdinePeriodicoBController.setupTable();
         Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
         imageView.setFitWidth(27);
         imageView.setFitHeight(27);
-        viewOrdiniController.getAlertButton().setGraphic(imageView);
-        viewOrdiniController.getAlertButton().setBackground(Background.EMPTY);
-        viewOrdiniController.getWelcomeText().setText(viewOrdiniController.getWelcomeText().getText()
+        viewOrdinePeriodicoBController.getAlertButton().setGraphic(imageView);
+        viewOrdinePeriodicoBController.getAlertButton().setBackground(Background.EMPTY);
+        viewOrdinePeriodicoBController.getWelcomeText().setText(viewOrdinePeriodicoBController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }

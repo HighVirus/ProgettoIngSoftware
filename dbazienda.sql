@@ -348,14 +348,11 @@ DROP TABLE IF EXISTS `permag`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `permag` (
-  `codice_ordine_pm` varchar(5) NOT NULL,
   `codice_aic_pm` varchar(9) NOT NULL,
-  `lotto_pm` varchar(9) NOT NULL,
   `unita` int NOT NULL,
-  PRIMARY KEY (`codice_ordine_pm`,`codice_aic_pm`,`lotto_pm`),
-  KEY `codice_aic_pm` (`codice_aic_pm`,`lotto_pm`),
-  CONSTRAINT `permag_ibfk_1` FOREIGN KEY (`codice_ordine_pm`) REFERENCES `ordini` (`codice_ordine`),
-  CONSTRAINT `permag_ibfk_2` FOREIGN KEY (`codice_aic_pm`, `lotto_pm`) REFERENCES `magazzino_aziendale` (`codice_aic`, `lotto`)
+  PRIMARY KEY (`codice_aic_pm`),
+  KEY `codice_aic_pm` (`codice_aic_pm`),
+  CONSTRAINT `permag_ibfk_2` FOREIGN KEY (`codice_aic_pm`) REFERENCES `magazzino_aziendale` (`codice_aic`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

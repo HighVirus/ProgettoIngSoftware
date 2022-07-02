@@ -680,6 +680,7 @@ public class DBMSB {
             }
         }, executor);
     }
+
     public void makeOrderDeliveredReadyToLoad(String orderCode) {
         String orderTable = (this == DBMSB.getAzienda()) ? "ordini" : "ordine";
         CompletableFuture.runAsync(() -> {
@@ -789,18 +790,18 @@ public class DBMSB {
 
     }
 
-    public CompletableFuture<List<Farmaco>> getFarmaciBanco() { //le unità del farmaco rappresentano la quantità di farmaco di ordinare periodicamente.
+    public CompletableFuture<List<Farmaco>> getFarmaciBanco(String piva) {
         return CompletableFuture.supplyAsync(() -> {
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM farmaco WHERE prescrivibilita = no")) {
-           //da completare.....
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM farmaco WHERE prescrivibilita = false")) {
+                //da completare.....
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             return null;
         }, executor);
-}
+    }
 
     public void addFarmaciBancoToStorage(String codiceAic, String lotto, String nomeFarmaco, String principioAttivo, boolean prescrivibilita, Date data_scadenza, double costo, int unita) {
         CompletableFuture.runAsync(() -> {
@@ -835,7 +836,6 @@ public class DBMSB {
     }
 
 
-
     public CompletableFuture<List<Order>> getOrderReadyToLoadList() {
         return null;
     }
@@ -848,8 +848,17 @@ public class DBMSB {
         return null;
     }
 
-    public CompletableFuture<Integer> getFarmacoUnitaPeriodic() {
-        return null;
+    public CompletableFuture<List<Farmaco>> getFarmacoUnitaPeriodic(String codAic) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM farmaco WHERE prescrivibilita = false")) {
+                //da completare.....
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }, executor);
     }
 
     public void updateUnitaPeriodicOrder(Farmaco farmaco) {

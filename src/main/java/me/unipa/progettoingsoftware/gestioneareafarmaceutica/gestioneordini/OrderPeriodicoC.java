@@ -1,5 +1,6 @@
 package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +20,16 @@ public class OrderPeriodicoC {
     public void showViewOrdinePeriodicoB(){
         DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
             String piva = strings.get(0);
-            DBMSB.getAzienda().getFarmacoUnitaPeriodic().thenAccept(orders -> {
-                viewOrdinePeriodicoBController = new ViewOrdinePeriodicoBController(stage, this, this);
-                FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ViewOrdinePeriodicoB.fxml"));
-                fxmlLoader.setRoot(viewOrdinePeriodicoBController);
-                fxmlLoader.setController(viewOrdinePeriodicoBController);
-                new ViewOrdinePeriodicoB(stage, fxmlLoader);
+            DBMSB.getAzienda().getFarmaciBanco(piva).thenAccept(farmacoList-> {
+                Platform.runLater(() -> {
+                    viewOrdinePeriodicoBController = new ViewOrdinePeriodicoBController(stage, this, farmacoList);
+                    FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ViewOrdinePeriodicoB.fxml"));
+                    fxmlLoader.setRoot(viewOrdinePeriodicoBController);
+                    fxmlLoader.setController(viewOrdinePeriodicoBController);
+                    new ViewOrdinePeriodicoB(stage, fxmlLoader);
+                });
             });
         });
-
 
     }
 
@@ -37,7 +39,6 @@ public class OrderPeriodicoC {
         fxmlLoader.setRoot(unitOrderPerReportController);
         fxmlLoader.setController(unitOrderPerReportController);
         new UnitOrderPerReport(stage, fxmlLoader);
-
     }
 
     public void clickConfirmModifyOrderPeriodic(Farmaco farmaco) {
