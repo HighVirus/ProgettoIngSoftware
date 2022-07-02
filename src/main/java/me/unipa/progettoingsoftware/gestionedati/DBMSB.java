@@ -849,7 +849,7 @@ public class DBMSB {
                 for (Map.Entry<String, Integer> map : alertMap.entrySet()) {
                     if (map.getValue() == AlertType.FARMACIA_QUANTITY.getType()) {
                         List<Farmaco> farmacoList = this.getAlertListFarm(map.getKey()).join();
-                        alertEList.add(new AlertE(AlertType.FARMACIA_CARICO, farmacoList));
+                        alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.FARMACIA_CARICO, farmacoList));
                     } else if (map.getValue() == AlertType.FARMACIA_CARICO.getType()) {
 
                     }
