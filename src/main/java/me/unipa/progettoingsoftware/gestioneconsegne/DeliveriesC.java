@@ -52,7 +52,7 @@ public class DeliveriesC {
     }
 
     public void showInfoDelivery() {
-        InfoDeliveryBController infoDeliveryBController = new InfoDeliveryBController();
+        InfoDeliveryBController infoDeliveryBController = new InfoDeliveryBController(order, this);
         FXMLLoader fxmlLoader = new FXMLLoader(InfoDeliveryB.class.getResource("InfoDeliveryB.fxml"));
         fxmlLoader.setRoot(infoDeliveryBController);
         fxmlLoader.setController(infoDeliveryBController);
