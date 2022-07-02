@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.29, for Linux (x86_64)
 --
--- Host: localhost    Database: dbazienda
+-- Host: localhost    Database: dbaziendafinale
 -- ------------------------------------------------------
 -- Server version	8.0.29
 
@@ -219,7 +219,7 @@ CREATE TABLE `magazzino_aziendale` (
   `lotto` varchar(9) NOT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) NOT NULL,
-  `prescrivibilita` boolean NOT NULL,
+  `prescrivibilita` tinyint(1) NOT NULL,
   `data_scadenza` date DEFAULT NULL,
   `costo` double DEFAULT '0',
   `unita` int NOT NULL DEFAULT '0',
@@ -234,15 +234,7 @@ CREATE TABLE `magazzino_aziendale` (
 
 LOCK TABLES `magazzino_aziendale` WRITE;
 /*!40000 ALTER TABLE `magazzino_aziendale` DISABLE KEYS */;
-INSERT INTO `magazzino_aziendale` VALUES 
-('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',false,'2027-07-01',4.54,4503),
-('12745182','abe790','tachipirina 1000 mg 16 compresse','paracetamolo',false,'2028-07-01',4.54,4503),
-('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',false,'2025-06-01',12.5,157),
-('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',false,'2022-07-01',1.35,19),
-('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',true,'2022-09-01',2.35,871),
-('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',true,'2023-05-01',8.5,210),
-('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',true,'2024-12-01',6.67,0),
-('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',true,'2022-07-01',4.75,5);
+INSERT INTO `magazzino_aziendale` VALUES ('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',0,'2027-07-01',4.54,4503),('12745182','abe790','tachipirina 1000 mg 16 compresse','paracetamolo',0,'2028-07-01',4.54,4503),('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',1,'2025-06-01',12.5,157),('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',0,'2022-07-01',1.35,19),('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',0,'2022-09-01',2.35,871),('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',1,'2023-05-01',8.5,210),('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',1,'2024-12-01',6.67,0),('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',0,'2022-07-01',4.75,5);
 /*!40000 ALTER TABLE `magazzino_aziendale` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -308,10 +300,10 @@ DROP TABLE IF EXISTS `ordine_periodico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ordine_periodico` (
-  `piva` varchar(5) NOT NULL,
+  `piva` varchar(11) NOT NULL,
   `codice_aic_pm` varchar(9) NOT NULL,
   `unita` int NOT NULL,
-  `periodo_consegna` int NOT NULL,
+  `periodo_consegna` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -321,6 +313,7 @@ CREATE TABLE `ordine_periodico` (
 
 LOCK TABLES `ordine_periodico` WRITE;
 /*!40000 ALTER TABLE `ordine_periodico` DISABLE KEYS */;
+INSERT INTO `ordine_periodico` VALUES ('15486232231','24840074',50,7),('45781004476','27860016',120,7),('15486232231','34246023',300,7),('45781004476','42386488',150,7);
 /*!40000 ALTER TABLE `ordine_periodico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -410,4 +403,5 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-26 20:32:57
+-- Dump completed on 2022-07-02 14:15:41
+
