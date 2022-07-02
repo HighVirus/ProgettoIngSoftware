@@ -5,14 +5,15 @@ import com.zaxxer.hikari.HikariDataSource;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import lombok.Getter;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini.PeriodicOrder;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
 import me.unipa.progettoingsoftware.utils.AlertType;
 import me.unipa.progettoingsoftware.utils.RestoreConnectionC;
 
-import java.sql.*;
 import java.sql.Date;
+import java.sql.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -848,21 +849,46 @@ public class DBMSB {
         return null;
     }
 
-    public CompletableFuture<List<Farmaco>> getFarmacoUnitaPeriodic(String codAic) {
+    /**
+     * metodo che ottiene le informazioni sugli ordini periodici di una certa farmacia
+     *
+     * @param piva piva della farmacia
+     * @return
+     */
+    public CompletableFuture<List<PeriodicOrder>> getFarmacoUnitaPeriodic(String piva) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM farmaco WHERE prescrivibilita = false")) {
-                //da completare.....
-
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT op.piva, op.codice_aic, ca.nome_farmaco, ca.principio_attivo, op.unita, op.periodo_consegna FROM ordine_periodico op, catalogo_aziendale ca WHERE piva=? AND op.codice_aic_pm=ca.codice_aic")) {
+                List<PeriodicOrder> periodicOrders = new ArrayList<>();
+                preparedStatement.setString(1, piva);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    periodicOrders.add(new PeriodicOrder(resultSet.getString("piva"),
+                            resultSet.getString("codice_aic"),
+                            resultSet.getString("nome_farmaco"),
+                            resultSet.getString("principio_attivo"),
+                            resultSet.getInt("unita"),
+                            resultSet.getString("periodo_consegna")));
+                }
+                return periodicOrders;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return null;
         }, executor);
     }
 
-    public void updateUnitaPeriodicOrder(Farmaco farmaco) {
-
+    public void updateUnitaPeriodicOrder(PeriodicOrder periodicOrder) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE ordine_periodico SET unita=? WHERE piva=? AND codAic=?")) {
+                preparedStatement.setInt(1, periodicOrder.getUnita());
+                preparedStatement.setString(2, periodicOrder.getPiva());
+                preparedStatement.setString(3, periodicOrder.getCodAic());
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
     }
 
     public CompletableFuture<List<Farmaco>> getFarmacoListCheckStorage() {

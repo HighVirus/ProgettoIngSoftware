@@ -300,7 +300,9 @@ DROP TABLE IF EXISTS `ordine_periodico`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ordine_periodico` (
-  `codice_ordine` varchar(5) NOT NULL,
+  `piva` varchar(5) NOT NULL,
+  `codice_aic_pm` varchar(9) NOT NULL,
+  `unita` int NOT NULL,
   `periodo_consegna` int NOT NULL,
   PRIMARY KEY (`codice_ordine`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -338,31 +340,6 @@ LOCK TABLES `ordini` WRITE;
 /*!40000 ALTER TABLE `ordini` DISABLE KEYS */;
 INSERT INTO `ordini` VALUES ('47811','2022-07-05',3);
 /*!40000 ALTER TABLE `ordini` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `permag`
---
-
-DROP TABLE IF EXISTS `permag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `permag` (
-  `codice_aic_pm` varchar(9) NOT NULL,
-  `unita` int NOT NULL,
-  PRIMARY KEY (`codice_aic_pm`),
-  KEY `codice_aic_pm` (`codice_aic_pm`),
-  CONSTRAINT `permag_ibfk_2` FOREIGN KEY (`codice_aic_pm`) REFERENCES `magazzino_aziendale` (`codice_aic`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `permag`
---
-
-LOCK TABLES `permag` WRITE;
-/*!40000 ALTER TABLE `permag` DISABLE KEYS */;
-/*!40000 ALTER TABLE `permag` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

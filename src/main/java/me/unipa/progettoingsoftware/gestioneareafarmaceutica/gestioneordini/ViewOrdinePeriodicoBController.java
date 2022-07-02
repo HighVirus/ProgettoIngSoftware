@@ -8,13 +8,11 @@ import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
-import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
 import java.util.Comparator;
@@ -30,45 +28,33 @@ public class ViewOrdinePeriodicoBController extends Homepage {
 
     @FXML
     @Getter
-    private MFXTableView<Farmaco> farmacoTable;
-    private final List<Farmaco> farmacoList;
+    private MFXTableView<PeriodicOrder> farmacoTable;
+    private final List<PeriodicOrder> farmacoList;
 
-    public ViewOrdinePeriodicoBController(Stage stage, OrderPeriodicoC orderPeriodicoC, List<Farmaco> farmacoList) {
+    public ViewOrdinePeriodicoBController(Stage stage, OrderPeriodicoC orderPeriodicoC, List<PeriodicOrder> periodicOrders) {
         super(stage);
         this.stage = stage;
         this.orderPeriodicoC = orderPeriodicoC;
-        this.farmacoList = farmacoList;
+        this.farmacoList = periodicOrders;
     }
 
     public void setupTable() {
-        MFXTableColumn<Farmaco> codAicColumn = new MFXTableColumn<>("Codice AIC", true, Comparator.comparing(Farmaco::getCodAic));
-        MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome Farmaco", true, Comparator.comparing(Farmaco::getFarmacoName));
+        MFXTableColumn<PeriodicOrder> codAicColumn = new MFXTableColumn<>("Codice AIC", true, Comparator.comparing(PeriodicOrder::getCodAic));
+        MFXTableColumn<PeriodicOrder> farmacoNameColumn = new MFXTableColumn<>("Nome Farmaco", true, Comparator.comparing(PeriodicOrder::getFarmacoName));
         farmacoNameColumn.setPrefWidth(130);
-        MFXTableColumn<Farmaco> principioColumn = new MFXTableColumn<>("Principio Attivo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
+        MFXTableColumn<PeriodicOrder> principioColumn = new MFXTableColumn<>("Principio Attivo", true, Comparator.comparing(PeriodicOrder::getPrincipioAttivo));
         principioColumn.setPrefWidth(130);
-        MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getUnita));
+        MFXTableColumn<PeriodicOrder> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(PeriodicOrder::getUnita));
         unitaColumn.setPrefWidth(230);
-        MFXTableColumn<Farmaco> intervalloColumn = new MFXTableColumn<>("Intervallo", true);
+        MFXTableColumn<PeriodicOrder> intervalloColumn = new MFXTableColumn<>("Intervallo", true, Comparator.comparing(PeriodicOrder::getPeriodic));
 
-        intervalloColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
-            private final Label label = new Label("Ogni lunedì");
-
-            @Override
-            public void update(Farmaco farmaco){
-                if (farmaco == null){
-                    setGraphic(null);
-                    return;
-                }
-            }
-        });
-
-        MFXTableColumn<Farmaco> modOrdPerButton = new MFXTableColumn<>("", false);
-        modOrdPerButton.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
+        MFXTableColumn<PeriodicOrder> modOrdPerButton = new MFXTableColumn<>("", false);
+        modOrdPerButton.setRowCellFactory(param -> new MFXTableRowCell<>(periodicOrder -> periodicOrder) {
             private final MFXButton modOrdPerButton = new MFXButton("");
 
             @Override
-            public void update(Farmaco farmaco) {
-                if (farmaco == null) {
+            public void update(PeriodicOrder periodicOrder) {
+                if (periodicOrder == null) {
                     setGraphic(null);
                     return;
                 }
@@ -81,23 +67,24 @@ public class ViewOrdinePeriodicoBController extends Homepage {
 
                 setGraphic(modOrdPerButton);
                 modOrdPerButton.setOnAction(event -> {
-                    orderPeriodicoC.showUnitOrderPerReport(farmaco);
+                    orderPeriodicoC.showUnitOrderPerReport(periodicOrder);
                 });
             }
         });
 
 
-        codAicColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Farmaco::getCodAic));
-        farmacoNameColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
-        principioColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
-        unitaColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Farmaco::getUnita));
+        codAicColumn.setRowCellFactory(periodicOrder -> new MFXTableRowCell<>(PeriodicOrder::getCodAic));
+        farmacoNameColumn.setRowCellFactory(periodicOrder -> new MFXTableRowCell<>(PeriodicOrder::getFarmacoName));
+        principioColumn.setRowCellFactory(periodicOrder -> new MFXTableRowCell<>(PeriodicOrder::getPrincipioAttivo));
+        unitaColumn.setRowCellFactory(periodicOrder -> new MFXTableRowCell<>(PeriodicOrder::getUnita));
+        intervalloColumn.setRowCellFactory(periodicOrder -> new MFXTableRowCell<>(PeriodicOrder::getPeriodic));
 
         farmacoTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioColumn, unitaColumn, intervalloColumn, modOrdPerButton);
         farmacoTable.getFilters().addAll(
-                new StringFilter<>("Codice AIC", Farmaco::getCodAic),
-                new StringFilter<>("Nome Farmaco", Farmaco::getFarmacoName),
-                new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
-                new IntegerFilter<>("Unità", Farmaco::getUnita)
+                new StringFilter<>("Codice AIC", PeriodicOrder::getCodAic),
+                new StringFilter<>("Nome Farmaco", PeriodicOrder::getFarmacoName),
+                new StringFilter<>("Principio Attivo", PeriodicOrder::getPrincipioAttivo),
+                new IntegerFilter<>("Unità", PeriodicOrder::getUnita)
         );
 
         farmacoTable.setItems(FXCollections.observableArrayList(farmacoList));

@@ -8,6 +8,7 @@ import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
+import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.utils.GenericNotice;
 
 @RequiredArgsConstructor
@@ -17,12 +18,12 @@ public class OrderPeriodicoC {
     private ViewOrdinePeriodicoBController viewOrdinePeriodicoBController;
     private UnitOrderPerReportController unitOrderPerReportController;
 
-    public void showViewOrdinePeriodicoB(){
+    public void showViewOrdinePeriodicoB() {
         DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
             String piva = strings.get(0);
-            DBMSB.getAzienda().getFarmaciBanco(piva).thenAccept(farmacoList-> {
+            DBMSB.getAzienda().getFarmacoUnitaPeriodic(piva).thenAccept(periodicOrders -> {
                 Platform.runLater(() -> {
-                    viewOrdinePeriodicoBController = new ViewOrdinePeriodicoBController(stage, this, farmacoList);
+                    viewOrdinePeriodicoBController = new ViewOrdinePeriodicoBController(stage, this, periodicOrders);
                     FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ViewOrdinePeriodicoB.fxml"));
                     fxmlLoader.setRoot(viewOrdinePeriodicoBController);
                     fxmlLoader.setController(viewOrdinePeriodicoBController);
@@ -33,22 +34,39 @@ public class OrderPeriodicoC {
 
     }
 
-    public void showUnitOrderPerReport(Farmaco farmaco){
-        unitOrderPerReportController = new UnitOrderPerReportController(farmaco, this);
+    public void showUnitOrderPerReport(PeriodicOrder periodicOrder) {
+        Stage stage = new Stage();
+        unitOrderPerReportController = new UnitOrderPerReportController(periodicOrder, this, stage);
         FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("UnitOrderPerReport.fxml"));
         fxmlLoader.setRoot(unitOrderPerReportController);
         fxmlLoader.setController(unitOrderPerReportController);
         new UnitOrderPerReport(stage, fxmlLoader);
     }
 
-    public void clickConfirmModifyOrderPeriodic(Farmaco farmaco) {
-        DBMSB.getAzienda().updateUnitaPeriodicOrder(farmaco);
-        DBMSB.getFarmacia().updateUnitaPeriodicOrder(farmaco);
+    public void clickConfirmModifyOrderPeriodic(PeriodicOrder periodicOrder) {
+        if (!isValidUnitaField(unitOrderPerReportController.getUnita().getText())) {
+            new ErrorsNotice("Valore non valido");
+            return;
+        }
+        DBMSB.getAzienda().updateUnitaPeriodicOrder(periodicOrder);
         new GenericNotice("Ordine periodico modificato con successo");
+        unitOrderPerReportController.getStage().close();
 
     }
+
     public void showHomePageFarmacia() {
         new HomePageFarmacia(this.stage, new FXMLLoader(HomePageFarmacia.class.getResource("HomePageFarmacia.fxml")));
+    }
+
+    private boolean isValidUnitaField(String textField) {
+        if (textField.length() == 0)
+            return false;
+        try {
+            int value = Integer.parseInt(textField);
+            return value > 0;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
     }
 }
 

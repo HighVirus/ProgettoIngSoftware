@@ -9,13 +9,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 @RequiredArgsConstructor
 public class UnitOrderPerReportController extends AnchorPane {
 
-    private final Farmaco farmaco;
+    private final PeriodicOrder periodicOrder;
     private final OrderPeriodicoC orderPeriodicoC;
+    @Getter
+    private final Stage stage;
 
     @FXML
     @Getter
@@ -26,8 +27,7 @@ public class UnitOrderPerReportController extends AnchorPane {
 
     @FXML
     public void onClickConfirmButton(ActionEvent event) {
-
-        orderPeriodicoC.clickConfirmModifyOrderPeriodic(farmaco);
+        orderPeriodicoC.clickConfirmModifyOrderPeriodic(periodicOrder);
     }
 
     @FXML
