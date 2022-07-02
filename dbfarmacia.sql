@@ -148,7 +148,14 @@ CREATE TABLE `farmaco` (
 
 LOCK TABLES `farmaco` WRITE;
 /*!40000 ALTER TABLE `farmaco` DISABLE KEYS */;
-INSERT INTO `farmaco` VALUES ('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',false,'2027-07-01',4.53,450),('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',false,'2025-06-01',12.5,15),('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',false,'2027-07-01',1.35,219),('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',true,'2027-09-01',2.34,40),('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',true,'2026-05-01',8.5,21),('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',true,'2027-12-01',6,150),('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',true,'2025-07-01',4.75,25);
+INSERT INTO `farmaco` VALUES 
+('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',false,'2027-07-01',4.53,450),
+('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',false,'2025-06-01',12.5,15),
+('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',false,'2027-07-01',1.35,219),
+('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',true,'2027-09-01',2.34,40),
+('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',true,'2026-05-01',8.5,21),
+('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',true,'2027-12-01',6,150),
+('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',true,'2025-07-01',4.75,25);
 /*!40000 ALTER TABLE `farmaco` ENABLE KEYS */;
 UNLOCK TABLES;
 
