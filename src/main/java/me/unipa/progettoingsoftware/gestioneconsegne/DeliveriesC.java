@@ -16,8 +16,6 @@ import me.unipa.progettoingsoftware.utils.GenericNotice;
 public class DeliveriesC {
     private final Stage stage;
     private DeliveryListBController deliveryListBController;
-    private final DeliveriesC deliveriesC;
-    private Order order;
     public void showDeliveryList() {
         DBMSB.getAzienda().getDeliveryList().whenComplete((orders, throwable) -> {
             if (throwable != null)
@@ -36,22 +34,22 @@ public class DeliveriesC {
         new HomePageCorriere(this.stage, new FXMLLoader(HomePageCorriere.class.getResource("HomePageCorriere.fxml")));
     }
 
-    public void showSignNotice() {
-        SignNoticeController signNoticeController = new SignNoticeController(deliveriesC);
+    public void showSignNotice(Order order) {
+        SignNoticeController signNoticeController = new SignNoticeController(this, order);
         FXMLLoader fxmlLoader = new FXMLLoader(SignNotice.class.getResource("SignNotice.fxml"));
         fxmlLoader.setRoot(signNoticeController);
         fxmlLoader.setController(signNoticeController);
         new SignNotice(new Stage(), fxmlLoader);
     }
 
-    public void submitSign() {
+    public void submitSign(Order order) {
 
-        DBMSB.getAzienda().makeOrderDeliveredReadyToLoad(this.order.getOrderCode());
+        DBMSB.getAzienda().makeOrderDeliveredReadyToLoad(order.getOrderCode());
         new GenericNotice("La consegna è stata effettuata con successo.");
 
     }
 
-    public void showInfoDelivery() {
+    public void showInfoDelivery(Order order) {
         InfoDeliveryBController infoDeliveryBController = new InfoDeliveryBController(order, this);
         FXMLLoader fxmlLoader = new FXMLLoader(InfoDeliveryB.class.getResource("InfoDeliveryB.fxml"));
         fxmlLoader.setRoot(infoDeliveryBController);

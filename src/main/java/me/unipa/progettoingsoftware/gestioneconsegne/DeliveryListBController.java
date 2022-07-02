@@ -4,11 +4,13 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
-import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -16,9 +18,11 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.Init;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -28,6 +32,9 @@ public class DeliveryListBController extends AnchorPane {
     @FXML
     @Getter
     private MFXTableView<Order> orderTable;
+    @FXML
+    @Getter
+    private Label welcomeText;
     private final Stage stage;
     private final DeliveriesC deliveriesC;
     private final List<Order> orderList;
@@ -62,7 +69,7 @@ public class DeliveryListBController extends AnchorPane {
                 infoOrderButton.setGraphic(imageView);
 
                 setGraphic(infoOrderButton);
-                infoOrderButton.setOnAction(event -> deliveriesC.showInfoDelivery());
+                infoOrderButton.setOnAction(event -> deliveriesC.showInfoDelivery(order));
             }
         });
 
@@ -86,8 +93,26 @@ public class DeliveryListBController extends AnchorPane {
 
 
     }
+
     @FXML
     public void onClickTornaButton(ActionEvent event) {
         deliveriesC.showHomePageCorriere();
+    }
+
+    public void onClickLogoutButton(ActionEvent event) {
+        if (User.isAuthenticated())
+            User.getUser().logout();
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(Init.class.getResource("InitPage.fxml"));
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Ipazia");
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

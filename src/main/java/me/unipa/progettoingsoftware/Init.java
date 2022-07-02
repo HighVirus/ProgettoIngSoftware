@@ -13,7 +13,7 @@ public class Init extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Init.class.getResource("InitPage.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Nome Farmacia");
+        stage.setTitle("Ipazia");
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.setScene(scene);

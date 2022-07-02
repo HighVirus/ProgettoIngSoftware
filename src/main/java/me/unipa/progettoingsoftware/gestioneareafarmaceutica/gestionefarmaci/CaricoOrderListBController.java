@@ -37,27 +37,13 @@ public class CaricoOrderListBController extends AnchorPane {
     @Getter
     private final Stage stage;
 
-    /*public void setup() {
-        MFXTableColumn<Order> codAicColumn = new MFXTableColumn<>("Codice AIC", false, Comparator.comparing(Farmaco::getCodAic));
-        codAicColumn.setMinWidth(90);
-        codAicColumn.resize(90, codAicColumn.getHeight());
-        MFXTableColumn<Order> farmacoNameColumn = new MFXTableColumn<>("Nome", false, Comparator.comparing(Farmaco::getFarmacoName));
-        farmacoNameColumn.setPrefWidth(230);
-        MFXTableColumn<Order> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        principioAttivoColumn.setPrefWidth(170);
-        MFXTableColumn<Order> expireDateColumn = new MFXTableColumn<>("Scadenza", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        MFXTableColumn<Order> disponibilitaColumn = new MFXTableColumn<>("Disponibilità", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        disponibilitaColumn.setMinWidth(80);
-        disponibilitaColumn.resize(80, disponibilitaColumn.getHeight());
-        MFXTableColumn<Order> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        costoColumn.setMinWidth(80);
-        costoColumn.resize(80, costoColumn.getHeight());
-        MFXTableColumn<Order> unitaColumn = new MFXTableColumn<>("Unità", false);
+    public void setup() {
+        MFXTableColumn<Order> orderCodeColumn = new MFXTableColumn<>("Codice Ordine", true, Comparator.comparing(Order::getOrderCode));
+        MFXTableColumn<Order> deliveryDateColumn = new MFXTableColumn<>("Data Consegna", true, Comparator.comparing(Order::getDeliveryDate));
+        MFXTableColumn<Order> statusColumn = new MFXTableColumn<>("Stato", true, Comparator.comparing(Order::getStatus));
 
-        MFXTableColumn<Order> addUnitProductColumn = new MFXTableColumn<>("", false);
-        addUnitProductColumn.setMinWidth(50);
-        addUnitProductColumn.resize(50, addUnitProductColumn.getHeight());
-        addUnitProductColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
+        MFXTableColumn<Order> addOrderButtonColumn = new MFXTableColumn<>("", false);
+        addOrderButtonColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
             private final MFXButton addUnitProduct = new MFXButton("+");
 
             @Override
@@ -77,24 +63,13 @@ public class CaricoOrderListBController extends AnchorPane {
             }
         });
 
-        codAicColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getCodAic));
-        farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getFarmacoName));
-        principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getPrincipioAttivo));
-        costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getCosto));
-        expireDateColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getScadenza));
-        disponibilitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getUnita));
+        orderCodeColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getOrderCode));
+        deliveryDateColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getDeliveryDate));
+        statusColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getStatus));
 
-        orderTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, disponibilitaColumn, expireDateColumn, costoColumn, unitaColumn, addUnitProductColumn);
-        orderTable.getFilters().addAll(
-                new StringFilter<>("Codice AIC", Order::getCodAic),
-                new StringFilter<>("Nome", Order::getFarmacoName),
-                new StringFilter<>("Principio Attivo", Order::getPrincipioAttivo),
-                new IntegerFilter<>("Disponibilità", Order::getUnita),
-                new DoubleFilter<>("Costo", Order::getCosto)
-        );
-
+        orderTable.getTableColumns().addAll(orderCodeColumn, deliveryDateColumn, statusColumn, addOrderButtonColumn);
         orderTable.setItems(FXCollections.observableArrayList(orderList));
-    }*/
+    }
 
     @FXML
     public void onClickTornaButton(ActionEvent event) {

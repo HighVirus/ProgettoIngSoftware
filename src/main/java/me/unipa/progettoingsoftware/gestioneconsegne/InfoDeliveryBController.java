@@ -48,7 +48,6 @@ public class InfoDeliveryBController extends AnchorPane {
         indirizzoEmail.setText(indirizzoEmail.getText().replaceAll("%IndirizzoEmail%", order.getEmail()));
         cap.setText(cap.getText().replaceAll("%CAP%", order.getCap()));
         indirizzo.setText(indirizzo.getText().replaceAll("%Indirizzo%", order.getIndirizzo()));
-        nomeCorriere.setText(nomeCorriere.getText().replaceAll("%NomeCorriere%", order.getNomeCorriere().toString()));
         deliveryDate.setText(deliveryDate.getText().replaceAll("%DataConsegna%", order.getDeliveryDate().toString()));
         deliveryStatus.setText(deliveryStatus.getText().replaceAll("%StatoConsegna%", order.getStatus().getValue()));
 
@@ -71,7 +70,7 @@ public class InfoDeliveryBController extends AnchorPane {
 
     @FXML
     public void onClickConfirmDeliveryButton(ActionEvent event) {
-        deliveriesC.showSignNotice();
+        deliveriesC.showSignNotice(order);
     }
 
     @FXML

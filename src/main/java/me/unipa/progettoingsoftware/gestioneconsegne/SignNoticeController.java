@@ -7,21 +7,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.CatalogoAzControl;
+import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 
-
+@RequiredArgsConstructor
 public class SignNoticeController extends AnchorPane {
-
-
     private final DeliveriesC deliveriesC;
-
-    public SignNoticeController(DeliveriesC deliveriesC) {
-        this.deliveriesC = deliveriesC;
-    }
+    private final Order order;
     @FXML
     public void onClickConfirmButton(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        deliveriesC.submitSign();
+        deliveriesC.submitSign(order);
 
         stage.close();
     }

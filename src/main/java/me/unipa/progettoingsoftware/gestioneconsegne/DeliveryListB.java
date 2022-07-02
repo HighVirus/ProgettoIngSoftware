@@ -43,9 +43,9 @@ public class DeliveryListB extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        ViewOrdiniController viewOrdiniController = fxmlLoader.getController();
-        viewOrdiniController.setupTable();
-        viewOrdiniController.getWelcomeText().setText(viewOrdiniController.getWelcomeText().getText()
+        DeliveryListBController deliveryListBController = fxmlLoader.getController();
+        deliveryListBController.setupTable();
+        deliveryListBController.getWelcomeText().setText(deliveryListBController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }
