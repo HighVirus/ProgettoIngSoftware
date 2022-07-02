@@ -304,7 +304,6 @@ CREATE TABLE `ordine_periodico` (
   `codice_aic_pm` varchar(9) NOT NULL,
   `unita` int NOT NULL,
   `periodo_consegna` int NOT NULL,
-  PRIMARY KEY (`codice_ordine`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
