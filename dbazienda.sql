@@ -219,7 +219,7 @@ CREATE TABLE `magazzino_aziendale` (
   `lotto` varchar(9) NOT NULL,
   `nome_farmaco` varchar(255) NOT NULL,
   `principio_attivo` varchar(100) NOT NULL,
-  `prescrivibilita` tinyint(1) NOT NULL,
+  `prescrivibilita` boolean NOT NULL,
   `data_scadenza` date DEFAULT NULL,
   `costo` double DEFAULT '0',
   `unita` int NOT NULL DEFAULT '0',
@@ -234,7 +234,15 @@ CREATE TABLE `magazzino_aziendale` (
 
 LOCK TABLES `magazzino_aziendale` WRITE;
 /*!40000 ALTER TABLE `magazzino_aziendale` DISABLE KEYS */;
-INSERT INTO `magazzino_aziendale` VALUES ('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',0,'2027-07-01',4.54,4503),('12745182','abe790','tachipirina 1000 mg 16 compresse','paracetamolo',0,'2028-07-01',4.54,4503),('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',1,'2025-06-01',12.5,157),('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',0,'2022-07-01',1.35,19),('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',0,'2022-09-01',2.35,871),('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',1,'2023-05-01',8.5,210),('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',1,'2024-12-01',6.67,0),('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',0,'2022-07-01',4.75,5);
+INSERT INTO `magazzino_aziendale` VALUES 
+('12745182','abe789','tachipirina 1000 mg 16 compresse','paracetamolo',false,'2027-07-01',4.54,4503),
+('12745182','abe790','tachipirina 1000 mg 16 compresse','paracetamolo',false,'2028-07-01',4.54,4503),
+('12745232','abe775','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',false,'2025-06-01',12.5,157),
+('19655051','bfh845','bentelan 1 mg 10 compresse resistenti ','betametasone',false,'2022-07-01',1.35,19),
+('24840074','bgt541','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',true,'2022-09-01',2.35,871),
+('27860016','frt654','zitromax 250 mg 6 capsule rigide','azitromicina',true,'2023-05-01',8.5,210),
+('34246013','trf741','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',true,'2024-12-01',6.67,0),
+('42386488','rfq416','brufen 400 mg 16 compresse rivestite con film','ibuprofene',true,'2022-07-01',4.75,5);
 /*!40000 ALTER TABLE `magazzino_aziendale` ENABLE KEYS */;
 UNLOCK TABLES;
 
