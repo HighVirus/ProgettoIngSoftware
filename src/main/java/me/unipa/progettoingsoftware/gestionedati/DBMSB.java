@@ -833,7 +833,21 @@ public class DBMSB {
     }
 
     public CompletableFuture<String> getAlertsAzienda() {
-        return null;
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT codice_ordine_aa, partita_iva_aa FROM alert_azienda")) {
+                Map<String, Integer> alertMap = new HashMap<>();
+                List<AlertE> alertEList = new ArrayList<>();
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    alertMap.put(resultSet.getString("codice_Ordine"), resultSet.getInt("Piva"));
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }, executor);
     }
 
     public CompletableFuture<List<AlertE>> getAlertList(String piva) {
@@ -851,6 +865,8 @@ public class DBMSB {
                         List<Farmaco> farmacoList = this.getAlertListFarm(map.getKey()).join();
                         alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.FARMACIA_CARICO, farmacoList));
                     } else if (map.getValue() == AlertType.FARMACIA_CARICO.getType()) {
+                        List<Order> orderList = this.getAlertListOrd(map.getKey()).join();
+                        alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.FARMACIA_QUANTITY, orderList));
 
                     }
                 }
@@ -1049,7 +1065,18 @@ public class DBMSB {
         return null;
     }
 
-    public void addFarmaciToOrdered(List<Farmaco> farmacoList) {
-
+    public void addFarmaciToOrdered(String piva, String codice_aic) {
+        //insert farmaci già ordina to tabella in dbms farmacia quando farmacista clicca già ordinati dal infoalertquantità
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO farmaci_ordinati (piva, codice_aic) " +
+                         "VALUES (?,?)")) {
+                preparedStatement.setString(1, piva);
+                preparedStatement.setString(2, codice_aic);
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
     }
 }

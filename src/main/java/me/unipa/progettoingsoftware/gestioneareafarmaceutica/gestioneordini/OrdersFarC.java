@@ -9,6 +9,8 @@ import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.Confi
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.InfoOrderB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.InfoOrderBController;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.GestioneFarmaciB;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.GestioneFarmaciBController;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.CarrelloE;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
@@ -59,7 +61,7 @@ public class OrdersFarC {
     }
 
     public void showOrderInfoB(Order order) {
-        //Order.getOrderInfo().thenAccept(orders -> { info dalla entity --classe identica a InfoOrderB dell azienda
+        Order.getOrderInfo().thenAccept(orders ->
         InfoOrderBController infoOrderBController = new InfoOrderBController(order);
         FXMLLoader fxmlLoader = new FXMLLoader(InfoOrderB.class.getResource("InfoOrderB.fxml"));
         fxmlLoader.setRoot(infoOrderBController);
@@ -320,5 +322,12 @@ public class OrdersFarC {
     public void removeFromCarrello(Farmaco farmaco) {
         viewCarrelloController.getCarrello().getItems().remove(farmaco);
         CarrelloE.getInstance().getFarmaci().remove(farmaco);
+    }
+    public void showGestioneOrdiniB() {
+        GestioneOrdiniBController gestioneOrdiniBController = new GestioneOrdiniBController(stage);
+        FXMLLoader fxmlLoader = new FXMLLoader(GestioneOrdiniB.class.getResource("GestioneOrdiniB.fxml"));
+        fxmlLoader.setRoot(gestioneOrdiniBController);
+        fxmlLoader.setController(gestioneOrdiniBController);
+        new GestioneOrdiniB(stage, fxmlLoader);
     }
 }

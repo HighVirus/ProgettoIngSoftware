@@ -76,11 +76,14 @@ public class AlertListBController extends AnchorPane {
 
         alertTable.getTableColumns().addAll(codiceAlertColumn, tipoColumn, infoAlertColumn);
         alertTable.getFilters().addAll(
-                new StringFilter<>("Codice Alert", AlertE::getCodeAlert),
-                new IntegerFilter<>("Tipo Alert", AlertE::getAlertType)
+                new StringFilter<>("Codice Alert", AlertE::getCodeAlert)
 
         );
 
         alertTable.setItems(FXCollections.observableArrayList(alertList));
+    }
+    public void onClickTornaButton(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 }

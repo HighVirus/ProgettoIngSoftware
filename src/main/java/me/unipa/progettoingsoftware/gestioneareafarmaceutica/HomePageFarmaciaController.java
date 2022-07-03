@@ -3,7 +3,9 @@ package me.unipa.progettoingsoftware.gestioneareafarmaceutica;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
+import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.OrdersC;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.StorageFarmaciaC;
+import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini.OrdersFarC;
 import me.unipa.progettoingsoftware.utils.Homepage;
 
 public class HomePageFarmaciaController extends Homepage {
@@ -21,7 +23,7 @@ public class HomePageFarmaciaController extends Homepage {
 
     @FXML
     public void onClickGesOrdiniButton(ActionEvent event) {
-        System.out.println("porcodio");
+        new OrdersFarC(stage).showGestioneOrdiniB();
     }
 
 }

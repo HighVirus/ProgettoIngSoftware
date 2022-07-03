@@ -75,7 +75,7 @@ public class AlertInfoCaricoBController extends AnchorPane {
 
     @FXML
     public void onClickConfirmNotAll(ActionEvent event) {
-        alertC.showCaricaMerci();
+        alertC.clickConfirmNotAll();
 
     }
     @FXML

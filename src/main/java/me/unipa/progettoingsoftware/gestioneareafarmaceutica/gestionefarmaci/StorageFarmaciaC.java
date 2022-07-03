@@ -34,7 +34,7 @@ public class StorageFarmaciaC {
 
     public void showCaricaMerci() {
         this.caricaProductsFormController = new CaricaProductsFormController(stage, this);
-        FXMLLoader fxmlLoader = new FXMLLoader(GestioneFarmaciB.class.getResource("CaricaProductsForm.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(CaricaProductsForm.class.getResource("CaricaProductsForm.fxml"));
         fxmlLoader.setRoot(caricaProductsFormController);
         fxmlLoader.setController(caricaProductsFormController);
         new CaricaProductsForm(new Stage(), fxmlLoader);

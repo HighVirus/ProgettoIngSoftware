@@ -20,6 +20,7 @@ import java.io.IOException;
 
 public abstract class Homepage extends AnchorPane {
     private final Stage stage;
+    private String piva;
 
     public Homepage(Stage stage) {
         this.stage = stage;
@@ -58,7 +59,7 @@ public abstract class Homepage extends AnchorPane {
                 DBMSB.getAzienda().getAlertsAzienda();
                 new AlertC(stage).showAlertReport();
             } else if (User.getUser().getType() == 2) {
-                DBMSB.getFarmacia().getAlertList();
+                DBMSB.getFarmacia().getAlertList(piva);
                 new AlertC(stage).showAlertList();
             }
         }

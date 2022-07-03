@@ -19,18 +19,31 @@ public class AlertC {
     private AlertInfoCaricoBController alertInfoCaricoBController;
     private AlertInfoQuantitaBController alertInfoQuantitaBController;
 
-    private AlertReportBController alertReportController;
+    private AlertReportBController alertReportBController;
 
     private AlertListBController alertListBController;
 
-    public void showAlertReport() { //lato azienda, sistemare la control
+    public void showAlertReport() {
         new AlertReportB(this.stage, new FXMLLoader(AlertReportB.class.getResource( "AlertReportB.fxml")));
+        DBMSB.getAzienda().getAlertsAzienda().thenAccept(alertEList -> {
+            if (alertEList.isEmpty()) {
+                new GenericNotice("Non ci sono alert da visualizzare");
+            }
+            else {
+                alertReportBController = new AlertReportBController(this.stage, this, alertEList);
+                FXMLLoader fxmlLoader = new FXMLLoader(AlertReportB.class.getResource("AlertReportB.fxml"));
+                fxmlLoader.setRoot(alertReportBController);
+                fxmlLoader.setController(alertReportBController);
+                new AlertReportB(new Stage(), fxmlLoader);
+            }
+        });
     }
 
-    public void showAlertList() {  //lato farmacia, sistemare la control
+
+    public void showAlertList() {
         DBMSB.getFarmacia().getAlertList(User.getUser().getFarmaciaPiva()).thenAccept(alertEList -> {
             if (alertEList.isEmpty()) {
-                new ErrorsNotice("Non ci sono alert da visualizzare");
+                new GenericNotice("Non ci sono alert da visualizzare");
             }
             else {
                 alertListBController = new AlertListBController(this.stage, this, alertEList);
@@ -42,7 +55,7 @@ public class AlertC {
         });
     }
 
-    public void showViewAlertFarmacia(AlertE alertE) { //quantita DA SISTEMARE LA CONTROL MANUALE
+    public void showViewAlertFarmacia(AlertE alertE) {
         if (alertE.getAlertType() == AlertType.FARMACIA_QUANTITY) {
             new AlertInfoQuantitaB(new Stage(), new FXMLLoader(AlertInfoQuantitaB.class.getResource("AlertInfoQuantitaB.fxml")));
         } else if (alertE.getAlertType() == AlertType.FARMACIA_CARICO) {
@@ -51,15 +64,17 @@ public class AlertC {
     }
 
 
-    public void showCaricaMerci() {
+    public void clickConfirmNotAll() {
         new StorageFarmaciaC(this.stage).showCaricaMerci();
     }
 
-    public void clickConfirmAll() { //da aggiungere l'aggiunta in db dei farmaci
-        this.alertInfoCaricoBController.getOrderTable().getItems();
+    public void clickConfirmAll() {
+        DBMSB.getFarmacia().getFarmaciFromOrder();
+        //addFarmacoToStorage
+        //makeDeliveryCompleted azienda e farmacia
     }
 
     public void clickAlreadyOrdered() {
-        DBMSB.getFarmacia().addFarmaciToOrdered(this.alertInfoQuantitaBController.getFarmacoTable().getItems());
+        DBMSB.getFarmacia().addFarmaciToOrdered(this, this);
     }
 }

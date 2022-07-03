@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestionedati.entity.AlertE;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 
 import java.util.Comparator;
 import java.util.List;
@@ -26,29 +27,28 @@ public class AlertReportBController extends AnchorPane {
     private final Stage stage;
     @FXML
     @Getter
-    private MFXTableView<AlertE> alertTable;
+    private MFXTableView<Order> orderTable;
     private final AlertC alertC;
-    private final List<AlertE> alertList;
+    @Getter
+    private final List<Order> orderList;
 
 
     public void setupTable() {
-        MFXTableColumn<AlertE> codiceAlert = new MFXTableColumn<>("Codice Alert", true, Comparator.comparing(AlertE::getCodeAlert));
-        codiceAlert.setMinWidth(80);
-        /*MFXTableColumn<AlertE> codiceOrdine = new MFXTableColumn<>("Codice Ordine", true, Comparator.comparing(AlertE:://getCodeOrder));
+        MFXTableColumn<Order> codiceOrdine = new MFXTableColumn<>("Codice Ordine", true, Comparator.comparing(Order::getOrderCode));
         codiceOrdine.setMinWidth(80);
-        MFXTableColumn<AlertE> piva = new MFXTableColumn<>("PIVA", true, Comparator.comparing(AlertE:://getPiva));
-        piva.setMinWidth(80);*/
+        MFXTableColumn<Order> piva = new MFXTableColumn<>("Partita IVA", true, Comparator.comparing(Order::getPivaFarmacia));
+        piva.setMinWidth(80);
 
 
 
-        codiceAlert.setRowCellFactory(farmaco -> new MFXTableRowCell<>(AlertE::getCodeAlert));
+        codiceOrdine.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getOrderCode));
+        piva.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getPivaFarmacia));
 
 
-        alertTable.getTableColumns().addAll();
-        alertTable.getFilters().addAll(
-                new StringFilter<>(),
-                new StringFilter<>(),
-                new StringFilter<>()
+        orderTable.getTableColumns().addAll(codiceOrdine, piva);
+        orderTable.getFilters().addAll(
+                new StringFilter<>("Codice Ordine", (Order::getOrderCode)),
+                new StringFilter<>("Partita IVA", (Order::getPivaFarmacia))
 
 
         );

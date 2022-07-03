@@ -10,6 +10,7 @@ import java.util.List;
 
 @Getter
 public class Order {
+    @Getter
     private final String orderCode;
     private final Date deliveryDate;
     private final String pivaFarmacia;
