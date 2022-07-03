@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -25,7 +26,9 @@ import me.unipa.progettoingsoftware.utils.Homepage;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CaricaProductsFormController extends MFXScrollPane {
 
@@ -80,6 +83,47 @@ public class CaricaProductsFormController extends MFXScrollPane {
         farmacoNameColumn.setPrefWidth(350);
         MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getCosto));
         MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getCosto));
+
+        MFXTableColumn<Farmaco> modificaCostoColumn = new MFXTableColumn<>("Modifica Unita", false);
+        Map<Farmaco, TextField> fields = new HashMap<>();
+        modificaCostoColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
+
+            @Override
+            public void update(Farmaco farmaco) {
+                if (farmaco == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                TextField field = fields.get(farmaco);
+                if (field == null) {
+                    field = new TextField();
+                    fields.put(farmaco, field);
+                }
+                setGraphic(field);
+            }
+        });
+
+        MFXTableColumn<Farmaco> modificaColumn = new MFXTableColumn<>("", false);
+        modificaColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
+            private final MFXButton modificaButton = new MFXButton("X");
+
+            @Override
+            public void update(Farmaco farmaco) {
+                if (farmaco == null) {
+                    setGraphic(null);
+                    return;
+                }
+
+                modificaButton.setStyle("-fx-background-color: #FF595E;" + "-fx-font-weight: bold;");
+                modificaButton.setTextFill(Paint.valueOf("WHITE"));
+
+                setGraphic(modificaButton);
+                modificaButton.setOnAction(event -> {
+                    storageFarmaciaC.modificaCostoFarmaco(farmaco, fields.get(farmaco).getText());
+                });
+            }
+        });
 
 
         MFXTableColumn<Farmaco> removeColumn = new MFXTableColumn<>("", false);

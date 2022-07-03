@@ -40,7 +40,7 @@ CREATE TABLE `account` (
 
 LOCK TABLES `account` WRITE;
 /*!40000 ALTER TABLE `account` DISABLE KEYS */;
-INSERT INTO `account` VALUES (1,1,'Alessandro','Spank','1','1'),(2,2,'Alessandro','Spank','2','2'),(3,3,'Alessandro','Spank','3','3'),(4,2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),(5,2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),(6,3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),(7,1,'Maria','Magro','mariamagro@gmail.com','treppitre');
+INSERT INTO `account` VALUES (1,1,'Azienda','Spank','1','1'),(2,2,'Farmacia','Spank','2','2'),(3,3,'Corriere','Spank','3','3'),(4,2,'Edoardo','Mannino','edoardomannino@gmail.com','ciaociao'),(5,2,'Alberto','Scannaliato','albertoscannaliato@gmail.com','provapass5'),(6,3,'Gabriele','Saporito','gabrielesaporito@gmail.com','retedue'),(7,1,'Maria','Magro','mariamagro@gmail.com','treppitre');
 /*!40000 ALTER TABLE `account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,7 +146,7 @@ CREATE TABLE `farmaccount` (
 
 LOCK TABLES `farmaccount` WRITE;
 /*!40000 ALTER TABLE `farmaccount` DISABLE KEYS */;
-INSERT INTO `farmaccount` VALUES (2,'15486232231'),(3,'45781004476');
+INSERT INTO `farmaccount` VALUES (2,'15486232231'),(4,'45781004476');
 /*!40000 ALTER TABLE `farmaccount` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,7 +173,8 @@ CREATE TABLE `farmacia` (
 
 LOCK TABLES `farmacia` WRITE;
 /*!40000 ALTER TABLE `farmacia` DISABLE KEYS */;
-INSERT INTO `farmacia` VALUES ('15486232231','la mia farmacia','90115','via Ernesto Basile 64'),('45781004476','farmacia pennino','02475','viale Europa 41');
+INSERT INTO `farmacia` VALUES ('15486232231','la mia farmacia','90115','via Ernesto Basile 64'),
+                              ('45781004476','farmacia pennino','02475','viale Europa 41');
 /*!40000 ALTER TABLE `farmacia` ENABLE KEYS */;
 UNLOCK TABLES;
 

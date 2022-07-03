@@ -71,12 +71,12 @@ public class AlertC {
     }
 
     public void clickConfirmAll() {
-        DBMSB.getFarmacia().getFarmaciFromOrder(order.getOrderCode());
+        //DBMSB.getFarmacia().getFarmaciFromOrder(order.getOrderCode());
         //addFarmacoToStorage
         //makeDeliveryCompleted azienda e farmacia
     }
 
     public void clickAlreadyOrdered() {
-        DBMSB.getFarmacia().addFarmaciToOrdered(this, alertInfoQuantitaBController.getFarmacoTable().getItems());
+        //DBMSB.getFarmacia().addFarmaciToOrdered(this, alertInfoQuantitaBController.getFarmacoTable().getItems());
     }
 }

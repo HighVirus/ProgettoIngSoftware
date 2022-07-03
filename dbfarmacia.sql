@@ -19,18 +19,44 @@
 -- Table structure for table `alefam`
 --
 
+DROP TABLE IF EXISTS `alert_farmacia`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `alert_farmacia`
+(
+    piva           VARCHAR(11) NOT NULL,
+    `codice_alert` int         NOT NULL AUTO_INCREMENT,
+    `type`         int         NOT NULL,
+    PRIMARY KEY (`codice_alert`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+LOCK
+TABLES `alert_farmacia` WRITE;
+/*!40000 ALTER TABLE `alert_farmacia` DISABLE KEYS */;
+INSERT INTO `alert_farmacia`
+VALUES ('15486232231', 1, 1),
+       ('15486232231', 2, 1),
+       ('15486232231', 3, 1),
+       ('15486232231', 4, 1),
+       ('15486232231', 5, 1),
+       ('15486232231', 6, 2);
+/*!40000 ALTER TABLE `alert_farmacia` ENABLE KEYS */;
+UNLOCK
+TABLES;
+
 DROP TABLE IF EXISTS `alefam`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `alefam`
 (
     `codice_alert_af` int         NOT NULL AUTO_INCREMENT,
+    piva_af           VARCHAR(11) NOT NULL,
     `codice_aic_af`   varchar(11) NOT NULL,
     `lotto_af`        varchar(9)  NOT NULL,
     PRIMARY KEY (`codice_alert_af`, `codice_aic_af`, `lotto_af`),
     KEY               `codice_aic_af` (`codice_aic_af`,`lotto_af`),
     CONSTRAINT `alefam_ibfk_1` FOREIGN KEY (`codice_alert_af`) REFERENCES `alert_farmacia` (`codice_alert`),
-    CONSTRAINT `alefam_ibfk_2` FOREIGN KEY (`codice_aic_af`, `lotto_af`) REFERENCES `farmaco` (`codice_aic`, `lotto`)
+    CONSTRAINT `alefam_ibfk_2` FOREIGN KEY (`piva_af`, `codice_aic_af`, `lotto_af`) REFERENCES `farmaco` (`piva`, `codice_aic`, `lotto`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -42,11 +68,11 @@ LOCK
 TABLES `alefam` WRITE;
 /*!40000 ALTER TABLE `alefam` DISABLE KEYS */;
 INSERT INTO `alefam`
-VALUES (1, '12745232', 'abe775'),
-       (2, '24840074', 'bgt541'),
-       (3, '24840074', 'bgt541'),
-       (4, '27860016', 'frt654'),
-       (5, '42386488', 'rfq416');
+VALUES (1, '15486232231', '12745232', 'abe775'),
+       (2, '15486232231', '24840074', 'bgt541'),
+       (3, '15486232231', '24840074', 'bgt541'),
+       (4, '15486232231', '27860016', 'frt654'),
+       (5, '15486232231', '42386488', 'rfq416');
 /*!40000 ALTER TABLE `alefam` ENABLE KEYS */;
 UNLOCK
 TABLES;
@@ -86,36 +112,13 @@ TABLES;
 --
 -- Table structure for table `alert_farmacia`
 --
-
-DROP TABLE IF EXISTS `alert_farmacia`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `alert_farmacia`
-(
-    piva           VARCHAR(11) NOT NULL,
-    `codice_alert` int         NOT NULL AUTO_INCREMENT,
-    `type`         int         NOT NULL,
-    PRIMARY KEY (`codice_alert`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `alert_farmacia`
 --
 
-LOCK
-TABLES `alert_farmacia` WRITE;
-/*!40000 ALTER TABLE `alert_farmacia` DISABLE KEYS */;
-INSERT INTO `alert_farmacia`
-VALUES ('15486232231', 1, 1),
-       ('15486232231', 2, 1),
-       ('15486232231', 3, 1),
-       ('15486232231', 4, 1),
-       ('15486232231', 5, 1),
-       ('15486232231', 6, 2);
-/*!40000 ALTER TABLE `alert_farmacia` ENABLE KEYS */;
-UNLOCK
-TABLES;
+
 
 --
 -- Table structure for table `farmaci_ordinati`
@@ -128,7 +131,7 @@ CREATE TABLE `farmaci_ordinati`
 (
     piva       VARCHAR(11) NOT NULL,
     codice_aic varchar(11) NOT NULL,
-    FOREIGN KEY (`codice_aic`) REFERENCES `farmaco` (`codice_aic`)
+    FOREIGN KEY (piva, `codice_aic`) REFERENCES `farmaco` (piva, `codice_aic`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -157,7 +160,7 @@ DROP TABLE IF EXISTS `farmaco`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `farmaco`
 (
-    piva               VARCHAR(11)  NOT NULL,
+    `piva`             VARCHAR(11)  NOT NULL,
     `codice_aic`       varchar(11)  NOT NULL,
     `lotto`            varchar(9)   NOT NULL,
     `nome_farmaco`     varchar(255) NOT NULL,
@@ -166,7 +169,7 @@ CREATE TABLE `farmaco`
     `data_scadenza`    date         DEFAULT NULL,
     `costo`            double       DEFAULT NULL,
     `unita`            int          NOT NULL,
-    PRIMARY KEY (`codice_aic`, `lotto`)
+    PRIMARY KEY (`piva`, `codice_aic`, `lotto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -178,17 +181,23 @@ LOCK
 TABLES `farmaco` WRITE;
 /*!40000 ALTER TABLE `farmaco` DISABLE KEYS */;
 INSERT INTO `farmaco`
-VALUES ('15486232231', '12745182', 'abe789', 'tachipirina 1000 mg 16 compresse', 'paracetamolo', false, '2027-07-01',
-        4.53, 450),
-       ('12745232', 'abe775', 'tachipirina 10 mg/ml soluzione per infusione', 'paracetamolo', false, '2025-06-01', 12.5,
-        15),
-       ('19655051', 'bfh845', 'bentelan 1 mg 10 compresse resistenti ', 'betametasone', false, '2027-07-01', 1.35, 219),
-       ('24840074', 'bgt541', 'cardioaspirin 100 mg 30 compresse gastroresistenti', 'acido acetilsalicilico', true,
-        '2027-09-01', 2.34, 40),
-       ('27860016', 'frt654', 'zitromax 250 mg 6 capsule rigide', 'azitromicina', true, '2026-05-01', 8.5, 21),
-       ('34246013', 'trf741', 'nurofen 200 mg + 30 mg 12 compresse rivestite', 'ibuprofene', true, '2027-12-01', 6,
+VALUES ('15486232231', '12745182', 'abe789', 'tachipirina 1000 mg 16 compresse', 'paracetamolo', false,
+        '2027-07-01', 4.53, 450),
+       ('15486232231', '12745232', 'abe775', 'tachipirina 10 mg/ml soluzione per infusione', 'paracetamolo', false,
+        '2025-06-01', 12.5, 15),
+       ('15486232231', '19655051', 'bfh845', 'bentelan 1 mg 10 compresse resistenti ', 'betametasone', false,
+        '2027-07-01', 1.35, 219),
+       ('15486232231', '24840074', 'bgt541', 'cardioaspirin 100 mg 30 compresse gastroresistenti',
+        'acido acetilsalicilico', true, '2027-09-01', 2.34, 40),
+       ('15486232231', '27860016', 'frt654', 'zitromax 250 mg 6 capsule rigide', 'azitromicina', true, '2026-05-01',
+        8.5, 21),
+       ('15486232231', '34246013', 'trf741', 'nurofen 200 mg + 30 mg 12 compresse rivestite', 'ibuprofene', true,
+        '2027-12-01', 6,
         150),
-       ('42386488', 'rfq416', 'brufen 400 mg 16 compresse rivestite con film', 'ibuprofene', true, '2025-07-01', 4.75,
+       ('45781004476', '12745232', 'abe775', 'tachipirina 10 mg/ml soluzione per infusione', 'paracetamolo', false,
+        '2025-06-01', 12.5, 15),
+       ('15486232231', '42386488', 'rfq416', 'brufen 400 mg 16 compresse rivestite con film', 'ibuprofene', true,
+        '2025-07-01', 4.75,
         25);
 /*!40000 ALTER TABLE `farmaco` ENABLE KEYS */;
 UNLOCK
@@ -232,50 +241,10 @@ CREATE TABLE `ord_farmaci`
     `codice_ordine_of` varchar(5)  NOT NULL,
     `codice_aic_of`    varchar(11) NOT NULL,
     `lotto_of`         varchar(9)  NOT NULL,
+    `data_consegna`    date        NOT NULL,
     `unita`            int         NOT NULL,
     PRIMARY KEY (`codice_ordine_of`, `codice_aic_of`, `lotto_of`),
     KEY                `codice_aic_of` (`codice_aic_of`,`lotto_of`),
     CONSTRAINT `ord_farmaci_ibfk_1` FOREIGN KEY (`codice_ordine_of`) REFERENCES `ordine` (`codice_ordine`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Dump completed on 2022-06-24 19:47:46
-/* seleziona tutti i farmaci presenti all'interno del database */
-
-select *
-from farmaco;
-
-/* aggiornare le unità di farmaco in base all'ordine periodico */
-/* Il valore 200 è indicativo. Dipende dall'ordine periodico della farmacia */
-
-UPDATE farmaco
-SET unita = unita + 200
-WHERE codice_aic = '12745182'
-   or codice_aic = '19655051'
-;
-
-/* aggiungere un nuovo prodotto all'interno del magazzino della farmacia
-Ho inserito un dato a caso */
-
-INSERT INTO farmaco
-VALUES ('026803080', 'omeprazen 10 MG 14 capsule rigide gastroresistenti', 'omeprazolo', false, '2023-01-01', 7.85, 45)
-;
-
-/* vendere un farmaco */
-
-select unita
-from farmaco F1
-where F1.codice_aic = '12745182'
-
-UPDATE farmaco
-SET unita - (SELECT unita
-             FROM farmaco1 F2
-             WHERE F2.codice_aic = F1.codice_aic)
-;
-
-/* seleziona tutti i farmaci con una quantità di farmaci inferiore a 20 */
-
-SELECT codice_aic, nome_farmaco
-FROM farmaco
-WHERE unita < 50
-;
 

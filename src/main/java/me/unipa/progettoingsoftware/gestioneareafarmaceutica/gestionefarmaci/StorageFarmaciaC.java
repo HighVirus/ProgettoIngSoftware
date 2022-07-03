@@ -8,7 +8,6 @@ import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
-import me.unipa.progettoingsoftware.utils.AlertType;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.utils.GenericNotice;
 
@@ -54,7 +53,7 @@ public class StorageFarmaciaC {
     }
 
     public void showStorageFarmaciaB() {
-        DBMSB.getFarmacia().getFarmacoListFromStorage().whenComplete((farmacos, throwable) -> {
+        DBMSB.getFarmacia().getFarmacoListFromStorage(User.getUser().getFarmaciaPiva()).whenComplete((farmacos, throwable) -> {
             if (throwable != null)
                 throwable.printStackTrace();
         }).thenAccept(farmacos -> {
@@ -66,6 +65,33 @@ public class StorageFarmaciaC {
                 new StorageFarmaciaB(stage, fxmlLoader);
             });
         });
+    }
+
+    public void modificaCostoFarmaco(Farmaco farmaco, String textField) {
+        if (isValidCostoField(textField)) {
+            double costo = Double.parseDouble(textField);
+            farmaco.setCosto(costo);
+            for (Farmaco f1 : caricaProductsFormController.getCaricoList().getItems()) {
+                if (f1.getCodAic().equalsIgnoreCase(farmaco.getCodAic()) && f1.getLotto().equalsIgnoreCase(farmaco.getLotto())) {
+                    f1.setCosto(costo);
+                    return;
+                }
+            }
+            caricaProductsFormController.getCaricoList().update();
+        } else {
+            new ErrorsNotice("Valore non valido");
+        }
+    }
+
+    private boolean isValidCostoField(String textField) {
+        if (textField.length() == 0)
+            return false;
+        try {
+            double value = Double.parseDouble(textField);
+            return value > 0;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
     }
 
     public void addProductToCaricoList() {
@@ -129,25 +155,25 @@ public class StorageFarmaciaC {
             }
         });
 
-        DBMSB.getFarmacia().addFarmacoListToStorage(this.caricaProductsFormController.getCaricoList().getItems());
+        DBMSB.getFarmacia().addFarmacoListToStorage(User.getUser().getFarmaciaPiva(), this.caricaProductsFormController.getCaricoList().getItems());
 
         while (orderCodeIterator.hasNext()) {
             DBMSB.getFarmacia().makeDeliveryCompleted(orderCodeIterator.next());
             DBMSB.getAzienda().makeDeliveryCompleted(orderCodeIterator.next());
         }
 
-        DBMSB.getFarmacia().getFarmaciAlreadyOrdered().thenAccept(farmacoList -> {
-            for (Farmaco farmaco : farmacoList) {
-                DBMSB.getFarmacia().removeFarmacoFromAlreadyOrdered(farmaco.getCodAic());
+        DBMSB.getFarmacia().getFarmaciAlreadyOrdered(User.getUser().getFarmaciaPiva()).thenAccept(farmacoList -> {
+            for (String codAic : farmacoList) {
+                DBMSB.getFarmacia().removeFarmacoFromAlreadyOrdered(User.getUser().getFarmaciaPiva(), codAic);
             }
         });
 
-        new GenericNotice("messaggio di conferma");
+        new GenericNotice("Prodotti caricati con successo.");
 
     }
 
     public void addFarmaciFromOrder(Order order) {
-
+        this.caricaProductsFormController.getCaricoList().getItems().addAll(order.getFarmacoList());
     }
 
 

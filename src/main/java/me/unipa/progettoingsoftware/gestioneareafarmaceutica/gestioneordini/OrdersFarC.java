@@ -124,7 +124,7 @@ public class OrdersFarC {
     }
 
     private boolean isModifiedValueValid(String codAic, String lotto, int unita) {
-        Farmaco farmaco = DBMSB.getFarmacia().getFarmacoFromStorage(codAic, lotto).join();
+        Farmaco farmaco = DBMSB.getFarmacia().getFarmacoFromStorage(User.getUser().getFarmaciaPiva(), codAic, lotto).join();
         return farmaco.getUnita() >= unita;
     }
 

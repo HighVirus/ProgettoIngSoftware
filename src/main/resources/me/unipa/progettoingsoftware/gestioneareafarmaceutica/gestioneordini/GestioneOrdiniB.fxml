@@ -24,7 +24,7 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </MFXButton>
-                  <MFXButton layoutX="684.0" layoutY="41.0" prefHeight="39.0" prefWidth="42.0" text=" " />
+                  <MFXButton fx:id="alertButton" onAction="#onClickAlertButton" layoutX="684.0" layoutY="41.0" prefHeight="39.0" prefWidth="42.0" text=" " />
                </children>
             </AnchorPane>
          </top>
@@ -49,7 +49,7 @@
             <Font size="24.0" />
          </font>
       </MFXButton>
-      <MFXButton layoutX="51.0" layoutY="582.0" onAction="#onClickTornaButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
+      <MFXButton layoutX="51.0" layoutY="582.0" onAction="#onClickTornaButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

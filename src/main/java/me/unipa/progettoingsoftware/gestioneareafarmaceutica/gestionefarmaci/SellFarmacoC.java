@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
+import me.unipa.progettoingsoftware.gestionedati.entity.User;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 
 @RequiredArgsConstructor
@@ -14,16 +15,8 @@ public class SellFarmacoC {
     private Stage sellStage;
     private SellWindowBController sellWindowBController;
 
-    public void showGestioneFarmaciB() {
-        GestioneFarmaciBController gestioneFarmaciBController = new GestioneFarmaciBController(stage);
-        FXMLLoader fxmlLoader = new FXMLLoader(GestioneFarmaciB.class.getResource("GestioneFarmaciB.fxml"));
-        fxmlLoader.setRoot(gestioneFarmaciBController);
-        fxmlLoader.setController(gestioneFarmaciBController);
-        new GestioneFarmaciB(stage, fxmlLoader);
-    }
-
     public void showSellWindowB() {
-        DBMSB.getFarmacia().getFarmacoListFromStorage().whenComplete((farmacos, throwable) -> {
+        DBMSB.getFarmacia().getFarmacoListFromStorage(User.getUser().getFarmaciaPiva()).whenComplete((farmacos, throwable) -> {
             if (throwable != null)
                 throwable.printStackTrace();
         }).thenAccept(farmacos -> {
@@ -96,7 +89,7 @@ public class SellFarmacoC {
     }
 
     public void emettiScontrino() {
-        DBMSB.getFarmacia().confirmSell(sellWindowBController.getCarrelloTable().getItems());
+        DBMSB.getFarmacia().confirmSell(User.getUser().getFarmaciaPiva(), sellWindowBController.getCarrelloTable().getItems());
         this.sellStage.close();
     }
 

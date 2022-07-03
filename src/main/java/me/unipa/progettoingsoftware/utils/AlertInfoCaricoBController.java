@@ -43,14 +43,14 @@ public class AlertInfoCaricoBController extends AnchorPane {
         MFXTableColumn<Order> statoColumn = new MFXTableColumn<>("Stato Consegna", true, Comparator.comparing(Order::getStatus));
         statoColumn.setPrefWidth(260);
 
-        orderList.getTableColumns().addAll(farmacoNameColumn, lottoColumn, unitaColumn);
+        /*orderList.getTableColumns().addAll(farmacoNameColumn, lottoColumn, unitaColumn);
         orderList.getFilters().addAll(
                 new StringFilter<>("Nome Farmaco", Farmaco::getFarmacoName),
                 new StringFilter<>("Lotto", Farmaco::getLotto),
                 new IntegerFilter<>("Unita", Farmaco::getUnita)
         );
 
-        farmacoTable.setItems(FXCollections.observableArrayList(order.getFarmacoList()));
+        farmacoTable.setItems(FXCollections.observableArrayList(order.getFarmacoList()));*/
 
     }
 

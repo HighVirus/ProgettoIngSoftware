@@ -32,7 +32,7 @@
          </top>
       </BorderPane>
       <MFXTableView fx:id="farmacoTable" layoutX="51.0" layoutY="184.0" prefHeight="387.0" prefWidth="898.0" />
-      <MFXButton layoutX="51.0" layoutY="582.0" onAction="#onClickTornaButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
+      <MFXButton layoutX="51.0" layoutY="582.0" onAction="#onClickTornaButton" prefHeight="45.0" prefWidth="222.0" style="-fx-background-color: #ffffff; -fx-background-radius: 20; -fx-border-color: #1c7c54; -fx-border-radius: 20; -fx-border-width: 2;" text="Torna" textFill="#1c7c54">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

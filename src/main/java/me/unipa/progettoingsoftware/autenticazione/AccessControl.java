@@ -53,6 +53,7 @@ public class AccessControl {
                         }
                         case 3 -> {
                             fxmlLoader = new FXMLLoader(HomePageCorriere.class.getResource("HomePageCorriere.fxml"));
+                            new HomePageCorriere(this.stage, fxmlLoader);
                         }
                         default -> {
                             new ErrorsNotice("Qualcosa è andato storto, contatta l'amministratore.");
