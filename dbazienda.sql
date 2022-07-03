@@ -288,7 +288,10 @@ CREATE TABLE `ord_far` (
 
 LOCK TABLES `ord_far` WRITE;
 /*!40000 ALTER TABLE `ord_far` DISABLE KEYS */;
-INSERT INTO `ord_far` VALUES ('47811','24840074','bgt541',550),('47811','12745182','abe789',23),('47811','12745182','abe790',40),('47811','27860016','frt654',350);
+INSERT INTO `ord_far` VALUES ('47811','24840074','bgt541',550),
+                             ('47811','12745182','abe789',23),
+                             ('47811','12745182','abe790',40),
+                             ('47811','27860016','frt654',350);
 /*!40000 ALTER TABLE `ord_far` ENABLE KEYS */;
 UNLOCK TABLES;
 
