@@ -13,8 +13,6 @@ public class AlertE {
     private final AlertType alertType;
     @Getter
     private final String message;
-
-
     @Getter
     private final List<Order> caricoOrderList;
 

@@ -1,5 +1,6 @@
 package me.unipa.progettoingsoftware.utils;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
@@ -19,32 +20,38 @@ public class AlertC {
     private AlertListBController alertListBController;
 
     public void showAlertReport() {
-        new AlertReportB(this.stage, new FXMLLoader(AlertReportB.class.getResource("AlertReportB.fxml")));
         DBMSB.getAzienda().getAlertsAzienda().thenAccept(alertEList -> {
-            if (alertEList.isEmpty()) {
-                new GenericNotice("Non ci sono alert da visualizzare");
-            } else {
-                alertReportBController = new AlertReportBController(this.stage, this, alertEList);
-                FXMLLoader fxmlLoader = new FXMLLoader(AlertReportB.class.getResource("AlertReportB.fxml"));
-                fxmlLoader.setRoot(alertReportBController);
-                fxmlLoader.setController(alertReportBController);
-                new AlertReportB(new Stage(), fxmlLoader);
-            }
+            Platform.runLater(() -> {
+                if (alertEList.isEmpty()) {
+                    new GenericNotice("Non ci sono alert da visualizzare");
+                } else {
+                    alertReportBController = new AlertReportBController(this.stage, this, alertEList);
+                    FXMLLoader fxmlLoader = new FXMLLoader(AlertReportB.class.getResource("AlertReportB.fxml"));
+                    fxmlLoader.setRoot(alertReportBController);
+                    fxmlLoader.setController(alertReportBController);
+                    new AlertReportB(new Stage(), fxmlLoader);
+                }
+            });
         });
     }
 
 
     public void showAlertList() {
         DBMSB.getFarmacia().getAlertList(User.getUser().getFarmaciaPiva()).thenAccept(alertEList -> {
-            if (alertEList.isEmpty()) {
-                new GenericNotice("Non ci sono alert da visualizzare");
-            } else {
-                alertListBController = new AlertListBController(this.stage, this, alertEList);
-                FXMLLoader fxmlLoader = new FXMLLoader(AlertListB.class.getResource("AlertListB.fxml"));
-                fxmlLoader.setRoot(alertListBController);
-                fxmlLoader.setController(alertListBController);
-                new AlertListB(new Stage(), fxmlLoader);
-            }
+            Platform.runLater(() -> {
+
+
+
+                if (alertEList.isEmpty()) {
+                    new GenericNotice("Non ci sono alert da visualizzare");
+                } else {
+                    alertListBController = new AlertListBController(this.stage, this, alertEList);
+                    FXMLLoader fxmlLoader = new FXMLLoader(AlertListB.class.getResource("AlertListB.fxml"));
+                    fxmlLoader.setRoot(alertListBController);
+                    fxmlLoader.setController(alertListBController);
+                    new AlertListB(new Stage(), fxmlLoader);
+                }
+            });
         });
     }
 

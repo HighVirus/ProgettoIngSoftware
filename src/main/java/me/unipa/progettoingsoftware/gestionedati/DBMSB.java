@@ -804,6 +804,7 @@ public class DBMSB {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM farmaci_ordinati WHERE piva=?")) {
+                preparedStatement.setString(1, piva);
                 List<String> codAicList = new ArrayList<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
@@ -834,24 +835,35 @@ public class DBMSB {
         return null;
     }
 
-    public CompletableFuture<List<Order>> getDeliveryList() {  //Da controllare tutto il metodo
+    public CompletableFuture<List<Order>> getDeliveryList() {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT DISTINCT ordini.codice_ordine, farmacia.partita_iva, farmacia.nome_farmacia, account.email, ordini.stato, ordini.data_consegna, farmacia.indirizzo, farmacia.cap FROM ordini, magazzino_aziendale, farmacia_ord, farmacia, account, farmaccount WHERE  farmacia_ord.codice_ordine_fo = ordini.codice_ordine AND farmacia_ord.partita_iva_fo = farmacia.partita_iva AND farmaccount.partita_iva = farmacia.partita_iva AND farmaccount.IDACCOUNT_F = account.ID AND ordini.stato =1")) {
-                List<Order> orderList = new ArrayList<>();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.stato, ord.data_consegna, far.partita_iva, far.nome_farmacia, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, farmlistord.lotto_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
+                         " WHERE farord.codice_ordine_fo=ord.codice_ordine AND farord.partita_iva_fo=far.partita_iva AND ord.codice_ordine=farmlistord.codice_ordine_o AND cat.codice_aic=farmlistord.codice_aic_o AND far.partita_iva=faracc.partita_iva AND faracc.idaccount_f=acc.ID AND ord.stato=1")) {
+                Map<String, Order> orderMap = new HashMap<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     String orderCode = resultSet.getString("codice_ordine");
-                    String partitaIva= resultSet.getString("partita_iva");
-                    String farmaciaName = resultSet.getString("nome_farmacia");
-                    String indirizzo = resultSet.getString("indirizzo");
-                    String email = resultSet.getString("email");
-                    String cap = resultSet.getString("cap");
-                    int stato = resultSet.getInt("stato");
-                    Date deliveryDate = resultSet.getDate("data_consegna");
-                    orderList.add(new Order(orderCode, deliveryDate, partitaIva, farmaciaName, indirizzo, cap, email, stato));
+                    String codAic = resultSet.getString("codice_aic_o");
+                    String codLotto = resultSet.getString("lotto_o");
+                    String farmacoName = resultSet.getString("nome_farmaco");
+                    int unita = resultSet.getInt("unita");
+                    if (!orderMap.containsKey(orderCode)) {
+                        Date deliveryDate = resultSet.getDate("data_consegna");
+                        String pivaFarmacia = resultSet.getString("partita_iva");
+                        String farmaciaName = resultSet.getString("nome_farmacia");
+                        String indirizzo = resultSet.getString("indirizzo");
+                        String cap = resultSet.getString("cap");
+                        String email = resultSet.getString("email");
+                        int status = resultSet.getInt("stato");
+                        Order order = new Order(orderCode, deliveryDate, pivaFarmacia, farmaciaName, indirizzo, cap, email, status);
+                        order.getFarmacoList().add(new Farmaco(codAic, codLotto, farmacoName, unita));
+                        orderMap.put(orderCode, order);
+                    } else {
+                        orderMap.get(orderCode).getFarmacoList().add(new Farmaco(codAic, codLotto, farmacoName, unita));
+                    }
                 }
-                return orderList;
+                return new ArrayList<>(orderMap.values());
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -900,7 +912,7 @@ public class DBMSB {
                 List<AlertE> alertEList = new ArrayList<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    String farmaciaName = this.getFarmaciaInfo(resultSet.getString("partita_iva_aa")).join().get(1);
+                    String farmaciaName = this.getFarmaciaInfo(resultSet.getString("partita_iva_aa")).join().get(0);
                     alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.AZIENDA, resultSet.getString("partita_iva_aa"), farmaciaName));
                 }
                 return alertEList;
@@ -924,12 +936,14 @@ public class DBMSB {
                 for (Map.Entry<String, Integer> map : alertMap.entrySet()) {
                     if (map.getValue() == AlertType.FARMACIA_QUANTITY.getType()) {
                         List<Farmaco> farmacoList = this.getAlertListFarm(map.getKey(), piva).join();
-                        alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.FARMACIA_CARICO, farmacoList));
+                        alertEList.add(new AlertE(map.getKey(), AlertType.FARMACIA_QUANTITY, farmacoList));
                     } else if (map.getValue() == AlertType.FARMACIA_CARICO.getType()) {
                         List<Order> orderList = this.getAlertListOrd(map.getKey(), piva).join();
-                        alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.FARMACIA_QUANTITY, orderList, "questa stringa non serve a niente"));
+                        alertEList.add(new AlertE(map.getKey(), AlertType.FARMACIA_CARICO, orderList, "questa stringa non serve a niente"));
                     }
                 }
+                for (AlertE alertE : alertEList)
+                    System.out.println(alertE.getMessage());
                 return alertEList;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -940,7 +954,7 @@ public class DBMSB {
     public CompletableFuture<List<Farmaco>> getAlertListFarm(String codAlert, String piva) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT alefam.codice_aic_af, alefam.lotto_af, farmaco.nome_farmaco FROM alefam, farmaco, alert_farmacia WHERE alefam.codice_alert_af=? alefam.codice_aic_af=farmaco.codice_aic AND alert_farmacia.codice_alert=alefam.codice_alert_af AND alert_farmacia.piva=?")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT alefam.codice_aic_af, alefam.lotto_af, farmaco.nome_farmaco FROM alefam, farmaco, alert_farmacia WHERE alefam.codice_alert_af=? AND alefam.codice_aic_af=farmaco.codice_aic AND alert_farmacia.codice_alert=alefam.codice_alert_af AND alert_farmacia.piva=?")) {
                 List<Farmaco> farmacoList = new ArrayList<>();
                 preparedStatement.setString(1, codAlert);
                 preparedStatement.setString(2, piva);
@@ -956,7 +970,7 @@ public class DBMSB {
     }
 
     public CompletableFuture<List<Order>> getAlertListOrd(String codAlert, String piva) {
-        return CompletableFuture.supplyAsync(() -> {
+        /*return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM aleord, alert_farmacia WHERE aleord.codice_alert_ao=? AND alert_farmacia.codice_alert=aleord.codice_alert_ao AND alert_farmacia.piva=?")) {
                 List<Order> orderList = new ArrayList<>();
@@ -964,13 +978,45 @@ public class DBMSB {
                 preparedStatement.setString(2, piva);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    orderList.addAll(DBMSB.getAzienda().getOrderList(piva).join());
+                    orderList.addAll(this.getOrderList(piva).join());
                 }
                 return orderList;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-        }, executor);
+        }, executor);*/
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT aleord.codice_ordine_ao, ord.stato, ord.data_consegna, ordfar.codice_aic_of, ordfar.lotto_of, ordfar.unita, mag.nome_farmaco, mag.principio_attivo, mag.prescrivibilita, ordfar.data_consegna, ordfar.unita FROM ordine ord, aleord, alert_farmacia, ord_farmaci ordfar, farmaco mag" +
+                         " WHERE ord.codice_ordine=ordfar.codice_ordine_of AND ordfar.codice_aic_of=mag.codice_aic AND ordfar.lotto_of=mag.lotto AND alert_farmacia.codice_alert=aleord.codice_alert_ao AND aleord.codice_alert_ao=? AND alert_farmacia.piva=?")) {
+                preparedStatement.setString(1, codAlert);
+                preparedStatement.setString(1, piva);
+                Map<String, Order> orderMap = new HashMap<>();
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    String orderCode = resultSet.getString("codice_ordine_ao");
+                    String codAic = resultSet.getString("codice_aic_of");
+                    String codLotto = resultSet.getString("lotto_of");
+                    String farmacoName = resultSet.getString("nome_farmaco");
+                    String princioAttivo = resultSet.getString("principio_attivo");
+                    boolean prescrivibile = resultSet.getBoolean("prescrivibilita");
+                    Date expireDate = resultSet.getDate("data_consegna");
+                    int unita = resultSet.getInt("unita");
+                    if (!orderMap.containsKey(orderCode)) {
+                        Date deliveryDate = resultSet.getDate("data_consegna");
+                        int status = resultSet.getInt("stato");
+                        Order order = new Order(orderCode, deliveryDate, piva, null, null, null, null, status);
+                        order.getFarmacoList().add(new Farmaco(orderCode, codAic, codLotto, farmacoName, princioAttivo, prescrivibile, expireDate, 0, unita));
+                        orderMap.put(orderCode, order);
+                    } else {
+                        orderMap.get(orderCode).getFarmacoList().add(new Farmaco(orderCode, codAic, codLotto, farmacoName, princioAttivo, prescrivibile, expireDate, 0, unita));
+                    }
+                }
+                return new ArrayList<>(orderMap.values());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     /**

@@ -4,9 +4,6 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
-import io.github.palexdev.materialfx.filter.BooleanFilter;
-import io.github.palexdev.materialfx.filter.DoubleFilter;
-import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -19,14 +16,10 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.StorageFarmaciaC;
 import me.unipa.progettoingsoftware.gestionedati.entity.AlertE;
-import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
-import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 
 import java.util.Comparator;
 import java.util.List;
-import java.sql.Date;
 
 @RequiredArgsConstructor
 public class AlertListBController extends AnchorPane {
@@ -41,9 +34,7 @@ public class AlertListBController extends AnchorPane {
 
     public void setupTable() {
         MFXTableColumn<AlertE> codiceAlertColumn = new MFXTableColumn<>("Codice Alert", true, Comparator.comparing(AlertE::getCodeAlert));
-        codiceAlertColumn.setPrefWidth(130);
         MFXTableColumn<AlertE> tipoColumn = new MFXTableColumn<>("Tipo Alert", true, Comparator.comparing(AlertE::getAlertType));
-        tipoColumn.setPrefWidth(130);
 
         MFXTableColumn<AlertE> infoAlertColumn = new MFXTableColumn<>("", false);
         infoAlertColumn.setRowCellFactory(param -> new MFXTableRowCell<>(alertE -> alertE) {
@@ -69,10 +60,8 @@ public class AlertListBController extends AnchorPane {
             }
         });
 
-
         codiceAlertColumn.setRowCellFactory(order -> new MFXTableRowCell<>(AlertE::getCodeAlert));
-        tipoColumn.setRowCellFactory(order -> new MFXTableRowCell<>(AlertE::getAlertType));
-
+        tipoColumn.setRowCellFactory(order -> new MFXTableRowCell<>(alertE -> alertE.getAlertType().getValue()));
 
         alertTable.getTableColumns().addAll(codiceAlertColumn, tipoColumn, infoAlertColumn);
         alertTable.getFilters().addAll(
@@ -82,6 +71,7 @@ public class AlertListBController extends AnchorPane {
 
         alertTable.setItems(FXCollections.observableArrayList(alertList));
     }
+
     public void onClickTornaButton(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();

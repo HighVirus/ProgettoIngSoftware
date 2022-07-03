@@ -17,7 +17,7 @@
       </BorderPane>
       <Pane layoutX="51.0" layoutY="130.0" prefHeight="489.0" prefWidth="726.0" style="-fx-background-color: white; -fx-background-radius: 20;">
          <children>
-            <MFXTableView fx:id="onClickAlertFarmaButton" prefHeight="489.0" prefWidth="726.0" style="-fx-background-radius: 0 20 20 0;" />
+            <MFXTableView fx:id="alertTable" prefHeight="489.0" prefWidth="726.0" style="-fx-background-radius: 0 20 20 0;" />
          </children>
       </Pane>
       <Label layoutX="61.0" layoutY="80.0" text="NOTIFICHE" textFill="#1c7c54">

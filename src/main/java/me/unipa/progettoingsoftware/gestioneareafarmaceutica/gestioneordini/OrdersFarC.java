@@ -9,8 +9,6 @@ import me.unipa.progettoingsoftware.gestioneareaaziendale.gestionecatalogo.Confi
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.InfoOrderB;
 import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.InfoOrderBController;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.HomePageFarmacia;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.GestioneFarmaciB;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.GestioneFarmaciBController;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.CarrelloE;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
@@ -29,7 +27,7 @@ public class OrdersFarC {
     private final Stage stage;
     private ViewCarrelloController viewCarrelloController;
     private InfoOrderBController infoOrderBController;
-    private ViewOrdiniController viewOrdiniController;
+    private OrderListController orderListController;
     private OrderFarmaWindowBController orderFarmaWindowBController;
     private ConfirmCancelOrderNoticeController confirmCancelOrderNoticeController;
     private ModOrdFormController modOrdFormController;
@@ -52,11 +50,11 @@ public class OrdersFarC {
     public void showOrderList() {
         String piva = User.getUser().getFarmaciaPiva();
         DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
-            viewOrdiniController = new ViewOrdiniController(stage, this, orders);
-            FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ViewOrdini.fxml"));
-            fxmlLoader.setRoot(viewOrdiniController);
-            fxmlLoader.setController(viewOrdiniController);
-            new ViewOrdini(stage, fxmlLoader);
+            orderListController = new OrderListController(stage, this, orders);
+            FXMLLoader fxmlLoader = new FXMLLoader(OrderList.class.getResource("OrderList.fxml"));
+            fxmlLoader.setRoot(orderListController);
+            fxmlLoader.setController(orderListController);
+            new OrderList(stage, fxmlLoader);
         });
     }
 

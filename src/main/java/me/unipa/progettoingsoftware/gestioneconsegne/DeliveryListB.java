@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini.ViewOrdiniController;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.net.URL;

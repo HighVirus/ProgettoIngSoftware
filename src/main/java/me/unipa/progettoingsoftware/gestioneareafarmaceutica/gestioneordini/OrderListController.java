@@ -18,7 +18,7 @@ import me.unipa.progettoingsoftware.utils.Homepage;
 import java.util.Comparator;
 import java.util.List;
 
-public class ViewOrdiniController extends Homepage {
+public class OrderListController extends Homepage {
 
     @FXML
     @Getter
@@ -29,7 +29,7 @@ public class ViewOrdiniController extends Homepage {
     private MFXTableView<Order> orderTable;
     private final List<Order> orderList;
 
-    public ViewOrdiniController(Stage stage, OrdersFarC ordersFarC, List<Order> orderList) {
+    public OrderListController(Stage stage, OrdersFarC ordersFarC, List<Order> orderList) {
         super(stage);
         this.stage = stage;
         this.ordersFarC = ordersFarC;

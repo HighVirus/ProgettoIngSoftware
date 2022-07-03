@@ -56,10 +56,8 @@ public abstract class Homepage extends AnchorPane {
     public void onClickAlertButton(ActionEvent event) {
         if (User.isAuthenticated()) {
             if (User.getUser().getType() == 1) {
-                DBMSB.getAzienda().getAlertsAzienda();
                 new AlertC(stage).showAlertReport();
             } else if (User.getUser().getType() == 2) {
-                DBMSB.getFarmacia().getAlertList(piva);
                 new AlertC(stage).showAlertList();
             }
         }

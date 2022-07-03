@@ -14,11 +14,11 @@ import me.unipa.progettoingsoftware.utils.TempoC;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ViewOrdini extends Application {
+public class OrderList extends Application {
 
     private final FXMLLoader fxmlLoader;
 
-    public ViewOrdini(Stage stage, FXMLLoader fxmlLoader) {
+    public OrderList(Stage stage, FXMLLoader fxmlLoader) {
         this.fxmlLoader = fxmlLoader;
 
         try {
@@ -45,15 +45,15 @@ public class ViewOrdini extends Application {
         stage.setResizable(false);
         stage.setScene(scene);
         stage.centerOnScreen();
-        ViewOrdiniController viewOrdiniController = fxmlLoader.getController();
-        viewOrdiniController.setupTable();
+        OrderListController orderListController = fxmlLoader.getController();
+        orderListController.setupTable();
         Image buttonImage = TempoC.getInstance().isAlertsToRead() ? new Image(getClass().getResourceAsStream("/images/bell-new-alert.png")) : new Image(getClass().getResourceAsStream("/images/bell-alert.png"));
         ImageView imageView = new ImageView(buttonImage);
         imageView.setFitWidth(27);
         imageView.setFitHeight(27);
-        viewOrdiniController.getAlertButton().setGraphic(imageView);
-        viewOrdiniController.getAlertButton().setBackground(Background.EMPTY);
-        viewOrdiniController.getWelcomeText().setText(viewOrdiniController.getWelcomeText().getText()
+        orderListController.getAlertButton().setGraphic(imageView);
+        orderListController.getAlertButton().setBackground(Background.EMPTY);
+        orderListController.getWelcomeText().setText(orderListController.getWelcomeText().getText()
                 .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }

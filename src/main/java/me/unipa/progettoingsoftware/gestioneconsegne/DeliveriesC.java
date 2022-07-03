@@ -4,10 +4,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.HomePageAzienda;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.InfoOrderB;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.InfoOrderBController;
-import me.unipa.progettoingsoftware.gestioneareaaziendale.gestioneordiniaziendali.OrderListBController;
 import me.unipa.progettoingsoftware.gestionedati.DBMSB;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 import me.unipa.progettoingsoftware.utils.GenericNotice;
@@ -16,6 +12,7 @@ import me.unipa.progettoingsoftware.utils.GenericNotice;
 public class DeliveriesC {
     private final Stage stage;
     private DeliveryListBController deliveryListBController;
+
     public void showDeliveryList() {
         DBMSB.getAzienda().getDeliveryList().whenComplete((orders, throwable) -> {
             if (throwable != null)
@@ -26,10 +23,11 @@ public class DeliveriesC {
                 FXMLLoader fxmlLoader = new FXMLLoader(DeliveryListB.class.getResource("DeliveryListB.fxml"));
                 fxmlLoader.setRoot(deliveryListBController);
                 fxmlLoader.setController(deliveryListBController);
-                 new DeliveryListB(stage, fxmlLoader);
+                new DeliveryListB(stage, fxmlLoader);
             });
         });
     }
+
     public void showHomePageCorriere() {
         new HomePageCorriere(this.stage, new FXMLLoader(HomePageCorriere.class.getResource("HomePageCorriere.fxml")));
     }
@@ -43,23 +41,16 @@ public class DeliveriesC {
     }
 
     public void submitSign(Order order) {
-
         DBMSB.getAzienda().makeOrderDeliveredReadyToLoad(order.getOrderCode());
         new GenericNotice("La consegna è stata effettuata con successo.");
-
     }
 
     public void showInfoDelivery(Order order) {
-        DBMSB.getAzienda().getDeliveryInfo().whenComplete((orders, throwable) -> {
-            if (throwable != null)
-                throwable.printStackTrace();
-            }).thenAccept(orders ->{
-                InfoDeliveryBController infoDeliveryBController = new InfoDeliveryBController(order, this);
-                FXMLLoader fxmlLoader = new FXMLLoader(InfoDeliveryB.class.getResource("InfoDeliveryB.fxml"));
-                fxmlLoader.setRoot(infoDeliveryBController);
-                fxmlLoader.setController(infoDeliveryBController);
-                new InfoDeliveryB(new Stage(), fxmlLoader);
-        });
+        InfoDeliveryBController infoDeliveryBController = new InfoDeliveryBController(order, this);
+        FXMLLoader fxmlLoader = new FXMLLoader(InfoDeliveryB.class.getResource("InfoDeliveryB.fxml"));
+        fxmlLoader.setRoot(infoDeliveryBController);
+        fxmlLoader.setController(infoDeliveryBController);
+        new InfoDeliveryB(new Stage(), fxmlLoader);
     }
 
 }

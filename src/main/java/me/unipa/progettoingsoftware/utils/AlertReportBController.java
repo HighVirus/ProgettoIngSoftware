@@ -35,10 +35,8 @@ public class AlertReportBController extends AnchorPane {
 
     public void setupTable() {
         MFXTableColumn<AlertE> codiceAlertColumn = new MFXTableColumn<>("Codice Alert", true, Comparator.comparing(AlertE::getCodeAlert));
-        codiceAlertColumn.setMinWidth(80);
         MFXTableColumn<AlertE> messaggioColumn = new MFXTableColumn<>("Messaggio", true, Comparator.comparing(AlertE::getMessage));
-        messaggioColumn.setMinWidth(80);
-
+        messaggioColumn.setPrefWidth(550);
         codiceAlertColumn.setRowCellFactory(order -> new MFXTableRowCell<>(AlertE::getCodeAlert));
         messaggioColumn.setRowCellFactory(order -> new MFXTableRowCell<>(AlertE::getMessage));
 
@@ -47,6 +45,8 @@ public class AlertReportBController extends AnchorPane {
                 new StringFilter<>("Codice Alert", (AlertE::getCodeAlert)),
                 new StringFilter<>("Messaggio", (AlertE::getMessage))
         );
+
+        alertTable.getItems().addAll(alertList);
 
     }
 

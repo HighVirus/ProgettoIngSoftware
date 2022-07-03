@@ -22,7 +22,7 @@ public class OrderPeriodicoC {
         DBMSB.getAzienda().getFarmacoUnitaPeriodic(piva).thenAccept(periodicOrders -> {
             Platform.runLater(() -> {
                 viewOrdinePeriodicoBController = new ViewOrdinePeriodicoBController(stage, this, periodicOrders);
-                FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("ViewOrdinePeriodicoB.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(OrderList.class.getResource("ViewOrdinePeriodicoB.fxml"));
                 fxmlLoader.setRoot(viewOrdinePeriodicoBController);
                 fxmlLoader.setController(viewOrdinePeriodicoBController);
                 new ViewOrdinePeriodicoB(stage, fxmlLoader);
@@ -34,7 +34,7 @@ public class OrderPeriodicoC {
     public void showUnitOrderPerReport(PeriodicOrder periodicOrder) {
         Stage stage = new Stage();
         unitOrderPerReportController = new UnitOrderPerReportController(periodicOrder, this, stage);
-        FXMLLoader fxmlLoader = new FXMLLoader(ViewOrdini.class.getResource("UnitOrderPerReport.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(OrderList.class.getResource("UnitOrderPerReport.fxml"));
         fxmlLoader.setRoot(unitOrderPerReportController);
         fxmlLoader.setController(unitOrderPerReportController);
         new UnitOrderPerReport(stage, fxmlLoader);
