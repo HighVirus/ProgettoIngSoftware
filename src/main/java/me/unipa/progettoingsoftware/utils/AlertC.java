@@ -71,7 +71,7 @@ public class AlertC {
     }
 
     public void clickConfirmAll() {
-        DBMSB.getFarmacia().getFarmaciFromOrder();
+        DBMSB.getFarmacia().getFarmaciFromOrder(order.getOrderCode());
         //addFarmacoToStorage
         //makeDeliveryCompleted azienda e farmacia
     }

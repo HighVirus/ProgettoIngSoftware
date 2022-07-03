@@ -38,20 +38,10 @@ public class AlertInfoCaricoBController extends AnchorPane {
 
     public void setupTable() {
 
-        codiceOrdine.setText(codiceOrdine.getText().replaceAll("%CodiceOrdine%", order.getOrderCode()));
-        pivaFarmacia.setText(pivaFarmacia.getText().replaceAll("%pivaFarmacia%", order.getPivaFarmacia()));
-        indirizzoEmail.setText(indirizzoEmail.getText().replaceAll("%IndirizzoEmail%", order.getEmail()));
-
-        MFXTableColumn<Farmaco> farmacoNameColumn = new MFXTableColumn<>("Nome Farmaco", true, Comparator.comparing(Farmaco::getFarmacoName));
-        farmacoNameColumn.setPrefWidth(250);
-        MFXTableColumn<Farmaco> lottoColumn = new MFXTableColumn<>("Lotto", true, Comparator.comparing(Farmaco::getLotto));
-        farmacoNameColumn.setPrefWidth(100);
-        MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getUnita));
-
-
-        lottoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getLotto));
-        farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
-        unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
+        MFXTableColumn<Order> orderCodeColumn = new MFXTableColumn<>("Codice Ordine", true, Comparator.comparing(Order::getOrderCode));
+        orderCodeColumn.setPrefWidth(130);
+        MFXTableColumn<Order> statoColumn = new MFXTableColumn<>("Stato Consegna", true, Comparator.comparing(Order::getStatus));
+        statoColumn.setPrefWidth(260);
 
         orderList.getTableColumns().addAll(farmacoNameColumn, lottoColumn, unitaColumn);
         orderList.getFilters().addAll(
