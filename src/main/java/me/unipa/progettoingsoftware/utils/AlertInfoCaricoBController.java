@@ -3,8 +3,6 @@ package me.unipa.progettoingsoftware.utils;
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
-import io.github.palexdev.materialfx.filter.BooleanFilter;
-import io.github.palexdev.materialfx.filter.DoubleFilter;
 import io.github.palexdev.materialfx.filter.IntegerFilter;
 import io.github.palexdev.materialfx.filter.StringFilter;
 import javafx.collections.FXCollections;
@@ -16,7 +14,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestionefarmaci.StorageFarmaciaC;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 
@@ -29,7 +26,6 @@ public class AlertInfoCaricoBController extends AnchorPane {
     @FXML
     @Getter
     private MFXTableView<Farmaco> farmacoTable;
-    private final Order order;
 
     @FXML
     private Label codiceOrdine;
@@ -38,7 +34,7 @@ public class AlertInfoCaricoBController extends AnchorPane {
     @FXML
     private Label indirizzoEmail;
     private final AlertC alertC;
-    private final List<Farmaco> farmacoList;
+    private final List<Order> orderList;
 
     public void setupTable() {
 
@@ -57,8 +53,8 @@ public class AlertInfoCaricoBController extends AnchorPane {
         farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
         unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
 
-        farmacoList.getTableColumns().addAll(farmacoNameColumn, lottoColumn, unitaColumn);
-        farmacoList.getFilters().addAll(
+        orderList.getTableColumns().addAll(farmacoNameColumn, lottoColumn, unitaColumn);
+        orderList.getFilters().addAll(
                 new StringFilter<>("Nome Farmaco", Farmaco::getFarmacoName),
                 new StringFilter<>("Lotto", Farmaco::getLotto),
                 new IntegerFilter<>("Unita", Farmaco::getUnita)

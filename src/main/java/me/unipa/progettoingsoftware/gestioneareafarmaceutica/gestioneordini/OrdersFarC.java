@@ -61,13 +61,11 @@ public class OrdersFarC {
     }
 
     public void showOrderInfoB(Order order) {
-        Order.getOrderInfo().thenAccept(orders ->
         InfoOrderBController infoOrderBController = new InfoOrderBController(order);
         FXMLLoader fxmlLoader = new FXMLLoader(InfoOrderB.class.getResource("InfoOrderB.fxml"));
         fxmlLoader.setRoot(infoOrderBController);
         fxmlLoader.setController(infoOrderBController);
         new InfoOrderB(new Stage(), fxmlLoader);
-
     }
 
     public void showModOrderForm(Order order) {

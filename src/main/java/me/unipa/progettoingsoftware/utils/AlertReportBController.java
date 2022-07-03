@@ -27,33 +27,26 @@ public class AlertReportBController extends AnchorPane {
     private final Stage stage;
     @FXML
     @Getter
-    private MFXTableView<Order> orderTable;
+    private MFXTableView<AlertE> alertTable;
     private final AlertC alertC;
     @Getter
-    private final List<Order> orderList;
+    private final List<AlertE> alertList;
 
 
     public void setupTable() {
-        MFXTableColumn<Order> codiceOrdine = new MFXTableColumn<>("Codice Ordine", true, Comparator.comparing(Order::getOrderCode));
-        codiceOrdine.setMinWidth(80);
-        MFXTableColumn<Order> piva = new MFXTableColumn<>("Partita IVA", true, Comparator.comparing(Order::getPivaFarmacia));
-        piva.setMinWidth(80);
+        MFXTableColumn<AlertE> codiceAlertColumn = new MFXTableColumn<>("Codice Alert", true, Comparator.comparing(AlertE::getCodeAlert));
+        codiceAlertColumn.setMinWidth(80);
+        MFXTableColumn<AlertE> messaggioColumn = new MFXTableColumn<>("Messaggio", true, Comparator.comparing(AlertE::getMessage));
+        messaggioColumn.setMinWidth(80);
 
+        codiceAlertColumn.setRowCellFactory(order -> new MFXTableRowCell<>(AlertE::getCodeAlert));
+        messaggioColumn.setRowCellFactory(order -> new MFXTableRowCell<>(AlertE::getMessage));
 
-
-        codiceOrdine.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getOrderCode));
-        piva.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getPivaFarmacia));
-
-
-        orderTable.getTableColumns().addAll(codiceOrdine, piva);
-        orderTable.getFilters().addAll(
-                new StringFilter<>("Codice Ordine", (Order::getOrderCode)),
-                new StringFilter<>("Partita IVA", (Order::getPivaFarmacia))
-
-
+        alertTable.getTableColumns().addAll(codiceAlertColumn, messaggioColumn);
+        alertTable.getFilters().addAll(
+                new StringFilter<>("Codice Alert", (AlertE::getCodeAlert)),
+                new StringFilter<>("Messaggio", (AlertE::getMessage))
         );
-
-
 
     }
 

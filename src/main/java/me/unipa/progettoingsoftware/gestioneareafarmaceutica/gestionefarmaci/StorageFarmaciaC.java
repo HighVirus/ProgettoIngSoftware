@@ -122,13 +122,10 @@ public class StorageFarmaciaC {
                         }
                     }
                     if (!found) {
-                        DBMSB.getAzienda().sendAlert(AlertType.AZIENDA, farmaciaInfo.get(1));
+                        DBMSB.getAzienda().sendAlert(farmaciaInfo.get(0));
                         break;
                     }
                 }
-
-                String farmaciaName = farmaciaInfo.get(1);
-                DBMSB.getAzienda().sendAlert(AlertType.AZIENDA, farmaciaName);
             }
         });
 

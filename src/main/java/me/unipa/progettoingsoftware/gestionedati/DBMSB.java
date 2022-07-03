@@ -3,7 +3,6 @@ package me.unipa.progettoingsoftware.gestionedati;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import lombok.Getter;
 import me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini.PeriodicOrder;
@@ -12,7 +11,6 @@ import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
 import me.unipa.progettoingsoftware.utils.AlertType;
-import me.unipa.progettoingsoftware.utils.OrderStatus;
 import me.unipa.progettoingsoftware.utils.RestoreConnectionC;
 
 import java.sql.Date;
@@ -850,28 +848,28 @@ public class DBMSB {
         }, executor);
     }
 
-    public CompletableFuture<String> getAlertsAzienda() {
+    public CompletableFuture<List<AlertE>> getAlertsAzienda() {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT codice_ordine_aa, partita_iva_aa FROM alert_azienda")) {
-                Map<String, Integer> alertMap = new HashMap<>();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT codice_alert, partita_iva_aa FROM alert_azienda")) {
                 List<AlertE> alertEList = new ArrayList<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    alertMap.put(resultSet.getString("codice_Ordine"), resultSet.getInt("Piva"));
+                    String farmaciaName = this.getFarmaciaInfo(resultSet.getString("partita_iva_aa")).join().get(1);
+                    alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.AZIENDA, resultSet.getString("partita_iva_aa"), farmaciaName));
                 }
-
+                return alertEList;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return null;
         }, executor);
     }
 
     public CompletableFuture<List<AlertE>> getAlertList(String piva) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM alert_farmacia")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM alert_farmacia WHERE piva=?")) {
+                preparedStatement.setString(1, piva);
                 Map<String, Integer> alertMap = new HashMap<>();
                 List<AlertE> alertEList = new ArrayList<>();
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -880,18 +878,17 @@ public class DBMSB {
                 }
                 for (Map.Entry<String, Integer> map : alertMap.entrySet()) {
                     if (map.getValue() == AlertType.FARMACIA_QUANTITY.getType()) {
-                        List<Farmaco> farmacoList = this.getAlertListFarm(map.getKey()).join();
+                        List<Farmaco> farmacoList = this.getAlertListFarm(map.getKey(), piva).join();
                         alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.FARMACIA_CARICO, farmacoList));
                     } else if (map.getValue() == AlertType.FARMACIA_CARICO.getType()) {
-                        List<Order> orderList = this.getAlertListOrd(map.getKey()).join();
-                        alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.FARMACIA_QUANTITY, orderList));
-
+                        List<Order> orderList = this.getAlertListOrd(map.getKey(), piva).join();
+                        alertEList.add(new AlertE(resultSet.getString("codice_alert"), AlertType.FARMACIA_QUANTITY, orderList, "questa stringa non serve a niente"));
                     }
                 }
+                return alertEList;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-            return null;
         }, executor);
     }
 
@@ -931,11 +928,24 @@ public class DBMSB {
         }, executor);
     }
 
-    public void sendAlert(AlertType alertType, String farmaciaName) {
-
+    /**
+     * usato per inviare l'alert all'azienda
+     *
+     * @param farmaciaPiva
+     */
+    public void sendAlert(String farmaciaPiva) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO alert_azienda (partita_iva_aa) VALUES (?)")) {
+                preparedStatement.setString(1, farmaciaPiva);
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
     }
 
-    public CompletableFuture<List<Farmaco>> getFarmaciBanco(String piva) {
+    public CompletableFuture<List<Farmaco>> getFarmaciBanco(String piva) { //TODO da finire
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM farmaco WHERE prescrivibilita = false")) {
@@ -1083,15 +1093,16 @@ public class DBMSB {
         return null;
     }
 
-    public void addFarmaciToOrdered(String piva, String codice_aic) {
-        //insert farmaci già ordina to tabella in dbms farmacia quando farmacista clicca già ordinati dal infoalertquantità
+    public void addFarmaciToOrdered(String piva, List<Farmaco> codAicList) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO farmaci_ordinati (piva, codice_aic) " +
                          "VALUES (?,?)")) {
                 preparedStatement.setString(1, piva);
-                preparedStatement.setString(2, codice_aic);
-                preparedStatement.executeUpdate();
+                for (Farmaco f : codAicList) {
+                    preparedStatement.setString(2, f.getCodAic());
+                    preparedStatement.executeUpdate();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
