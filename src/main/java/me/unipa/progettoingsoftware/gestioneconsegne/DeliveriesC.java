@@ -50,11 +50,16 @@ public class DeliveriesC {
     }
 
     public void showInfoDelivery(Order order) {
-        InfoDeliveryBController infoDeliveryBController = new InfoDeliveryBController(order, this);
-        FXMLLoader fxmlLoader = new FXMLLoader(InfoDeliveryB.class.getResource("InfoDeliveryB.fxml"));
-        fxmlLoader.setRoot(infoDeliveryBController);
-        fxmlLoader.setController(infoDeliveryBController);
-        new InfoDeliveryB(new Stage(), fxmlLoader);
+        DBMSB.getAzienda().getDeliveryInfo().whenComplete((orders, throwable) -> {
+            if (throwable != null)
+                throwable.printStackTrace();
+            }).thenAccept(orders ->{
+                InfoDeliveryBController infoDeliveryBController = new InfoDeliveryBController(order, this);
+                FXMLLoader fxmlLoader = new FXMLLoader(InfoDeliveryB.class.getResource("InfoDeliveryB.fxml"));
+                fxmlLoader.setRoot(infoDeliveryBController);
+                fxmlLoader.setController(infoDeliveryBController);
+                new InfoDeliveryB(new Stage(), fxmlLoader);
+        });
     }
 
 }
