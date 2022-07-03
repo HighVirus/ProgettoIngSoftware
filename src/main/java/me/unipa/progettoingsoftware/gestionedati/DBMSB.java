@@ -343,11 +343,13 @@ public class DBMSB {
         if (STORAGE_TABLE.equals("magazzino_aziendale")) {
             return CompletableFuture.supplyAsync(() -> {
                 try (Connection connection = getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement("select sum(unita) from " + STORAGE_TABLE + " where codice_aic=? group by codice_aic having sum(unita)>=?")) {
-                    preparedStatement.setString(1, codice_aic);
-                    preparedStatement.setInt(2, quantity);
-                    ResultSet resultSet = preparedStatement.executeQuery();
-                    return resultSet.next();
+                     PreparedStatement storageStatement = connection.prepareStatement("SELECT sum(unita) FROM " + STORAGE_TABLE + " WHERE codice_aic=? GROUP BY codice_aic");
+                     PreparedStatement ordiniStatement = connection.prepareStatement("SELECT sum(unita) FROM ord_far WHERE codice_aic_o=? GROUP BY codice_aic_o")) {
+                    storageStatement.setString(1, codice_aic);
+                    ordiniStatement.setString(1, codice_aic);
+                    ResultSet storageResult = storageStatement.executeQuery();
+                    ResultSet ordiniResult = ordiniStatement.executeQuery();
+                    return (storageResult.getInt("sum(unita)") - ordiniResult.getInt("sum(unita)")) > quantity;
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -406,6 +408,7 @@ public class DBMSB {
 
     /**
      * Solo azienda
+     *
      * @return
      */
     public CompletableFuture<List<Order>> getOrderList() {
@@ -612,59 +615,74 @@ public class DBMSB {
     }
 
     public void createNewOrder(Order order) {
-        CompletableFuture.runAsync(() -> {
-            try (Connection connection = getConnection();
-                 PreparedStatement ordineStatement = connection.prepareStatement("INSERT INTO ordini (codice_ordine, data_consegna, stato) VALUES (?,?,?)");
-                 PreparedStatement ordFarStatement = connection.prepareStatement("INSERT INTO ord_far (codice_ordine_o, codice_aic_o, lotto_o, unita) VALUES (?,?,?,?)");
-                 PreparedStatement farmaciaOrdStatement = connection.prepareStatement("INSERT INTO farmacia_ord (codice_ordine_fo, partita_iva_fo) VALUES (?,?)");
-                 PreparedStatement magazzinoStatement = connection.prepareStatement("UPDATE magazzino_aziendale SET unita=? WHERE codice_aic=? AND lotto=?")) {
-                ordineStatement.setString(1, order.getOrderCode());
-                ordineStatement.setDate(2, order.getDeliveryDate());
-                ordineStatement.setInt(3, 1);
-                ordineStatement.executeUpdate();
+        if (this == DBMSB.getFarmacia()) {
+            CompletableFuture.runAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement ordineStatement = connection.prepareStatement("INSERT INTO ordine (codice_ordine, piva, data_consegna, stato) VALUES (?,?,?,?)");
+                     PreparedStatement ordFarStatement = connection.prepareStatement("INSERT INTO ord_farmaci (codice_ordine_of, codice_aic_of, lotto_of, unita) VALUES (?,?,?,?)")) {
+                    ordineStatement.setString(1, order.getOrderCode());
+                    ordineStatement.setString(2, order.getPivaFarmacia());
+                    ordineStatement.setDate(3, order.getDeliveryDate());
+                    ordineStatement.setInt(4, 1);
+                    ordineStatement.executeUpdate();
 
-                farmaciaOrdStatement.setString(1, order.getOrderCode());
-                farmaciaOrdStatement.setString(2, order.getPivaFarmacia());
-                farmaciaOrdStatement.executeUpdate();
-
-                for (Farmaco farmacoOrder : order.getFarmacoList()) {
-                    List<Farmaco> farmacos = this.getFarmacoListFromStorageToOrder(farmacoOrder.getCodAic(), farmacoOrder.getUnita()).join();
-                    int unitaToOrder = farmacoOrder.getUnita();
-                    for (Farmaco f : farmacos) {
-
-                        if (f.getUnita() > unitaToOrder) {
-                            ordFarStatement.setString(1, order.getOrderCode());
-                            ordFarStatement.setString(2, farmacoOrder.getCodAic());
-                            ordFarStatement.setString(3, f.getLotto());
-                            ordFarStatement.setInt(4, farmacoOrder.getUnita());
-                            ordFarStatement.executeUpdate();
-
-                            magazzinoStatement.setInt(1, f.getUnita() - farmacoOrder.getUnita());
-                            magazzinoStatement.setString(2, farmacoOrder.getCodAic());
-                            magazzinoStatement.setString(3, f.getLotto());
-                            magazzinoStatement.executeUpdate();
-                            break;
-                        } else {
-                            unitaToOrder -= f.getUnita();
-                            ordFarStatement.setString(1, order.getOrderCode());
-                            ordFarStatement.setString(2, farmacoOrder.getCodAic());
-                            ordFarStatement.setString(3, f.getLotto());
-                            ordFarStatement.setInt(4, f.getUnita());
-                            ordFarStatement.executeUpdate();
-
-                            magazzinoStatement.setInt(1, 0);
-                            magazzinoStatement.setString(2, farmacoOrder.getCodAic());
-                            magazzinoStatement.setString(3, f.getLotto());
-                            magazzinoStatement.executeUpdate();
-                        }
-
+                    for (Farmaco farmacoOrder : order.getFarmacoList()) {
+                        ordFarStatement.setString(1, order.getOrderCode());
+                        ordFarStatement.setString(2, farmacoOrder.getCodAic());
+                        ordFarStatement.setString(3, farmacoOrder.getLotto());
+                        ordFarStatement.setInt(4, farmacoOrder.getUnita());
+                        ordFarStatement.executeUpdate();
                     }
-                }
 
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }, executor);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+        } else {
+            CompletableFuture.runAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement ordineStatement = connection.prepareStatement("INSERT INTO ordini (codice_ordine, data_consegna, stato) VALUES (?,?,?)");
+                     PreparedStatement ordFarStatement = connection.prepareStatement("INSERT INTO ord_far (codice_ordine_o, codice_aic_o, lotto_o, unita) VALUES (?,?,?,?)");
+                     PreparedStatement farmaciaOrdStatement = connection.prepareStatement("INSERT INTO farmacia_ord (codice_ordine_fo, partita_iva_fo) VALUES (?,?)");) {
+                    ordineStatement.setString(1, order.getOrderCode());
+                    ordineStatement.setDate(2, order.getDeliveryDate());
+                    ordineStatement.setInt(3, 1);
+                    ordineStatement.executeUpdate();
+
+                    farmaciaOrdStatement.setString(1, order.getOrderCode());
+                    farmaciaOrdStatement.setString(2, order.getPivaFarmacia());
+                    farmaciaOrdStatement.executeUpdate();
+
+                    for (Farmaco farmacoOrder : order.getFarmacoList()) {
+                        List<Farmaco> farmacos = this.getFarmacoListFromStorageToOrder(farmacoOrder.getCodAic(), farmacoOrder.getUnita()).join();
+                        int unitaToOrder = farmacoOrder.getUnita();
+                        for (Farmaco f : farmacos) {
+
+                            if (f.getUnita() > unitaToOrder) {
+                                ordFarStatement.setString(1, order.getOrderCode());
+                                ordFarStatement.setString(2, farmacoOrder.getCodAic());
+                                ordFarStatement.setString(3, f.getLotto());
+                                ordFarStatement.setInt(4, farmacoOrder.getUnita());
+                                ordFarStatement.executeUpdate();
+                                break;
+                            } else {
+                                unitaToOrder -= f.getUnita();
+                                ordFarStatement.setString(1, order.getOrderCode());
+                                ordFarStatement.setString(2, farmacoOrder.getCodAic());
+                                ordFarStatement.setString(3, f.getLotto());
+                                ordFarStatement.setInt(4, f.getUnita());
+                                ordFarStatement.executeUpdate();
+                            }
+
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+        }
+
     }
 
     public CompletableFuture<Date> getFarmacoAvailabilityDate(String codAIC, int quantity) {

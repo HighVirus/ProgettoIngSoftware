@@ -204,8 +204,8 @@ DROP TABLE IF EXISTS `ordine`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ordine`
 (
-    piva            VARCHAR(11) NOT NULL,
     `codice_ordine` varchar(5)  NOT NULL,
+    piva            VARCHAR(11) NOT NULL,
     `data_consegna` date        NOT NULL,
     `stato`         int         NOT NULL,
     PRIMARY KEY (`codice_ordine`)
@@ -220,7 +220,7 @@ LOCK
 TABLES `ordine` WRITE;
 /*!40000 ALTER TABLE `ordine` DISABLE KEYS */;
 INSERT INTO `ordine`
-VALUES ('15486232231', '47811', '2022-07-05', 3);
+VALUES ('47811', '15486232231', '2022-07-05', 3);
 /*!40000 ALTER TABLE `ordine` ENABLE KEYS */;
 UNLOCK
 TABLES;

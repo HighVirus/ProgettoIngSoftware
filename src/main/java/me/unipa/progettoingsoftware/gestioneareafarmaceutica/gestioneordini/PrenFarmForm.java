@@ -13,9 +13,11 @@ import java.util.ResourceBundle;
 public class PrenFarmForm extends Application {
 
     private final FXMLLoader fxmlLoader;
+    private final String farmacoName;
 
-    public PrenFarmForm(Stage stage, FXMLLoader fxmlLoader) {
+    public PrenFarmForm(Stage stage, FXMLLoader fxmlLoader, String farmacoName) {
         this.fxmlLoader = fxmlLoader;
+        this.farmacoName = farmacoName;
 
         try {
             start(stage);
@@ -43,7 +45,8 @@ public class PrenFarmForm extends Application {
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UNDECORATED);
         PrenFarmFormController prenFarmFormController = fxmlLoader.getController();
-        prenFarmFormController.setupFields();
+        prenFarmFormController.getTextToShow().setText(prenFarmFormController.getTextToShow().getText()
+                .replaceAll("%NomeFarmaco%", farmacoName));
         stage.show();
     }
 }
