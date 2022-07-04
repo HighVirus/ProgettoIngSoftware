@@ -820,8 +820,19 @@ public class DBMSB {
         }, executor);
     }
 
-    public CompletableFuture<Boolean> isFarmacoOrdered() {
-        return null;
+    public CompletableFuture<Boolean> isFarmacoOrdered(String codAic) {
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM farmaci_ordinati WHERE codice_aic=?")) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if(resultSet.getString("codice_aic") == codAic) {
+                    return true;
+                }
+            return false;
+            }   catch(SQLException e){
+                    throw new RuntimeException(e);
+            }
+        }, executor);
     }
 
     public CompletableFuture<List<Order>> getDeliveryList() {
@@ -1095,7 +1106,19 @@ public class DBMSB {
     }
 
     public CompletableFuture<Date> getFarmacoExpireDate(String codAic) {
-        return null;
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT data_scadenza FROM magazzino_aziendale WHERE codice_aic = ?")) {
+                preparedStatement.setString(1, codAic);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getDate("data_scadenza");
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        }, executor);
     }
 
     /**
@@ -1157,7 +1180,25 @@ public class DBMSB {
     }
 
     public CompletableFuture<List<Farmaco>> getFarmacoListCheckStorage() {
-        return null;
+       return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM farmaco")) {
+                List<Farmaco> farmacoList = new ArrayList<>();
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    if (resultSet.getInt("unita") < 50) {
+                        farmacoList.add(new Farmaco(resultSet.getString("codice_aic"),
+                            resultSet.getString("nome_farmaco"),
+                            resultSet.getString("principio_attivo"),
+                            resultSet.getInt("unita")));
+                    }
+                }
+                return farmacoList;
+                //aggiungere il ciclo for per fare isFarmacoOrdered su ogni farmaco della lista e poi inviare l'alert;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
     }
 
     public void addFarmaciToOrdered(String piva, List<Farmaco> codAicList) {

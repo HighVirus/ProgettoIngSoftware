@@ -181,6 +181,8 @@ public class SellWindowBController extends AnchorPane {
                 new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
                 new DoubleFilter<>("Costo", Farmaco::getCosto)
         );
+
+        carrelloTable.setItems(FXCollections.observableArrayList(storageList));
     }
 
     @FXML
