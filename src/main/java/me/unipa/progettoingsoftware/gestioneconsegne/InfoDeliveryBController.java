@@ -74,6 +74,11 @@ public class InfoDeliveryBController extends AnchorPane {
     }
 
     @FXML
+    public void onClickSubmitSignButton(ActionEvent event) {
+        deliveriesC.submitSign(order);
+    }
+
+    @FXML
     public void onClickTornaButton(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
