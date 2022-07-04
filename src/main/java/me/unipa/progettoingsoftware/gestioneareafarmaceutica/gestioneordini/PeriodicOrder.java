@@ -1,10 +1,11 @@
 package me.unipa.progettoingsoftware.gestioneareafarmaceutica.gestioneordini;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Getter
 public class PeriodicOrder {
     private final String piva;
@@ -12,6 +13,6 @@ public class PeriodicOrder {
     private final String farmacoName;
     private final String principioAttivo;
     @Setter
-    private final int unita;
+    private int unita;
     private final String periodic;
 }

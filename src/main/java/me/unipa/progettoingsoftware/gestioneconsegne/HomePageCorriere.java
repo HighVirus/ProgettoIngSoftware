@@ -48,8 +48,8 @@ public class HomePageCorriere extends Application {
         stage.setScene(scene);
         stage.centerOnScreen();
         HomePageCorriereController homePageCorriereController = fxmlLoader.getController();
-        //homePageCorriereController.getWelcomeText().setText(homePageCorriereController.getWelcomeText().getText()
-        //        .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
+        homePageCorriereController.getWelcomeText().setText(homePageCorriereController.getWelcomeText().getText()
+                .replaceAll("%utente%", User.getUser().getName() + " " + User.getUser().getSurname()));
         stage.show();
     }
 }

@@ -39,9 +39,6 @@ public class AlertC {
     public void showAlertList() {
         DBMSB.getFarmacia().getAlertList(User.getUser().getFarmaciaPiva()).thenAccept(alertEList -> {
             Platform.runLater(() -> {
-
-
-
                 if (alertEList.isEmpty()) {
                     new GenericNotice("Non ci sono alert da visualizzare");
                 } else {

@@ -18,6 +18,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.unipa.progettoingsoftware.gestionedati.entity.CarrelloE;
 import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 
 import java.util.Comparator;
@@ -32,7 +33,7 @@ public class OrderFarmaWindowBController extends AnchorPane {
     private MFXTableView<Farmaco> catalogTable;
     @FXML
     @Getter
-    private MFXTableView<Farmaco> orderList;
+    private MFXTableView<Farmaco> carrelloTable;
     private final List<Farmaco> catalogList;
     private final OrdersFarC ordersFarC;
     @Getter
@@ -52,10 +53,6 @@ public class OrderFarmaWindowBController extends AnchorPane {
         farmacoNameColumn.setPrefWidth(230);
         MFXTableColumn<Farmaco> principioAttivoColumn = new MFXTableColumn<>("Principio Attivo", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
         principioAttivoColumn.setPrefWidth(170);
-        MFXTableColumn<Farmaco> expireDateColumn = new MFXTableColumn<>("Scadenza", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        MFXTableColumn<Farmaco> disponibilitaColumn = new MFXTableColumn<>("Disponibilità", false, Comparator.comparing(Farmaco::getPrincipioAttivo));
-        disponibilitaColumn.setMinWidth(80);
-        disponibilitaColumn.resize(80, disponibilitaColumn.getHeight());
         MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getPrincipioAttivo));
         costoColumn.setMinWidth(80);
         costoColumn.resize(80, costoColumn.getHeight());
@@ -108,15 +105,12 @@ public class OrderFarmaWindowBController extends AnchorPane {
         farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
         principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
-        expireDateColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getScadenza));
-        disponibilitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
 
-        catalogTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, disponibilitaColumn, expireDateColumn, costoColumn, unitaColumn, addUnitProductColumn);
+        catalogTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, unitaColumn, addUnitProductColumn);
         catalogTable.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
                 new StringFilter<>("Nome", Farmaco::getFarmacoName),
                 new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
-                new IntegerFilter<>("Disponibilità", Farmaco::getUnita),
                 new DoubleFilter<>("Costo", Farmaco::getCosto)
         );
 
@@ -164,7 +158,7 @@ public class OrderFarmaWindowBController extends AnchorPane {
 
                 setGraphic(addUnitProduct);
                 addUnitProduct.setOnAction(event -> {
-                    orderList.getItems().remove(farmaco);
+                    carrelloTable.getItems().remove(farmaco);
                 });
             }
         });
@@ -174,13 +168,14 @@ public class OrderFarmaWindowBController extends AnchorPane {
         principioAttivoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
 
-        orderList.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, unitaColumn, addUnitProductColumn);
-        orderList.getFilters().addAll(
+        carrelloTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioAttivoColumn, costoColumn, unitaColumn, addUnitProductColumn);
+        carrelloTable.getFilters().addAll(
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),
                 new StringFilter<>("Nome", Farmaco::getFarmacoName),
                 new StringFilter<>("Principio Attivo", Farmaco::getPrincipioAttivo),
                 new DoubleFilter<>("Costo", Farmaco::getCosto)
         );
+        carrelloTable.getItems().addAll(CarrelloE.getInstance().getFarmaci());
     }
 
     @FXML

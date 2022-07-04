@@ -31,7 +31,7 @@ public class UnitOrderPerReportController extends AnchorPane {
     }
 
     @FXML
-    public void onClickTornaButton(ActionEvent event) {
+    public void onClickAnnullaButton(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }

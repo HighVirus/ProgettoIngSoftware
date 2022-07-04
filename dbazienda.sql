@@ -92,7 +92,13 @@ CREATE TABLE `catalogo_aziendale` (
 
 LOCK TABLES `catalogo_aziendale` WRITE;
 /*!40000 ALTER TABLE `catalogo_aziendale` DISABLE KEYS */;
-INSERT INTO `catalogo_aziendale` VALUES ('12745182','tachipirina 1000 mg 16 compresse','paracetamolo',4.54),('12745232','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',12.5),('19655051','bentelan 1 mg 10 compresse resistenti ','betametasone',1.35),('24840074','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',2.35),('27860016','zitromax 250 mg 6 capsule rigide','azitromicina',8.5),('34246013','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',6.67),('42386488','brufen 400 mg 16 compresse rivestite con film','ibuprofene',4.75);
+INSERT INTO `catalogo_aziendale` VALUES ('12745182','tachipirina 1000 mg 16 compresse','paracetamolo',4.54),
+                                        ('12745232','tachipirina 10 mg/ml soluzione per infusione','paracetamolo',12.5),
+                                        ('19655051','bentelan 1 mg 10 compresse resistenti ','betametasone',1.35),
+                                        ('24840074','cardioaspirin 100 mg 30 compresse gastroresistenti','acido acetilsalicilico',2.35),
+                                        ('27860016','zitromax 250 mg 6 capsule rigide','azitromicina',8.5),
+                                        ('34246013','nurofen 200 mg + 30 mg 12 compresse rivestite','ibuprofene',6.67),
+                                        ('42386488','brufen 400 mg 16 compresse rivestite con film','ibuprofene',4.75);
 /*!40000 ALTER TABLE `catalogo_aziendale` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,7 +320,14 @@ CREATE TABLE `ordine_periodico` (
 
 LOCK TABLES `ordine_periodico` WRITE;
 /*!40000 ALTER TABLE `ordine_periodico` DISABLE KEYS */;
-INSERT INTO `ordine_periodico` VALUES ('15486232231','24840074',50,7),('45781004476','27860016',120,7),('15486232231','34246023',300,7),('45781004476','42386488',150,7);
+INSERT INTO `ordine_periodico` VALUES ('15486232231','24840074',50,7),
+                                      ('15486232231','12745182',300,7),
+                                      ('15486232231','24840074',300,7),
+                                      ('15486232231','42386488',300,7),
+                                      ('45781004476','24840074',50,7),
+                                      ('45781004476','12745182',300,7),
+                                      ('45781004476','24840074',300,7),
+                                      ('45781004476','42386488',300,7);
 /*!40000 ALTER TABLE `ordine_periodico` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -386,14 +399,14 @@ CREATE TABLE `produzione_farmaco` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `produzione_farmaco`
---
-
-LOCK TABLES `produzione_farmaco` WRITE;
-/*!40000 ALTER TABLE `produzione_farmaco` DISABLE KEYS */;
-/*!40000 ALTER TABLE `produzione_farmaco` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO produzione_farmaco (codice_aic_p, start_production_date, production_period, unita_production)
+VALUES (12745182, '2022-07-04', 2, 1000),
+       (12745232, '2022-07-04', 3, 1000),
+       (19655051, '2022-07-04', 1, 500),
+       (24840074, '2022-07-04', 4, 1000),
+       (27860016, '2022-07-04', 5, 2000),
+       (34246013, '2022-07-04', 2, 300),
+       (42386488, '2022-07-04', 4, 400);
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

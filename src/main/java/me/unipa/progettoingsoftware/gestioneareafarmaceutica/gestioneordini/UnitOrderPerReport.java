@@ -13,10 +13,11 @@ import java.util.ResourceBundle;
 public class UnitOrderPerReport extends Application {
 
     private final FXMLLoader fxmlLoader;
+    private final String farmacoName;
 
-    public UnitOrderPerReport(Stage stage, FXMLLoader fxmlLoader) {
+    public UnitOrderPerReport(Stage stage, FXMLLoader fxmlLoader, String farmacoName) {
         this.fxmlLoader = fxmlLoader;
-
+        this.farmacoName = farmacoName;
         try {
             start(stage);
         } catch (Exception e) {
@@ -42,8 +43,9 @@ public class UnitOrderPerReport extends Application {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UNDECORATED);
-        ModOrdFormController modOrdFormController = fxmlLoader.getController();
-        modOrdFormController.setupFields();
+        UnitOrderPerReportController unitOrderPerReportController = fxmlLoader.getController();
+        unitOrderPerReportController.getTextToShow().setText(unitOrderPerReportController.getTextToShow().getText()
+                .replaceAll("%NomeFarmaco%", farmacoName));
         stage.show();
     }
 }

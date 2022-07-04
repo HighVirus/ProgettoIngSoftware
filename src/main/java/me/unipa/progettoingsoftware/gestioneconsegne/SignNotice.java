@@ -13,10 +13,11 @@ import java.util.ResourceBundle;
 public class SignNotice extends Application {
 
     private final FXMLLoader fxmlLoader;
+    private final String farmaciaName;
 
-    public SignNotice(Stage stage, FXMLLoader fxmlLoader) {
+    public SignNotice(Stage stage, FXMLLoader fxmlLoader, String farmaciaName) {
         this.fxmlLoader = fxmlLoader;
-
+        this.farmaciaName = farmaciaName;
         try {
             start(stage);
         } catch (Exception e) {
@@ -42,8 +43,9 @@ public class SignNotice extends Application {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initStyle(StageStyle.UNDECORATED);
-        InfoDeliveryBController infoDeliveryBController = fxmlLoader.getController();
-        infoDeliveryBController.setupFields();
+        SignNoticeController signNoticeController = fxmlLoader.getController();
+        signNoticeController.getTextToShow().setText(signNoticeController.getTextToShow().getText()
+                .replaceAll("%NomeFarmacia%", farmaciaName));
         stage.show();
     }
 }

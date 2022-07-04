@@ -73,10 +73,12 @@ public class OrdersC {
                     return;
                 }
             }
+
             DBMSB.getAzienda().checkFarmacoAvailability(farmaco.getCodAic(), unita).thenAccept(aBoolean -> {
                 Platform.runLater(() -> {
-                    if (aBoolean)
+                    if (aBoolean){
                         orderWindowBController.getFarmaciTable().getItems().add(farmaco);
+                    }
                     else
                         new ErrorsNotice("Quantità non disponibile.");
                 });

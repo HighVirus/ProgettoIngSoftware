@@ -366,36 +366,25 @@ public class DBMSB {
     }
 
     public CompletableFuture<Boolean> checkFarmacoAvailability(String codice_aic, int quantity) {
-        String STORAGE_TABLE = (this == DBMSB.getAzienda()) ? "magazzino_aziendale" : "farmaco";
-        if (STORAGE_TABLE.equals("magazzino_aziendale")) {
-            return CompletableFuture.supplyAsync(() -> {
-                try (Connection connection = getConnection();
-                     PreparedStatement storageStatement = connection.prepareStatement("SELECT sum(unita) FROM " + STORAGE_TABLE + " WHERE codice_aic=? GROUP BY codice_aic");
-                     PreparedStatement ordiniStatement = connection.prepareStatement("SELECT sum(unita) FROM ord_far WHERE codice_aic_o=? GROUP BY codice_aic_o")) {
-                    storageStatement.setString(1, codice_aic);
-                    ordiniStatement.setString(1, codice_aic);
-                    ResultSet storageResult = storageStatement.executeQuery();
-                    ResultSet ordiniResult = ordiniStatement.executeQuery();
-                    return (storageResult.getInt("sum(unita)") - ordiniResult.getInt("sum(unita)")) > quantity;
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }, executor);
-        } else {
-            return CompletableFuture.supplyAsync(() -> {
-                try (Connection connection = getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement("select sum(unita) from " + STORAGE_TABLE + " where codice_aic=? group by codice_aic having sum(unita)>=?")) {
-                    preparedStatement.setString(1, codice_aic);
-                    preparedStatement.setInt(2, quantity);
-                    ResultSet resultSet = preparedStatement.executeQuery();
-                    return resultSet.next();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }, executor);
-        }
-
-
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement storageStatement = connection.prepareStatement("SELECT sum(unita) AS unita FROM magazzino_aziendale WHERE codice_aic=? GROUP BY codice_aic");
+                 PreparedStatement ordiniStatement = connection.prepareStatement("SELECT sum(unita) AS unita FROM ord_far WHERE codice_aic_o=? GROUP BY codice_aic_o")) {
+                storageStatement.setString(1, codice_aic);
+                ResultSet storageResult = storageStatement.executeQuery();
+                int storage = 0;
+                if (storageResult.next())
+                    storage = storageResult.getInt("unita");
+                ordiniStatement.setString(1, codice_aic);
+                ResultSet ordiniResult = ordiniStatement.executeQuery();
+                int ordini = 0;
+                if (ordiniResult.next())
+                    ordini = ordiniResult.getInt("unita");
+                return (storage - ordini) > quantity;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
     }
 
     public void removeFarmacoFromStorage(String codiceAic, String lotto) {
@@ -790,7 +779,7 @@ public class DBMSB {
         String orderTable = (this == DBMSB.getAzienda()) ? "ordini" : "ordine";
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement updateStatement = connection.prepareStatement("UDPATE " + orderTable + " SET stato = ? WHERE codice_ordine = ?")) {
+                 PreparedStatement updateStatement = connection.prepareStatement("UPDATE " + orderTable + " SET stato = ? WHERE codice_ordine = ?")) {
                 updateStatement.setInt(1, 2);
                 updateStatement.setString(2, orderCode);
                 updateStatement.executeUpdate();
@@ -938,7 +927,9 @@ public class DBMSB {
                         List<Farmaco> farmacoList = this.getAlertListFarm(map.getKey(), piva).join();
                         alertEList.add(new AlertE(map.getKey(), AlertType.FARMACIA_QUANTITY, farmacoList));
                     } else if (map.getValue() == AlertType.FARMACIA_CARICO.getType()) {
+                        System.out.println("gino");
                         List<Order> orderList = this.getAlertListOrd(map.getKey(), piva).join();
+                        System.out.println("pino");
                         alertEList.add(new AlertE(map.getKey(), AlertType.FARMACIA_CARICO, orderList, "questa stringa non serve a niente"));
                     }
                 }
@@ -970,25 +961,10 @@ public class DBMSB {
     }
 
     public CompletableFuture<List<Order>> getAlertListOrd(String codAlert, String piva) {
-        /*return CompletableFuture.supplyAsync(() -> {
-            try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM aleord, alert_farmacia WHERE aleord.codice_alert_ao=? AND alert_farmacia.codice_alert=aleord.codice_alert_ao AND alert_farmacia.piva=?")) {
-                List<Order> orderList = new ArrayList<>();
-                preparedStatement.setString(1, codAlert);
-                preparedStatement.setString(2, piva);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                while (resultSet.next()) {
-                    orderList.addAll(this.getOrderList(piva).join());
-                }
-                return orderList;
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }, executor);*/
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT aleord.codice_ordine_ao, ord.stato, ord.data_consegna, ordfar.codice_aic_of, ordfar.lotto_of, ordfar.unita, mag.nome_farmaco, mag.principio_attivo, mag.prescrivibilita, ordfar.data_consegna, ordfar.unita FROM ordine ord, aleord, alert_farmacia, ord_farmaci ordfar, farmaco mag" +
-                         " WHERE ord.codice_ordine=ordfar.codice_ordine_of AND ordfar.codice_aic_of=mag.codice_aic AND ordfar.lotto_of=mag.lotto AND alert_farmacia.codice_alert=aleord.codice_alert_ao AND aleord.codice_alert_ao=? AND alert_farmacia.piva=?")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT aleord.codice_ordine_ao, ord.stato, ord.data_consegna, ordfar.codice_aic_of, ordfar.lotto_of, ordfar.unita, mag.nome_farmaco, mag.principio_attivo, mag.prescrivibilita FROM ordine ord, aleord, alert_farmacia, ord_farmaci ordfar, farmaco mag" +
+                         " WHERE ord.codice_ordine=ordfar.codice_ordine_of AND ordfar.codice_aic_of=mag.codice_aic AND ordfar.lotto_of=mag.lotto AND alert_farmacia.codice_alert=aleord.codice_alert_ao AND aleord.codice_alert_ao=? AND ord.piva=?")) {
                 preparedStatement.setString(1, codAlert);
                 preparedStatement.setString(1, piva);
                 Map<String, Order> orderMap = new HashMap<>();
@@ -1131,7 +1107,7 @@ public class DBMSB {
     public CompletableFuture<List<PeriodicOrder>> getFarmacoUnitaPeriodic(String piva) {
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT op.piva, op.codice_aic, ca.nome_farmaco, ca.principio_attivo, op.unita, op.periodo_consegna FROM ordine_periodico op, catalogo_aziendale ca WHERE piva=? AND op.codice_aic_pm=ca.codice_aic")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("SELECT op.piva, ca.codice_aic, ca.nome_farmaco, ca.principio_attivo, op.unita, op.periodo_consegna FROM ordine_periodico op, catalogo_aziendale ca WHERE op.piva=? AND op.codice_aic_pm=ca.codice_aic")) {
                 List<PeriodicOrder> periodicOrders = new ArrayList<>();
                 preparedStatement.setString(1, piva);
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -1153,7 +1129,7 @@ public class DBMSB {
     public void updateUnitaPeriodicOrder(PeriodicOrder periodicOrder) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE ordine_periodico SET unita=? WHERE piva=? AND codAic=?")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE ordine_periodico SET unita=? WHERE piva=? AND codice_aic_pm=?")) {
                 preparedStatement.setInt(1, periodicOrder.getUnita());
                 preparedStatement.setString(2, periodicOrder.getPiva());
                 preparedStatement.setString(3, periodicOrder.getCodAic());

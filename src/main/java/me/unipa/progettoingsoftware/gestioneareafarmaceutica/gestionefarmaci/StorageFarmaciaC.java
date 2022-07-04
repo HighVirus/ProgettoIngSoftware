@@ -45,8 +45,8 @@ public class StorageFarmaciaC {
             Platform.runLater(() -> {
                 this.caricoOrderListBController = new CaricoOrderListBController(orders, this, new Stage());
                 FXMLLoader fxmlLoader = new FXMLLoader(CaricoOrderListB.class.getResource("CaricoOrderListB.fxml"));
-                fxmlLoader.setRoot(caricaProductsFormController);
-                fxmlLoader.setController(caricaProductsFormController);
+                fxmlLoader.setRoot(caricoOrderListBController);
+                fxmlLoader.setController(caricoOrderListBController);
                 new CaricoOrderListB(new Stage(), fxmlLoader);
             });
         });

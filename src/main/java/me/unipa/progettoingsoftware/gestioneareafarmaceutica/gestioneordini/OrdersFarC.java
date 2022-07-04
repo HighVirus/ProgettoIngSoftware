@@ -50,11 +50,13 @@ public class OrdersFarC {
     public void showOrderList() {
         String piva = User.getUser().getFarmaciaPiva();
         DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
-            orderListController = new OrderListController(stage, this, orders);
-            FXMLLoader fxmlLoader = new FXMLLoader(OrderList.class.getResource("OrderList.fxml"));
-            fxmlLoader.setRoot(orderListController);
-            fxmlLoader.setController(orderListController);
-            new OrderList(stage, fxmlLoader);
+            Platform.runLater(() -> {
+                orderListController = new OrderListController(stage, this, orders);
+                FXMLLoader fxmlLoader = new FXMLLoader(OrderList.class.getResource("OrderList.fxml"));
+                fxmlLoader.setRoot(orderListController);
+                fxmlLoader.setController(orderListController);
+                new OrderList(stage, fxmlLoader);
+            });
         });
     }
 
@@ -127,9 +129,9 @@ public class OrdersFarC {
     }
 
     public void clickOrdinaButton() {
-        if (orderFarmaWindowBController.getOrderList().getItems().isEmpty() || CarrelloE.getInstance().getFarmaci().isEmpty()) {
+        if (orderFarmaWindowBController.getCarrelloTable().getItems().isEmpty() || CarrelloE.getInstance().getFarmaci().isEmpty()) {
             new ErrorsNotice("Il carrello è vuoto.");
-        } else if (orderFarmaWindowBController.getOrderList().getItems().isEmpty() && !CarrelloE.getInstance().getFarmaci().isEmpty()) {
+        } else if (orderFarmaWindowBController.getCarrelloTable().getItems().isEmpty() && !CarrelloE.getInstance().getFarmaci().isEmpty()) {
             String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date(System.currentTimeMillis()));
@@ -151,7 +153,7 @@ public class OrdersFarC {
                     });
                 });
             });
-        } else if (!orderFarmaWindowBController.getOrderList().getItems().isEmpty() && CarrelloE.getInstance().getFarmaci().isEmpty()) {
+        } else if (!orderFarmaWindowBController.getCarrelloTable().getItems().isEmpty() && CarrelloE.getInstance().getFarmaci().isEmpty()) {
             String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date(System.currentTimeMillis()));
@@ -165,7 +167,7 @@ public class OrdersFarC {
                     String email = strings1.get(1);
                     Order order = new Order(orderCode, new Date(calendar.getTimeInMillis()),
                             piva, farmaciaName, indirizzo, cap, email, 1);
-                    order.getFarmacoList().addAll(orderFarmaWindowBController.getOrderList().getItems());
+                    order.getFarmacoList().addAll(orderFarmaWindowBController.getCarrelloTable().getItems());
                     DBMSB.getAzienda().createNewOrder(order);
                     DBMSB.getFarmacia().createNewOrder(order);
                     Platform.runLater(() -> {
@@ -194,6 +196,7 @@ public class OrdersFarC {
     public void showOrderFarmaWindowB() {
         DBMSB.getAzienda().getFarmaciCatalogList().thenAccept(farmacoList -> {
             Platform.runLater(() -> {
+                Stage stage = new Stage();
                 orderFarmaWindowBController = new OrderFarmaWindowBController(farmacoList, this, stage);
                 FXMLLoader fxmlLoader = new FXMLLoader(OrderFarmaWindowB.class.getResource("OrderFarmaWindowB.fxml"));
                 fxmlLoader.setRoot(orderFarmaWindowBController);
@@ -209,7 +212,7 @@ public class OrdersFarC {
         if (isValidUnitaField(textField)) {
             int unita = Integer.parseInt(textField);
             farmaco.setUnita(unita);
-            for (Farmaco f1 : orderFarmaWindowBController.getOrderList().getItems()) {
+            for (Farmaco f1 : orderFarmaWindowBController.getCarrelloTable().getItems()) {
                 if (f1.getCodAic().equalsIgnoreCase(farmaco.getCodAic())) {
                     new ErrorsNotice("Prodotto gia aggiunto nel carrello");
                     return;
@@ -227,11 +230,14 @@ public class OrdersFarC {
                                 while (expiringFarmacoToOrder == null && !refuseAddExpiringFarmaco) ;
                             }
                         });
-                        orderFarmaWindowBController.getOrderList().getItems().add(farmaco);
+                        orderFarmaWindowBController.getCarrelloTable().getItems().add(farmaco);
                         CarrelloE.getInstance().getFarmaci().add(farmaco);
 
                     } else {
-                        DBMSB.getAzienda().getFarmacoAvailabilityDate(farmaco.getCodAic(), farmaco.getUnita()).thenAccept(date -> {
+                        DBMSB.getAzienda().getFarmacoAvailabilityDate(farmaco.getCodAic(), farmaco.getUnita()).whenComplete((date, throwable) -> {
+                            if (throwable != null)
+                                throwable.printStackTrace();
+                        }).thenAccept(date -> {
                             Platform.runLater(() -> {
                                 this.showNoAvailabilityNotice(date, farmaco);
                             });
@@ -254,7 +260,7 @@ public class OrdersFarC {
     }
 
     public void confirmAddExpiringFarmaco(Farmaco farmaco) {
-        orderFarmaWindowBController.getOrderList().getItems().add(farmaco);
+        orderFarmaWindowBController.getCarrelloTable().getItems().add(farmaco);
         CarrelloE.getInstance().getFarmaci().add(farmaco);
         new GenericNotice("Prodotto aggiunto con successo.");
     }
@@ -279,7 +285,7 @@ public class OrdersFarC {
         FXMLLoader fxmlLoader = new FXMLLoader(PrenFarmForm.class.getResource("PrenFarmForm.fxml"));
         fxmlLoader.setRoot(prenFarmFormController);
         fxmlLoader.setController(prenFarmFormController);
-        new NoAvailabilityNotice(new Stage(), fxmlLoader, date);
+        new PrenFarmForm(new Stage(), fxmlLoader, farmaco.getFarmacoName());
 
     }
 
@@ -319,6 +325,7 @@ public class OrdersFarC {
         viewCarrelloController.getCarrello().getItems().remove(farmaco);
         CarrelloE.getInstance().getFarmaci().remove(farmaco);
     }
+
     public void showGestioneOrdiniB() {
         GestioneOrdiniBController gestioneOrdiniBController = new GestioneOrdiniBController(stage);
         FXMLLoader fxmlLoader = new FXMLLoader(GestioneOrdiniB.class.getResource("GestioneOrdiniB.fxml"));

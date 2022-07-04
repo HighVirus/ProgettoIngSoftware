@@ -28,14 +28,14 @@ public class ViewOrdinePeriodicoBController extends Homepage {
 
     @FXML
     @Getter
-    private MFXTableView<PeriodicOrder> farmacoTable;
-    private final List<PeriodicOrder> farmacoList;
+    private MFXTableView<PeriodicOrder> periodicOrderTable;
+    private final List<PeriodicOrder> periodicOrders;
 
     public ViewOrdinePeriodicoBController(Stage stage, OrderPeriodicoC orderPeriodicoC, List<PeriodicOrder> periodicOrders) {
         super(stage);
         this.stage = stage;
         this.orderPeriodicoC = orderPeriodicoC;
-        this.farmacoList = periodicOrders;
+        this.periodicOrders = periodicOrders;
     }
 
     public void setupTable() {
@@ -79,20 +79,20 @@ public class ViewOrdinePeriodicoBController extends Homepage {
         unitaColumn.setRowCellFactory(periodicOrder -> new MFXTableRowCell<>(PeriodicOrder::getUnita));
         intervalloColumn.setRowCellFactory(periodicOrder -> new MFXTableRowCell<>(PeriodicOrder::getPeriodic));
 
-        farmacoTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioColumn, unitaColumn, intervalloColumn, modOrdPerButton);
-        farmacoTable.getFilters().addAll(
+        periodicOrderTable.getTableColumns().addAll(codAicColumn, farmacoNameColumn, principioColumn, unitaColumn, intervalloColumn, modOrdPerButton);
+        periodicOrderTable.getFilters().addAll(
                 new StringFilter<>("Codice AIC", PeriodicOrder::getCodAic),
                 new StringFilter<>("Nome Farmaco", PeriodicOrder::getFarmacoName),
                 new StringFilter<>("Principio Attivo", PeriodicOrder::getPrincipioAttivo),
                 new IntegerFilter<>("Unità", PeriodicOrder::getUnita)
         );
 
-        farmacoTable.setItems(FXCollections.observableArrayList(farmacoList));
+        periodicOrderTable.setItems(FXCollections.observableArrayList(periodicOrders));
     }
 
     @FXML
     public void onClickTornaButton() {
-        orderPeriodicoC.showHomePageFarmacia();
+        orderPeriodicoC.showGestioneOrdiniB();
     }
 
 }

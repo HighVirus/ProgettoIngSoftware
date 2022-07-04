@@ -37,11 +37,12 @@ public class DeliveriesC {
         FXMLLoader fxmlLoader = new FXMLLoader(SignNotice.class.getResource("SignNotice.fxml"));
         fxmlLoader.setRoot(signNoticeController);
         fxmlLoader.setController(signNoticeController);
-        new SignNotice(new Stage(), fxmlLoader);
+        new SignNotice(new Stage(), fxmlLoader, order.getFarmaciaName());
     }
 
     public void submitSign(Order order) {
         DBMSB.getAzienda().makeOrderDeliveredReadyToLoad(order.getOrderCode());
+        DBMSB.getFarmacia().makeOrderDeliveredReadyToLoad(order.getOrderCode());
         new GenericNotice("La consegna è stata effettuata con successo.");
     }
 

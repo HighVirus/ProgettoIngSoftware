@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="262.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root type="javafx.scene.layout.AnchorPane" prefHeight="262.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MFXButton layoutX="498.0" layoutY="201.0" onAction="#onClickConfirmButton" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Conferma" textFill="WHITE">
          <font>
@@ -33,4 +33,4 @@
          </font>
       </Label>
    </children>
-</AnchorPane>
+</fx:root>

@@ -49,7 +49,7 @@ public class OrderListController extends Homepage {
         farmaciaEmailColumn.setPrefWidth(230);
         MFXTableColumn<Order> infoOrderColumn = new MFXTableColumn<>("", false);
         infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
-            private final MFXButton infoOrderButton = new MFXButton("!");
+            private final MFXButton infoOrderButton = new MFXButton(" ");
 
             @Override
             public void update(Order order) {
