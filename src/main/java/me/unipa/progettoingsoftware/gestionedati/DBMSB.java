@@ -1095,6 +1095,24 @@ public class DBMSB {
         }, executor);
     }
 
+    /**
+     * metodo usato per inviare alert alla farmacia di tipo quantity
+     *
+     * @param farmaciaPiva
+     * @param farmacoQuantityList
+     */
+    public void sendAlert(String farmaciaPiva, List<Farmaco> farmacoQuantityList) {
+        CompletableFuture.runAsync(() -> {
+            try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO alert_farmacia (partita_iva_aa) VALUES (?)")) {
+                preparedStatement.setString(1, farmaciaPiva);
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }, executor);
+    }
+
     public CompletableFuture<List<Farmaco>> getFarmaciBanco(String piva) { //TODO da finire
         return CompletableFuture.supplyAsync(() -> {
             try (Connection connection = getConnection();

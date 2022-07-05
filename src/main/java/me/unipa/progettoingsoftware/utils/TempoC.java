@@ -8,10 +8,7 @@ import me.unipa.progettoingsoftware.gestionedati.entity.Farmaco;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
 
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class TempoC {
@@ -22,6 +19,7 @@ public class TempoC {
     @Getter
     @Setter
     private boolean alertsToRead = false;
+    private final List<Farmaco> farmaciNotOrdered = new ArrayList<>();
 
     private TempoC() {
         this.rifonisciMagazzinoAziendale();
@@ -46,13 +44,12 @@ public class TempoC {
                 DBMSB.getFarmacia().getFarmacoListCheckStorage().thenAccept(farmacos -> {
                     if (farmacos.isEmpty()) return;
                     for (Farmaco farmaco : farmacos) {
-                        DBMSB.getFarmacia().isFarmacoOrdered(farmaco.getCodAic());
-                        if (false){
-                            TempoC.addToListFarmaciNotOrdered();
-                        }
+                        boolean isOrdered = DBMSB.getFarmacia().isFarmacoOrdered(farmaco.getCodAic()).join();
+                        if (!isOrdered)
+                            addToListFarmaciNotOrdered(farmaco);
                     }
-                    if (){
-
+                    if (!farmaciNotOrdered.isEmpty()){
+                        DBMSB.getFarmacia().sendAlert(User.getUser().getFarmaciaPiva());
                     }
                 });
             }
@@ -61,7 +58,8 @@ public class TempoC {
                 calendar.getTime(), TimeUnit.HOURS.toMillis(24));
     }
 
-    private static void addToListFarmaciNotOrdered() {
+    private void addToListFarmaciNotOrdered(Farmaco farmaco) {
+        this.farmaciNotOrdered.add(farmaco);
     }
 
 
