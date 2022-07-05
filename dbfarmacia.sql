@@ -241,7 +241,6 @@ CREATE TABLE `ord_farmaci`
     `codice_ordine_of` varchar(5)  NOT NULL,
     `codice_aic_of`    varchar(11) NOT NULL,
     `lotto_of`         varchar(9)  NOT NULL,
-    `data_consegna`    date        NOT NULL,
     `unita`            int         NOT NULL,
     PRIMARY KEY (`codice_ordine_of`, `codice_aic_of`, `lotto_of`),
     KEY                `codice_aic_of` (`codice_aic_of`,`lotto_of`),

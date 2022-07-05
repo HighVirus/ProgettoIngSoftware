@@ -65,7 +65,7 @@ public class CaricoOrderListBController extends AnchorPane {
 
         orderCodeColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getOrderCode));
         deliveryDateColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getDeliveryDate));
-        statusColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Order::getStatus));
+        statusColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(order -> order.getStatus().getValue()));
 
         orderTable.getTableColumns().addAll(orderCodeColumn, deliveryDateColumn, statusColumn, addOrderButtonColumn);
         orderTable.setItems(FXCollections.observableArrayList(orderList));

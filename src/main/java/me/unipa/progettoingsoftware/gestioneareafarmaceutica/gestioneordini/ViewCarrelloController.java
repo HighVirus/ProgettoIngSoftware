@@ -89,7 +89,7 @@ public class ViewCarrelloController extends Homepage {
 
     @FXML
     public void onClickOrdinaButton(ActionEvent event) {
-        ordersFarC.clickOrdinaButton();
+        ordersFarC.clickOrdinaButtonFromCarrello();
     }
 
     public void onClickEmptyCarrelloButton(ActionEvent event) {

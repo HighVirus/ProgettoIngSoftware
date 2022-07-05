@@ -69,7 +69,7 @@ public class OrdersFarC {
     }
 
     public void showModOrderForm(Order order) {
-        if ((ChronoUnit.DAYS.between(order.getDeliveryDate().toLocalDate(), new Date(System.currentTimeMillis()).toLocalDate())) < 2) {
+        if (ChronoUnit.DAYS.between(new Date(System.currentTimeMillis()).toLocalDate(), order.getDeliveryDate().toLocalDate()) < 2) {
             new ErrorsNotice("Ordine non modificabile");
         } else {
             modOrdFormController = new ModOrdFormController(order, this);
@@ -80,12 +80,13 @@ public class OrdersFarC {
         }
     }
 
-
     public void showConfirmCancelOrderNotice(Order order) {
-        if ((ChronoUnit.DAYS.between(this.orderToCancel.getDeliveryDate().toLocalDate(), new Date(System.currentTimeMillis()).toLocalDate())) < 2) {
+        if (ChronoUnit.DAYS.between(new Date(System.currentTimeMillis()).toLocalDate(), order.getDeliveryDate().toLocalDate()) < 2) {
             new ErrorsNotice("Ordine non annullabile");
         } else {
-            confirmCancelOrderNoticeController = new ConfirmCancelOrderNoticeController(order, this);
+            this.orderToCancel = order;
+            Stage stage = new Stage();
+            confirmCancelOrderNoticeController = new ConfirmCancelOrderNoticeController(order, this, stage);
             FXMLLoader fxmlLoader = new FXMLLoader(ConfirmCancelOrderNotice.class.getResource("ConfirmCancelOrderNotice.fxml"));
             fxmlLoader.setRoot(confirmCancelOrderNoticeController);
             fxmlLoader.setController(confirmCancelOrderNoticeController);
@@ -117,9 +118,11 @@ public class OrdersFarC {
         new GenericNotice("Ordine modificato con successo");
     }
 
-    public void clickConfirmCancelButton(String orderCode) {
+    public void deleteOrder(String orderCode) {
         DBMSB.getAzienda().deleteOrder(orderCode);
         DBMSB.getFarmacia().deleteOrder(orderCode);
+        orderListController.getOrderTable().getItems().removeIf(order -> order.getOrderCode().equals(orderCode));
+        confirmCancelOrderNoticeController.getStage().close();
         new GenericNotice("Ordine annullato con successo");
     }
 
@@ -128,14 +131,53 @@ public class OrdersFarC {
         return farmaco.getUnita() >= unita;
     }
 
-    public void clickOrdinaButton() {
-        if (orderFarmaWindowBController.getCarrelloTable().getItems().isEmpty() || CarrelloE.getInstance().getFarmaci().isEmpty()) {
+    public void clickOrdinaButtonFromCarrello() {
+        if (viewCarrelloController.getCarrello().getItems().isEmpty() || CarrelloE.getInstance().getFarmaci().isEmpty()) {
             new ErrorsNotice("Il carrello è vuoto.");
-        } else if (orderFarmaWindowBController.getCarrelloTable().getItems().isEmpty() && !CarrelloE.getInstance().getFarmaci().isEmpty()) {
+        } else {
             String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date(System.currentTimeMillis()));
-            calendar.add(Calendar.DAY_OF_YEAR, 2);
+            calendar.add(Calendar.DAY_OF_YEAR, 3);
+            DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).whenComplete((strings, throwable) -> {
+                if (throwable != null)
+                    throwable.printStackTrace();
+            }).thenAccept(strings -> {
+                String piva = strings.get(0);
+                String farmaciaName = strings.get(1);
+                DBMSB.getAzienda().getFarmaciaInfo(piva).whenComplete((strings1, throwable) -> {
+                    if (throwable != null)
+                        throwable.printStackTrace();
+                }).thenAccept(strings1 -> {
+                    String indirizzo = strings1.get(2);
+                    String cap = strings1.get(3);
+                    String email = strings1.get(1);
+                    Order order = new Order(orderCode, new Date(calendar.getTimeInMillis()),
+                            piva, farmaciaName, indirizzo, cap, email, 1);
+                    System.out.println("culo");
+                    order.getFarmacoList().addAll(CarrelloE.getInstance().getFarmaci());
+                    System.out.println("culo2");
+                    DBMSB.getAzienda().createNewOrder(order);
+                    System.out.println("culo3");
+                    DBMSB.getFarmacia().createNewOrder(order);
+                    System.out.println("culo4");
+                    Platform.runLater(() -> {
+                        new GenericNotice("Ordine creato con successo.");
+                    });
+                });
+            });
+        }
+
+    }
+
+    public void clickOrdinaButton() {
+        if (orderFarmaWindowBController.getCarrelloTable().getItems().isEmpty() || CarrelloE.getInstance().getFarmaci().isEmpty()) {
+            new ErrorsNotice("Il carrello è vuoto.");
+        } else {
+            String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date(System.currentTimeMillis()));
+            calendar.add(Calendar.DAY_OF_YEAR, 3);
             DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
                 String piva = strings.get(0);
                 String farmaciaName = strings.get(1);
@@ -149,29 +191,7 @@ public class OrdersFarC {
                     DBMSB.getAzienda().createNewOrder(order);
                     DBMSB.getFarmacia().createNewOrder(order);
                     Platform.runLater(() -> {
-                        new GenericNotice("Ordine creato conferma");
-                    });
-                });
-            });
-        } else if (!orderFarmaWindowBController.getCarrelloTable().getItems().isEmpty() && CarrelloE.getInstance().getFarmaci().isEmpty()) {
-            String orderCode = String.valueOf(new Random(System.currentTimeMillis()).nextInt(99999));
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date(System.currentTimeMillis()));
-            calendar.add(Calendar.DAY_OF_YEAR, 2);
-            DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(strings -> {
-                String piva = strings.get(0);
-                String farmaciaName = strings.get(1);
-                DBMSB.getAzienda().getFarmaciaInfo(piva).thenAccept(strings1 -> {
-                    String indirizzo = strings1.get(2);
-                    String cap = strings1.get(3);
-                    String email = strings1.get(1);
-                    Order order = new Order(orderCode, new Date(calendar.getTimeInMillis()),
-                            piva, farmaciaName, indirizzo, cap, email, 1);
-                    order.getFarmacoList().addAll(orderFarmaWindowBController.getCarrelloTable().getItems());
-                    DBMSB.getAzienda().createNewOrder(order);
-                    DBMSB.getFarmacia().createNewOrder(order);
-                    Platform.runLater(() -> {
-                        new GenericNotice("Ordine creato conferma");
+                        new GenericNotice("Ordine creato con successo.");
                     });
                 });
             });
@@ -225,7 +245,7 @@ public class OrdersFarC {
                         farmaco.setCosto(costoSingolo);
 
                         DBMSB.getAzienda().getFarmacoExpireDate(farmaco.getCodAic()).thenAccept(date -> {
-                            if ((ChronoUnit.DAYS.between(date.toLocalDate(), new Date(System.currentTimeMillis()).toLocalDate())) < 60) {
+                            if ((ChronoUnit.DAYS.between(new Date(System.currentTimeMillis()).toLocalDate(), date.toLocalDate())) < 60) {
                                 this.showFarmacoExpiringNotice(farmaco);
                                 while (expiringFarmacoToOrder == null && !refuseAddExpiringFarmaco) ;
                             }

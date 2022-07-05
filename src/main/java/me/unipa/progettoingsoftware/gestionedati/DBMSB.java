@@ -343,9 +343,9 @@ public class DBMSB {
             try (Connection connection = getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM magazzino_aziendale WHERE codice_aic = ?")) {
                 preparedStatement.setString(1, codice_aic);
-                ResultSet resultSet = preparedStatement.executeQuery();
                 List<Farmaco> farmacoList = new ArrayList<>();
                 int total = 0;
+                ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     String codAic = resultSet.getString("codice_aic");
                     String lotto = resultSet.getString("lotto");
@@ -468,7 +468,7 @@ public class DBMSB {
             return CompletableFuture.supplyAsync(() -> {
                 try (Connection connection = getConnection();
                      PreparedStatement preparedStatement = connection.prepareStatement("SELECT ord.codice_ordine, ord.stato, ord.data_consegna, far.partita_iva, far.nome_farmacia, acc.email, far.indirizzo, far.cap, farmlistord.codice_aic_o, farmlistord.lotto_o, cat.nome_farmaco, farmlistord.unita FROM ordini ord, farmacia_ord farord, ord_far farmlistord, catalogo_aziendale cat, farmacia far, account acc, farmaccount faracc" +
-                             " WHERE farord.codice_ordine_fo=ord.codice_ordine AND farord.partita_iva_fo=far.partita_iva AND ord.codice_ordine=farmlistord.codice_ordine_o AND cat.codice_aic=farmlistord.codice_aic_o AND far.partita_iva=faracc.partita_iva AND faracc.idaccount_f=acc.ID")) {
+                             " WHERE farord.codice_ordine_fo=ord.codice_ordine AND farord.partita_iva_fo=far.partita_iva AND ord.codice_ordine=farmlistord.codice_ordine_o AND cat.codice_aic=farmlistord.codice_aic_o AND far.partita_iva=faracc.partita_iva AND faracc.idaccount_f=acc.ID AND ord.stato=2")) {
                     Map<String, Order> orderMap = new HashMap<>();
                     ResultSet resultSet = preparedStatement.executeQuery();
                     while (resultSet.next()) {
@@ -636,10 +636,11 @@ public class DBMSB {
 
     public void createNewOrder(Order order) {
         if (this == DBMSB.getFarmacia()) {
-            CompletableFuture.runAsync(() -> {
+            //CompletableFuture.runAsync(() -> {
                 try (Connection connection = getConnection();
                      PreparedStatement ordineStatement = connection.prepareStatement("INSERT INTO ordine (codice_ordine, piva, data_consegna, stato) VALUES (?,?,?,?)");
                      PreparedStatement ordFarStatement = connection.prepareStatement("INSERT INTO ord_farmaci (codice_ordine_of, codice_aic_of, lotto_of, unita) VALUES (?,?,?,?)")) {
+                    System.out.println("sono dentro la farmacia");
                     ordineStatement.setString(1, order.getOrderCode());
                     ordineStatement.setString(2, order.getPivaFarmacia());
                     ordineStatement.setDate(3, order.getDeliveryDate());
@@ -647,6 +648,7 @@ public class DBMSB {
                     ordineStatement.executeUpdate();
 
                     for (Farmaco farmacoOrder : order.getFarmacoList()) {
+                        System.out.println("sono dentro la farmaciaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                         ordFarStatement.setString(1, order.getOrderCode());
                         ordFarStatement.setString(2, farmacoOrder.getCodAic());
                         ordFarStatement.setString(3, farmacoOrder.getLotto());
@@ -657,13 +659,13 @@ public class DBMSB {
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-            }, executor);
+            //}, executor);
         } else {
-            CompletableFuture.runAsync(() -> {
+            //CompletableFuture.runAsync(() -> {
                 try (Connection connection = getConnection();
                      PreparedStatement ordineStatement = connection.prepareStatement("INSERT INTO ordini (codice_ordine, data_consegna, stato) VALUES (?,?,?)");
                      PreparedStatement ordFarStatement = connection.prepareStatement("INSERT INTO ord_far (codice_ordine_o, codice_aic_o, lotto_o, unita) VALUES (?,?,?,?)");
-                     PreparedStatement farmaciaOrdStatement = connection.prepareStatement("INSERT INTO farmacia_ord (codice_ordine_fo, partita_iva_fo) VALUES (?,?)");) {
+                     PreparedStatement farmaciaOrdStatement = connection.prepareStatement("INSERT INTO farmacia_ord (codice_ordine_fo, partita_iva_fo) VALUES (?,?)")) {
                     ordineStatement.setString(1, order.getOrderCode());
                     ordineStatement.setDate(2, order.getDeliveryDate());
                     ordineStatement.setInt(3, 1);
@@ -700,7 +702,7 @@ public class DBMSB {
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-            }, executor);
+            //}, executor);
         }
 
     }
@@ -1059,7 +1061,7 @@ public class DBMSB {
     public void deleteOrder(String orderCode) {
         CompletableFuture.runAsync(() -> {
             try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM farmacia_ord WHERE or codice_ordine_fo = ?")) {
+                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM farmacia_ord WHERE codice_ordine_fo = ?")) {
                 preparedStatement.setString(1, orderCode);
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {

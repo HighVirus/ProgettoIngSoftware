@@ -48,6 +48,8 @@ public class OrderListController extends Homepage {
         MFXTableColumn<Order> statoColumn = new MFXTableColumn<>("Stato Consegna", true, Comparator.comparing(Order::getStatus));
         farmaciaEmailColumn.setPrefWidth(230);
         MFXTableColumn<Order> infoOrderColumn = new MFXTableColumn<>("", false);
+        infoOrderColumn.setMinWidth(30);
+        infoOrderColumn.resize(30, infoOrderColumn.getHeight());
         infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
             private final MFXButton infoOrderButton = new MFXButton(" ");
 
@@ -66,14 +68,16 @@ public class OrderListController extends Homepage {
 
                 setGraphic(infoOrderButton);
                 infoOrderButton.setOnAction(event -> {
-
+                    ordersFarC.showOrderInfoB(order);
                 });
             }
         });
 
         MFXTableColumn<Order> modOrderColumn = new MFXTableColumn<>("", false);
-        infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
-            private final MFXButton modOrderButton = new MFXButton("?");
+        modOrderColumn.setMinWidth(30);
+        modOrderColumn.resize(30, modOrderColumn.getHeight());
+        modOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
+            private final MFXButton modOrderButton = new MFXButton(" ");
 
             @Override
             public void update(Order order) {
@@ -81,7 +85,7 @@ public class OrderListController extends Homepage {
                     setGraphic(null);
                     return;
                 }
-                Image buttonImage = new Image(getClass().getResourceAsStream("/images/info.png"));
+                Image buttonImage = new Image(getClass().getResourceAsStream("/images/modificaButtonImage.png"));
                 ImageView imageView = new ImageView(buttonImage);
                 imageView.setFitWidth(15);
                 imageView.setFitHeight(17);
@@ -96,9 +100,10 @@ public class OrderListController extends Homepage {
         });
 
         MFXTableColumn<Order> cancelOrderColumn = new MFXTableColumn<>("", false);
-        infoOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
+        cancelOrderColumn.setMinWidth(30);
+        cancelOrderColumn.resize(30, cancelOrderColumn.getHeight());
+        cancelOrderColumn.setRowCellFactory(param -> new MFXTableRowCell<>(order -> order) {
             private final MFXButton cancelOrderButton = new MFXButton("X");
-
 
             @Override
             public void update(Order order) {
@@ -106,16 +111,12 @@ public class OrderListController extends Homepage {
                     setGraphic(null);
                     return;
                 }
-                Image buttonImage = new Image(getClass().getResourceAsStream("/images/info.png"));
-                ImageView imageView = new ImageView(buttonImage);
-                imageView.setFitWidth(15);
-                imageView.setFitHeight(17);
-                cancelOrderButton.setTextFill(Paint.valueOf("WHITE"));
-                cancelOrderButton.setGraphic(imageView);
 
+                cancelOrderButton.setStyle("-fx-background-color: #FF595E;" + "-fx-font-weight: bold;");
+                cancelOrderButton.setTextFill(Paint.valueOf("WHITE"));
                 setGraphic(cancelOrderButton);
                 cancelOrderButton.setOnAction(event -> {
-                    ordersFarC.setOrderToCancel(order);
+                    ordersFarC.showConfirmCancelOrderNotice(order);
                 });
             }
         });
@@ -127,7 +128,7 @@ public class OrderListController extends Homepage {
         farmaciaEmailColumn.setRowCellFactory(order -> new MFXTableRowCell<>(Order::getEmail));
         statoColumn.setRowCellFactory(order -> new MFXTableRowCell<>(order1 -> order1.getStatus().getValue()));
 
-        orderTable.getTableColumns().addAll(orderCodeColumn, pivaColumn, farmaciaNameColumn, farmaciaEmailColumn, statoColumn, infoOrderColumn);
+        orderTable.getTableColumns().addAll(orderCodeColumn, pivaColumn, farmaciaNameColumn, farmaciaEmailColumn, statoColumn, infoOrderColumn, modOrderColumn, cancelOrderColumn);
         orderTable.getFilters().addAll(
                 new StringFilter<>("Codice Ordine", Order::getOrderCode),
                 new StringFilter<>("P.IVA Farmacia", Order::getPivaFarmacia),
