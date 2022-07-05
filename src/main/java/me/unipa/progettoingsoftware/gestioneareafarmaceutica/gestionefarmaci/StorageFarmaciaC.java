@@ -10,12 +10,10 @@ import me.unipa.progettoingsoftware.gestionedati.entity.Order;
 import me.unipa.progettoingsoftware.gestionedati.entity.User;
 import me.unipa.progettoingsoftware.utils.ErrorsNotice;
 import me.unipa.progettoingsoftware.utils.GenericNotice;
+import me.unipa.progettoingsoftware.utils.OrderStatus;
 
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class StorageFarmaciaC {
@@ -41,7 +39,10 @@ public class StorageFarmaciaC {
 
     public void showCaricoOrderListB() {
         String piva = User.getUser().getFarmaciaPiva();
-        DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
+        DBMSB.getFarmacia().getOrderList(piva, OrderStatus.CONSEGNATO_DA_CARICARE).whenComplete((orderList, throwable) -> {
+            if (throwable != null)
+                throwable.printStackTrace();
+        }).thenAccept(orders -> {
             Platform.runLater(() -> {
                 this.caricoOrderListBController = new CaricoOrderListBController(orders, this, new Stage());
                 FXMLLoader fxmlLoader = new FXMLLoader(CaricoOrderListB.class.getResource("CaricoOrderListB.fxml"));
@@ -74,7 +75,7 @@ public class StorageFarmaciaC {
             for (Farmaco f1 : caricaProductsFormController.getCaricoList().getItems()) {
                 if (f1.getCodAic().equalsIgnoreCase(farmaco.getCodAic()) && f1.getLotto().equalsIgnoreCase(farmaco.getLotto())) {
                     f1.setCosto(costo);
-                    return;
+                    break;
                 }
             }
             caricaProductsFormController.getCaricoList().update();
@@ -126,14 +127,15 @@ public class StorageFarmaciaC {
             return;
         }
 
-        Set<String> orderCodeSet = new HashSet<>();
-        for (Farmaco farmaco : this.caricaProductsFormController.getCaricoList().getItems())
-            orderCodeSet.add(farmaco.getFarmacoName());
+        List<String> orderCodeSet = new ArrayList<>();
+        for (Farmaco farmaco : this.caricaProductsFormController.getCaricoList().getItems()) {
+            if (!orderCodeSet.contains(farmaco.getOrderCode()))
+                orderCodeSet.add(farmaco.getOrderCode());
+        }
 
-        Iterator<String> orderCodeIterator = orderCodeSet.iterator();
         DBMSB.getAzienda().getFarmaciaFromUserId(User.getUser().getId()).thenAccept(farmaciaInfo -> {
-            while (orderCodeIterator.hasNext()) {
-                List<Farmaco> farmacoList = DBMSB.getAzienda().getFarmaciFromOrder(orderCodeIterator.next()).join();
+            for (String orderCode : orderCodeSet){
+                List<Farmaco> farmacoList = DBMSB.getAzienda().getFarmaciFromOrder(orderCode).join();
                 if (farmacoList.isEmpty()) {
                     new ErrorsNotice("Il codice d'ordine non esiste.");
                     return;
@@ -157,9 +159,9 @@ public class StorageFarmaciaC {
 
         DBMSB.getFarmacia().addFarmacoListToStorage(User.getUser().getFarmaciaPiva(), this.caricaProductsFormController.getCaricoList().getItems());
 
-        while (orderCodeIterator.hasNext()) {
-            DBMSB.getFarmacia().makeDeliveryCompleted(orderCodeIterator.next());
-            DBMSB.getAzienda().makeDeliveryCompleted(orderCodeIterator.next());
+        for (String orderCode : orderCodeSet){
+            DBMSB.getFarmacia().makeDeliveryCompleted(orderCode);
+            DBMSB.getAzienda().makeDeliveryCompleted(orderCode);
         }
 
         DBMSB.getFarmacia().getFarmaciAlreadyOrdered(User.getUser().getFarmaciaPiva()).thenAccept(farmacoList -> {

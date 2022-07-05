@@ -9,6 +9,7 @@ public enum OrderStatus {
 
     @Getter
     private final String value;
+    @Getter
     private final int statusInt;
 
     OrderStatus(String value, int statusInt){

@@ -11,11 +11,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<fx:root prefHeight="600.0" prefWidth="800.0" type="MFXScrollPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="600.0" prefWidth="1000.0" type="MFXScrollPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <content>
-      <javafx.scene.layout.AnchorPane accessibleRole="SCROLL_PANE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1431.0" prefWidth="800.0" style="-fx-background-color: #DBDBDB;">
+      <javafx.scene.layout.AnchorPane accessibleRole="SCROLL_PANE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1431.0" prefWidth="1000.0" style="-fx-background-color: #DBDBDB;">
          <children>
-            <MFXScrollPane layoutX="-6.0" layoutY="-8.0" opacity="0.0" prefHeight="1415.0" prefWidth="800.0" AnchorPane.bottomAnchor="-115.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <MFXScrollPane layoutX="-6.0" layoutY="-8.0" opacity="0.0" prefHeight="1415.0" prefWidth="1000.0" AnchorPane.bottomAnchor="-115.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <MFXTextField fx:id="aicCode" layoutX="130.0" layoutY="228.0" prefHeight="50.0" prefWidth="533.0" style="-mfx-main: #1c7c54;" />
             <MFXDatePicker fx:id="expireDate" layoutX="130.0" layoutY="620.0" style="-mfx-main: #1c7c54;" />
             <MFXComboBox fx:id="prescrivibilita" layoutX="131.0" layoutY="515.0" prefHeight="40.0" prefWidth="198.0" />
@@ -83,7 +83,7 @@
                   <Font name="System Bold" size="16.0" />
                </font>
             </Text>
-            <MFXTableView fx:id="caricoList" layoutX="35.0" layoutY="954.0" prefHeight="363.0" prefWidth="737.0" />
+            <MFXTableView fx:id="caricoList" layoutX="35.0" layoutY="954.0" prefHeight="363.0" prefWidth="950.0" />
             <MFXButton layoutX="664.0" layoutY="1340.0" onAction="#onClickConfirmButton" style="-fx-background-color: #1c7c54; -fx-background-radius: 20; -fx-border-radius: 20;" text="Conferma" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />

@@ -13,6 +13,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -84,7 +86,7 @@ public class CaricaProductsFormController extends MFXScrollPane {
         MFXTableColumn<Farmaco> costoColumn = new MFXTableColumn<>("Costo", true, Comparator.comparing(Farmaco::getCosto));
         MFXTableColumn<Farmaco> unitaColumn = new MFXTableColumn<>("Unità", true, Comparator.comparing(Farmaco::getCosto));
 
-        MFXTableColumn<Farmaco> modificaCostoColumn = new MFXTableColumn<>("Modifica Unita", false);
+        MFXTableColumn<Farmaco> modificaCostoColumn = new MFXTableColumn<>("Modifica Costo", false);
         Map<Farmaco, TextField> fields = new HashMap<>();
         modificaCostoColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
 
@@ -106,7 +108,7 @@ public class CaricaProductsFormController extends MFXScrollPane {
 
         MFXTableColumn<Farmaco> modificaColumn = new MFXTableColumn<>("", false);
         modificaColumn.setRowCellFactory(param -> new MFXTableRowCell<>(farmaco -> farmaco) {
-            private final MFXButton modificaButton = new MFXButton("X");
+            private final MFXButton modificaButton = new MFXButton(" ");
 
             @Override
             public void update(Farmaco farmaco) {
@@ -115,9 +117,12 @@ public class CaricaProductsFormController extends MFXScrollPane {
                     return;
                 }
 
-                modificaButton.setStyle("-fx-background-color: #FF595E;" + "-fx-font-weight: bold;");
+                Image buttonImage = new Image(getClass().getResourceAsStream("/images/modificaButtonImage.png"));
+                ImageView imageView = new ImageView(buttonImage);
+                imageView.setFitWidth(15);
+                imageView.setFitHeight(17);
                 modificaButton.setTextFill(Paint.valueOf("WHITE"));
-
+                modificaButton.setGraphic(imageView);
                 setGraphic(modificaButton);
                 modificaButton.setOnAction(event -> {
                     storageFarmaciaC.modificaCostoFarmaco(farmaco, fields.get(farmaco).getText());
@@ -152,10 +157,10 @@ public class CaricaProductsFormController extends MFXScrollPane {
         codAicColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCodAic));
         lottoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getLotto));
         farmacoNameColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getFarmacoName));
-        unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getPrincipioAttivo));
+        unitaColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getUnita));
         costoColumn.setRowCellFactory(farmaco -> new MFXTableRowCell<>(Farmaco::getCosto));
 
-        caricoList.getTableColumns().addAll(orderCodeColumn, codAicColumn, lottoColumn, farmacoNameColumn, costoColumn, unitaColumn, removeColumn);
+        caricoList.getTableColumns().addAll(orderCodeColumn, codAicColumn, lottoColumn, farmacoNameColumn, costoColumn, unitaColumn, modificaCostoColumn, modificaColumn, removeColumn);
         caricoList.getFilters().addAll(
                 new StringFilter<>("Ordine", Farmaco::getOrderCode),
                 new StringFilter<>("Codice AIC", Farmaco::getCodAic),

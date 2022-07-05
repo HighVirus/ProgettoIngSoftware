@@ -49,7 +49,10 @@ public class OrdersFarC {
 
     public void showOrderList() {
         String piva = User.getUser().getFarmaciaPiva();
-        DBMSB.getAzienda().getOrderList(piva).thenAccept(orders -> {
+        DBMSB.getAzienda().getOrderList(piva).whenComplete((orderList, throwable) -> {
+            if (throwable != null)
+                throwable.printStackTrace();
+        }).thenAccept(orders -> {
             Platform.runLater(() -> {
                 orderListController = new OrderListController(stage, this, orders);
                 FXMLLoader fxmlLoader = new FXMLLoader(OrderList.class.getResource("OrderList.fxml"));
@@ -149,19 +152,15 @@ public class OrdersFarC {
                     if (throwable != null)
                         throwable.printStackTrace();
                 }).thenAccept(strings1 -> {
-                    String indirizzo = strings1.get(2);
-                    String cap = strings1.get(3);
-                    String email = strings1.get(1);
-                    Order order = new Order(orderCode, new Date(calendar.getTimeInMillis()),
-                            piva, farmaciaName, indirizzo, cap, email, 1);
-                    System.out.println("culo");
-                    order.getFarmacoList().addAll(CarrelloE.getInstance().getFarmaci());
-                    System.out.println("culo2");
-                    DBMSB.getAzienda().createNewOrder(order);
-                    System.out.println("culo3");
-                    DBMSB.getFarmacia().createNewOrder(order);
-                    System.out.println("culo4");
                     Platform.runLater(() -> {
+                        String indirizzo = strings1.get(2);
+                        String cap = strings1.get(3);
+                        String email = strings1.get(1);
+                        Order order = new Order(orderCode, new Date(calendar.getTimeInMillis()),
+                                piva, farmaciaName, indirizzo, cap, email, 1);
+                        order.getFarmacoList().addAll(CarrelloE.getInstance().getFarmaci());
+                        DBMSB.getAzienda().createNewOrder(order);
+                        DBMSB.getFarmacia().createNewOrder(order);
                         new GenericNotice("Ordine creato con successo.");
                     });
                 });
