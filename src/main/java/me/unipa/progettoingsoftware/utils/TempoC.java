@@ -29,6 +29,39 @@ public class TempoC {
         this.checkAlerts();
         this.addPeriodicOrder();
         this.checkOrderReadyToLoadList();
+        this.checkUnitFarmaco();
+    }
+
+    private void checkUnitFarmaco() {// metodo controllo magazzino farmaco < 50
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Timer time = new Timer();
+        time.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                DBMSB.getFarmacia().getFarmacoListCheckStorage().thenAccept(farmacos -> {
+                    if (farmacos.isEmpty()) return;
+                    for (Farmaco farmaco : farmacos) {
+                        DBMSB.getFarmacia().isFarmacoOrdered(farmaco.getCodAic());
+                        if (false){
+                            TempoC.addToListFarmaciNotOrdered();
+                        }
+                    }
+                    if (){
+
+                    }
+                });
+            }
+
+        },
+                calendar.getTime(), TimeUnit.HOURS.toMillis(24));
+    }
+
+    private static void addToListFarmaciNotOrdered() {
     }
 
 
