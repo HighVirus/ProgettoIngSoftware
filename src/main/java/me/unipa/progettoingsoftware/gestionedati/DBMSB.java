@@ -1147,15 +1147,37 @@ public class DBMSB {
     }
 
     public void deleteOrder(String orderCode) {
-        CompletableFuture.runAsync(() -> {
-            try (Connection connection = getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM farmacia_ord WHERE codice_ordine_fo = ?")) {
-                preparedStatement.setString(1, orderCode);
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }, executor);
+        if (this == DBMSB.getAzienda()){
+            CompletableFuture.runAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement ordStatement = connection.prepareStatement("DELETE FROM ordini WHERE codice_ordine = ?");
+                     PreparedStatement ordfarStatement = connection.prepareStatement("DELETE FROM ord_far WHERE codice_ordine_o = ?");
+                     PreparedStatement farmOrdStatement = connection.prepareStatement("DELETE FROM farmacia_ord WHERE codice_ordine_fo = ?")) {
+                    ordStatement.setString(1, orderCode);
+                    ordStatement.executeUpdate();
+                    ordfarStatement.setString(1, orderCode);
+                    ordfarStatement.executeUpdate();
+                    farmOrdStatement.setString(1, orderCode);
+                    farmOrdStatement.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+        } else {
+            CompletableFuture.runAsync(() -> {
+                try (Connection connection = getConnection();
+                     PreparedStatement farmOrdStatement = connection.prepareStatement("DELETE FROM farmacia_ord WHERE codice_ordine_fo = ?");
+                     PreparedStatement orderStatement = connection.prepareStatement("DELETE FROM ordine WHERE codice_ordine = ?")) {
+                    farmOrdStatement.setString(1, orderCode);
+                    farmOrdStatement.executeUpdate();
+                    orderStatement.setString(1, orderCode);
+                    orderStatement.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }, executor);
+        }
+
     }
 
 
