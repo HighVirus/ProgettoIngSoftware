@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="832.0" style="-fx-background-color: #DBDBDB;" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="832.0" style="-fx-background-color: #DBDBDB;" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane layoutX="-2.0" prefHeight="706.0" prefWidth="832.0">
          <top>
@@ -68,33 +68,23 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Text fill="#1c7c54" layoutX="36.0" layoutY="352.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data di Consegna">
+            <Text fill="#1c7c54" layoutX="36.0" layoutY="310.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data di Consegna">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Label fx:id="deliveryDate" layoutX="36.0" layoutY="355.0" text="\%DataConsegna%">
+            <Label fx:id="deliveryDate" layoutX="36.0" layoutY="313.0" text="\%DataConsegna%">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
             <MFXTableView fx:id="farmacoTable" layoutX="281.0" prefHeight="489.0" prefWidth="445.0" style="-fx-background-radius: 0 20 20 0;" />
-            <Text fill="#1c7c54" layoutX="35.0" layoutY="406.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stato Consegna">
+            <Text fill="#1c7c54" layoutX="35.0" layoutY="364.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stato Consegna">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
-            <Label fx:id="deliveryStatus" layoutX="36.0" layoutY="411.0" text="\%StatoConsegna%">
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
-            <Text fill="#1c7c54" layoutX="36.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nome Corriere">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font>
-            </Text>
-            <Label fx:id="nomeCorriere" layoutX="34.0" layoutY="308.0" text="\%NomeCorriere%">
+            <Label fx:id="deliveryStatus" layoutX="36.0" layoutY="369.0" text="\%StatoConsegna%">
                <font>
                   <Font size="14.0" />
                </font>
